@@ -1,4 +1,4 @@
-# Uber Trip Demand & Revenue Analysis Using SQL
+# Ride Demand Forecasting & Revenue Analytics 
 
 ## Problem Statement
 
