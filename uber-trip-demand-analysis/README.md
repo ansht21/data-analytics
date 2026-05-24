@@ -1,4 +1,4 @@
-# Ride Demand Forecasting & Revenue Analytics 
+# Uber trip Demand Forecasting & Revenue Analytics 
 
 ## Problem Statement
 
