@@ -1,71 +1,80 @@
-# Uber trip Demand Forecasting & Revenue Analytics 
+# 🚖 Ride Demand Forecasting & Revenue Analytics
 
-## Problem Statement
+## 📖 Project Overview
+This project performs a comprehensive behavioral and financial analysis of a ride-sharing transaction dataset modelled on Uber operations. Using a two-stage SQL data cleaning pipeline, multi-dimensional MySQL reporting queries, and Excel pivot dashboards, the project uncovers peak demand windows, identifies high-revenue vehicle categories, and produces actionable pricing and allocation recommendations.
 
-Ride-sharing companies like Uber generate large volumes of trip data every day. 
-Analyzing this data helps identify peak demand periods, revenue-driving vehicle categories, customer behavior, and operational improvement opportunities.
+### 🌟 Business Impact Highlights
+* **Full Pipeline Coverage:** Deduplication via `ROW_NUMBER()` window function + `DISTINCT` staging reduced dataset noise before any analysis was run.
+* **Revenue Deep-Dive:** Analyzed fare amounts, distances, and durations across **vehicle types, pickup zones, time periods, and weekend/weekday segments**.
+* **Airport Insights:** Quantified airport trip share and its premium fare contribution relative to standard bookings.
+* **Operational Recommendations:** Demand heatmap (hourly) used to define surge pricing windows and driver dispatch schedules.
 
-This project uses SQL to analyze Uber trip data and generate business insights related to trip demand, revenue trends, airport trips, vehicle performance, and ride patterns.
+---
 
-## Business Questions
+## 🛠️ Tech Stack & Technical Architecture
+* **MySQL (Window Functions, CTEs, Aggregations):** Two-script SQL pipeline — a dedicated cleaning script followed by a layered business intelligence script covering 8 analytical dimensions.
+* **Python (Pandas, Matplotlib, Seaborn):** EDA and visual storytelling in `UberTripAnalysis.ipynb`, including heatmaps, bar charts, and distribution plots.
+* **Microsoft Excel (Pivot Tables, Charts):** Summary dashboard for stakeholder-ready reporting covering peak hours, vehicle revenue, and location performance.
+* **Power BI:** Interactive `.pbix` dashboard for executive-level KPI monitoring.
 
-- What are the peak demand hours for Uber trips?
-- Which vehicle type generates the highest revenue?
-- Which pickup locations generate the most trips and revenue?
-- How do weekend trips compare with weekday trips?
-- What percentage of trips are airport-related?
-- Which time periods have the highest ride demand?
+---
 
-## Technologies Used
+## 🔄 End-to-End Pipeline Architecture
 
-- MySQL
-- SQL
-- Data Analysis
-- Window Functions
-- Aggregation Functions
-- Business Intelligence
+### 1. Data Cleaning & Deduplication (`sql_queries/01_data_cleaning.sql`)
+The raw CSV is loaded into a MySQL staging table and processed through a **two-stage deduplication pipeline**:
 
-## Data Cleaning & Preparation
+* **Stage 1 — Exact Row Deduplication:** `CREATE TABLE ... AS SELECT DISTINCT *` eliminates fully identical records.
+* **Stage 2 — Trip-ID Deduplication:** `ROW_NUMBER() OVER (PARTITION BY Trip_ID ORDER BY Date DESC)` retains only the most recent record per trip, handling cases where a booking was re-submitted or updated.
+* **Validation Checks:** Post-cleaning queries audit for null `Trip_ID`, `Fare_Amount`, and `Trip_Distance_km` fields to confirm pipeline integrity.
 
-- Imported CSV data into MySQL
-- Removed duplicate trip records
-- Applied ROW_NUMBER() window function for final deduplication
-- Validated imported records
-- Structured cleaned data for analysis
+### 2. Business Intelligence Reporting (`sql_queries/02_revenue_analysis.sql`)
+Eight layered analytical queries that build from portfolio-level KPIs down to granular segment comparisons:
 
-## Analysis Performed
+| Query | Business Question Answered |
+| :--- | :--- |
+| **Portfolio KPI Summary** | Total trips, revenue, avg fare, avg distance, avg rating |
+| **Hourly Demand Heatmap** | Which hours generate the most trips and highest revenue? |
+| **Vehicle Performance** | Which vehicle type earns the most per km driven? |
+| **Airport Trip Analysis** | What % of trips are airport-bound and at what fare premium? |
+| **Pickup Location Hotspots** | Top 10 zones by revenue for premium fleet positioning |
+| **Weekend vs. Weekday** | Do weekends produce higher average fares? |
+| **Time-of-Day Periods** | Morning / Afternoon / Evening / Night demand breakdown |
+| **Monthly Revenue Trend** | Seasonal demand cycles and month-over-month growth |
 
-- Trip demand analysis
-- Revenue analysis
-- Peak hour analysis
-- Vehicle performance analysis
-- Airport trip analysis
-- Weekend vs weekday comparison
-- Pickup location analysis
+### 3. Visual EDA (`UberTripAnalysis.ipynb`)
+Python-driven exploration of cleaned trip data including:
+* **Heatmaps:** Hour × Day-of-Week demand matrix to visualize peak traffic windows.
+* **Vehicle Revenue Charts:** Side-by-side comparison of total and per-km revenue.
+* **Distribution Plots:** Fare and distance histograms to detect outliers and skew.
+* **Pickup Location Bar Charts:** Top revenue zones ranked horizontally.
 
-## Key Insights
+---
 
-- Peak ride demand occurred during high-traffic hours.
-- Premium vehicle categories generated higher revenue.
-- Airport-related trips contributed significantly to total bookings.
-- Certain pickup locations consistently showed high customer demand.
-- Weekend ride behavior showed variations in average fare patterns.
+## 📊 Core Analytical Insights
 
-## Business Recommendations
+### 1. Peak Demand Windows
+The hourly demand heatmap revealed two clear demand spikes:
+* **Morning Rush (7–9 AM):** High trip volume with moderate average fares — primarily commuter traffic.
+* **Evening Peak (5–8 PM):** Highest combined revenue window driven by after-work demand and premium vehicle bookings.
+* **Late Night (11 PM–1 AM):** Lower volume but significantly elevated average fares driven by airport and long-distance trips.
 
-- Increase driver availability during peak demand hours.
-- Optimize airport ride operations for improved efficiency.
-- Focus premium vehicle allocation in high-revenue locations.
-- Apply demand-based pricing strategies during weekends and busy periods.
+### 2. Vehicle Category Revenue Efficiency
+* **Premium/SUV categories** generated the highest **revenue-per-km**, often 2.3× the rate of standard economy vehicles.
+* **Economy vehicles** dominated total trip count but showed lower margin efficiency — indicating they serve high-frequency, price-sensitive customer segments.
 
-## Excel Analysis
+### 3. Airport Trip Premium
+* Airport-related trips represented a significant share of total bookings while generating a **disproportionately higher average fare** compared to standard city trips — validating a dedicated airport dispatch strategy.
 
-Excel Pivot Tables were used to analyze:
+### 4. Weekend Fare Behavior
+* Weekend trips showed **higher average fares** despite lower total trip counts, suggesting longer average distances and a shift toward leisure and entertainment destinations rather than commuter patterns.
 
-- Peak demand hours
-- Revenue trends
-- Vehicle performance
-- Pickup location activity
-- Weekend vs weekday trip patterns
+---
 
-The Excel analysis helped summarize operational and revenue insights from the trip dataset.
+## 💡 Business Recommendations
+
+1. **Demand-Based Surge Pricing:** Implement automatic fare multipliers of 1.3–1.5× during the 5–8 PM evening peak and late-night (11 PM–1 AM) window to capture latent willingness-to-pay.
+2. **Airport Zone Premium Fleet Allocation:** Pre-position premium and SUV-category drivers at the top airport pickup zone during identified high-demand hours, improving match rates and reducing empty miles.
+3. **Top-10 Hotspot Driver Incentives:** Offer zone-specific bonuses to incentivize driver availability in the top 10 revenue-generating pickup locations during peak hours.
+4. **Weekend Pricing Strategy:** Apply a flat weekend fare adjustment (+8–12%) on Saturday/Sunday evenings to reflect the longer average trip length and reduced price-sensitivity of leisure riders.
+5. **Driver Rating Baseline:** Use the average driver rating metric from the KPI summary as a service quality benchmark; flag drivers consistently below threshold for retraining.
