@@ -6,15 +6,6 @@ I focus on turning raw data into clear business insights through structured anal
 
 ---
 
-## Quick Links
-
-- **Portfolio Website:** [ansh-thakur.netlify.app](https://ansh-thakur.netlify.app/)
-- **LinkedIn:** [linkedin.com/in/ansh-thakur-5407192b4](https://www.linkedin.com/in/ansh-thakur-5407192b4/)
-- **GitHub Profile:** [github.com/ansht120](https://github.com/ansht120)
-- **Email:** [ansht1194@gmail.com](mailto:ansht1194@gmail.com)
-
----
-
 ## Core Skills
 
 | Area | Tools & Skills |
@@ -79,7 +70,15 @@ data-analytics-projects/
 │   └── README.md
 │
 └── README.md
+
 ```
+
+## Quick Links
+
+- **Portfolio Website:** [ansh-thakur.netlify.app](https://ansh-thakur.netlify.app/)
+- **LinkedIn:** [linkedin.com/in/ansh-thakur-5407192b4](https://www.linkedin.com/in/ansh-thakur-5407192b4/)
+- **GitHub Profile:** [github.com/ansht120](https://github.com/ansht120)
+- **Email:** [ansht1194@gmail.com](mailto:ansht1194@gmail.com)
 
 ---
 
