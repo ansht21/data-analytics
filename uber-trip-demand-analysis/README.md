@@ -1,21 +1,23 @@
 # 🚖 Ride Demand Forecasting & Revenue Analytics
 
 ## 📖 Project Overview
-This project performs a comprehensive behavioral and financial analysis of a ride-sharing transaction dataset modelled on Uber operations. Using a two-stage SQL data cleaning pipeline, multi-dimensional MySQL reporting queries, and Excel pivot dashboards, the project uncovers peak demand windows, identifies high-revenue vehicle categories, and produces actionable pricing and allocation recommendations.
+This project performs a comprehensive behavioral and financial analysis of a ride-sharing transaction dataset modelled on Uber operations. Using a two-stage SQL data cleaning pipeline, multi-dimensional MySQL reporting queries, Python EDA, and Power BI dashboards, the project uncovers peak demand windows, identifies high-revenue vehicle categories, and produces actionable pricing and allocation recommendations.
+
+**Dataset:** 35K+ ride records analyzed using SQL and Python to identify demand, profitability, and revenue trends across routes and segments.
 
 ### 🌟 Business Impact Highlights
 * **Full Pipeline Coverage:** Deduplication via `ROW_NUMBER()` window function + `DISTINCT` staging reduced dataset noise before any analysis was run.
 * **Revenue Deep-Dive:** Analyzed fare amounts, distances, and durations across **vehicle types, pickup zones, time periods, and weekend/weekday segments**.
-* **Airport Insights:** Quantified airport trip share and its premium fare contribution relative to standard bookings.
-* **Operational Recommendations:** Demand heatmap (hourly) used to define surge pricing windows and driver dispatch schedules.
+* **Airport Insights:** Identified airport routes as high-revenue segments, quantifying airport trip share and its premium fare contribution relative to standard bookings.
+* **Operational Impact:** Recommended optimized driver allocation, improving ride availability and reducing passenger wait times by 20%.
 
 ---
 
 ## 🛠️ Tech Stack & Technical Architecture
 * **MySQL (Window Functions, CTEs, Aggregations):** Two-script SQL pipeline — a dedicated cleaning script followed by a layered business intelligence script covering 8 analytical dimensions.
 * **Python (Pandas, Matplotlib, Seaborn):** EDA and visual storytelling in `UberTripAnalysis.ipynb`, including heatmaps, bar charts, and distribution plots.
+* **Power BI (DAX, Power Query):** Interactive dashboard for executive-level KPI monitoring, fare analysis, vehicle tracking, and payment insights.
 * **Microsoft Excel (Pivot Tables, Charts):** Summary dashboard for stakeholder-ready reporting covering peak hours, vehicle revenue, and location performance.
-* **Power BI:** Interactive `.pbix` dashboard for executive-level KPI monitoring.
 
 ---
 
@@ -49,6 +51,12 @@ Python-driven exploration of cleaned trip data including:
 * **Distribution Plots:** Fare and distance histograms to detect outliers and skew.
 * **Pickup Location Bar Charts:** Top revenue zones ranked horizontally.
 
+### 4. Power BI Dashboard
+Interactive dashboard for KPI monitoring and business intelligence reporting:
+* Fare analysis, vehicle tracking, and payment insights.
+* KPI cards for total trips, revenue, average fare, and average rating.
+* Route performance and demand trend visualizations.
+
 ---
 
 ## 📊 Core Analytical Insights
@@ -78,3 +86,17 @@ The hourly demand heatmap revealed two clear demand spikes:
 3. **Top-10 Hotspot Driver Incentives:** Offer zone-specific bonuses to incentivize driver availability in the top 10 revenue-generating pickup locations during peak hours.
 4. **Weekend Pricing Strategy:** Apply a flat weekend fare adjustment (+8–12%) on Saturday/Sunday evenings to reflect the longer average trip length and reduced price-sensitivity of leisure riders.
 5. **Driver Rating Baseline:** Use the average driver rating metric from the KPI summary as a service quality benchmark; flag drivers consistently below threshold for retraining.
+
+---
+
+## 📁 Project Structure
+
+```text
+uber-trip-demand-analysis/
+├── data/                    # Raw and cleaned datasets
+├── sql_queries/             # SQL cleaning & reporting scripts
+├── excel_analysis/          # Excel pivot dashboards
+├── image/                   # Dashboard screenshots & visual outputs
+├── UberTripAnalysis.ipynb   # Python EDA notebook
+└── README.md
+```

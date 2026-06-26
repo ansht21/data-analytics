@@ -1,7 +1,7 @@
-# 📦 Supply Chain Performance & Inventory Optimization Dashboard
+# 📦 Inventory & Logistics Performance Analytics
 
 ## 📖 Project Overview
-This project delivers a comprehensive, end-to-end data analytics solution designed to optimize warehouse inventory, streamline order fulfillment, and boost profit margins. By building a Python-based data cleaning pipeline, executing deep-dive SQL warehousing audits, and designing a fully interactive, macro-enabled Excel dashboard, this project models real-world corporate supply chain challenges and provides data-backed operational solutions.
+This project delivers a comprehensive, end-to-end data analytics solution designed to analyze inventory, shipping costs, and delivery performance to surface inefficiencies and support inventory optimization. By building a Python-based data cleaning pipeline, executing deep-dive SQL warehousing audits, and designing a fully interactive, macro-enabled Excel dashboard, this project models real-world corporate supply chain challenges and provides data-backed operational solutions.
 
 ### 🌟 Business Impact Highlights
 * **Revenue Analyzed:** **$82.69 Million** gross transactional revenue.
@@ -67,11 +67,29 @@ By classifying items based on cumulative financial contribution, the analysis co
 * **Top Performing Hub:** `WARE-MKL1006` consistently maintains an average dispatch-to-delivery speed of **4.2 days** with a **96.5% on-time rate**.
 * **Underperforming Hub:** `WARE-XYS1001` exhibits an average transit delay of **7.8 days** and is responsible for **62% of all late deliveries**—primarily due to regional courier bottlenecks.
 
+### 3. Overstock & Understock Detection
+* KPI monitoring and data validation identified overstock and understock conditions across inventory categories, supporting inventory optimization decisions.
+* Trend analysis surfaced slow-moving items occupying disproportionate warehouse space.
+
 ---
 
 ## 💡 Business Recommendations
 
 1. **Implement ABC Replenishment:** Move away from uniform ordering. Transition C-items to a "Just-In-Time" (JIT) model to free up 30%+ of warehouse shelf space and lower holding costs. Establish rigid safety stock thresholds for high-velocity A-items.
 2. **Redistribute Fulfillment Loads:** Reroute orders originally bound for `WARE-XYS1001` during peak Q4 seasonal spikes to `WARE-MKL1006` to minimize late delivery penalties and customer churn.
-3. **Establish Discount Threshold Alerts:** SQL audits identified that **1.4% of orders were unprofitable** due to overlapping sales discounts (coupons combined with volume markdowns). Enforce an hard discount cap at **15%** within the Excel order entry system.
+3. **Establish Discount Threshold Alerts:** SQL audits identified that **1.4% of orders were unprofitable** due to overlapping sales discounts (coupons combined with volume markdowns). Enforce a hard discount cap at **15%** within the Excel order entry system.
 4. **Negotiate Supplier SLAs:** Leverage lead-time variability metrics from the Python analysis to renegotiate delivery windows with slow-performing regional logistics providers.
+
+---
+
+## 📁 Project Structure
+
+```text
+supply-chain-performance-analysis/
+├── data/                  # Raw and cleaned datasets
+├── sql_queries/           # SQL setup & analysis scripts
+├── excel_analysis/        # Interactive Excel dashboard
+├── image/                 # Dashboard screenshots & visual outputs
+├── Supplychain.ipynb      # Python EDA & data cleaning notebook
+└── README.md
+```

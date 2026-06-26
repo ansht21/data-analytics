@@ -1,10 +1,10 @@
-# Ansh Thakur | Data Analyst Portfolio
+# Ansh Thakur | Business Intelligence Analyst Portfolio
 
-**Data Analyst | Python | SQL | Power BI | Excel | Business Intelligence**
+**Business Intelligence Analyst | Python | SQL | Power BI (DAX, Power Query) | Tableau | Excel | Data Storytelling**
 
-B.Sc. IT graduate with hands-on analytics experience in Python, SQL, Power BI, Tableau, Excel, AWS, and Google Cloud Platform (GCP). This portfolio is built to show practical work in data cleaning, data validation, KPI reporting, dashboard development, workflow automation, business intelligence, and analytics reporting.
+B.Sc. IT graduate and MCA (pursuing) student with hands-on BI and analytics experience building Power BI dashboards, KPI reporting, and SQL-based data models. Skilled at turning raw operational data into clear, decision-ready insights for stakeholders through data visualization, report automation, and EDA. Proficient in Python, SQL, DAX/Power Query, Excel, and cloud analytics (AWS, GCP), with a focus on accuracy, data validation, and data storytelling.
 
-I use data to answer business questions, monitor KPIs, build dashboards, and turn raw datasets into clear insights for decision-making.
+I use data to answer business questions, monitor KPIs, build dashboards, automate reporting, and turn raw datasets into clear insights for decision-making.
 
 ---
 
@@ -12,12 +12,23 @@ I use data to answer business questions, monitor KPIs, build dashboards, and tur
 
 | Area | Skills & Tools |
 | :--- | :--- |
-| **Data Analytics** | Data Cleaning, Data Preprocessing, Data Wrangling, EDA, Statistical Analysis, Data Validation |
-| **Programming & Databases** | Python, Pandas, NumPy, Matplotlib, Seaborn, SQL, MySQL, PostgreSQL |
-| **Business Intelligence** | Power BI, Tableau, Excel, KPI Reporting, Dashboard Development, Data Visualization |
-| **Data Engineering Concepts** | Data Pipelines, ETL Concepts, Reporting Automation, Workflow Automation |
-| **Cloud & AI** | AWS Data Engineering Foundations, Google Cloud Platform (GCP), Cloud Analytics, Generative AI Tools, Prompt Engineering, AI-assisted Research |
-| **Tools** | Jupyter Notebook, Google Colab, VS Code, Git, GitHub |
+| **Business Intelligence & Reporting** | Power BI (DAX, Power Query, Dashboard Development), Tableau, Excel (Pivot Tables, Charts), KPI Reporting, Dashboard Design, Report Automation, Data Storytelling |
+| **Data Analytics** | Data Cleaning, Data Preprocessing, Data Wrangling, EDA, Statistical Analysis, Trend Analysis, Data Validation, Business Insights |
+| **Programming & Databases** | SQL (MySQL, PostgreSQL, Joins, Subqueries, Aggregations), Python (Pandas, NumPy, Matplotlib, Seaborn) |
+| **Cloud & Data Engineering** | AWS (Data Engineering Foundations), GCP, Cloud Analytics, Data Pipelines, ETL Concepts |
+| **AI, ML & Tools** | Generative AI Tools, Prompt Engineering, AI-assisted Analytics, Monitoring & Alerting, Regression, Decision Trees, K-Means, Scikit-learn, Jupyter, Colab, VS Code, Git/GitHub |
+| **Soft Skills** | Data Storytelling, Stakeholder Communication, Team Collaboration, Problem Solving |
+
+---
+
+## Experience
+
+**BI / Data Analytics Intern — Unified Mentor Pvt. Ltd.** | Sep 2025 – Dec 2025
+
+- Built and maintained Power BI dashboards for KPI tracking, trend analysis, and operational reporting, giving stakeholders a single view of business performance.
+- Automated DAX measures and Power Query transformations to streamline recurring reporting and improve dashboard usability and refresh efficiency.
+- Performed data cleaning, transformation, and validation on 5K+ records using Python and SQL to ensure accurate, reliable BI reporting.
+- Conducted EDA to surface business trends and translate findings into actionable insights supporting decision-making.
 
 ---
 
@@ -25,7 +36,7 @@ I use data to answer business questions, monitor KPIs, build dashboards, and tur
 
 | Project | Business Focus | Tools Used | Proof of Work |
 | :--- | :--- | :--- | :--- |
-| [Ride Demand Forecasting & Revenue Analytics](./uber-trip-demand-analysis/) | Demand analysis, revenue trends, KPI monitoring, route performance | SQL, Python, Power BI, Excel | SQL pipeline, Python EDA notebook, dashboard reporting, business recommendations |
+| [Ride Demand Forecasting & Revenue Analytics](./uber-trip-demand-analysis/) | Demand analysis, revenue trends, KPI monitoring, route performance | SQL, Python, Power BI, Excel | SQL pipeline, Python EDA notebook, Power BI dashboard, business recommendations |
 | [Inventory & Logistics Performance Analytics](./supply-chain-performance-analysis/) | Inventory optimization, logistics reporting, delivery tracking, operational insights | Python, SQL, Excel | Data cleaning pipeline, SQL validation, Excel dashboard, KPI monitoring |
 
 ---
@@ -35,15 +46,14 @@ I use data to answer business questions, monitor KPIs, build dashboards, and tur
 **Business Problem:** Analyze ride-sharing trip data to identify demand patterns, revenue trends, high-value routes, and vehicle performance insights.
 
 **What I Built:**
-- Validated and analyzed 35K+ ride records using SQL and Python.
+- Analyzed 35K+ ride records using SQL and Python to identify demand, profitability, and revenue trends across routes and segments.
 - Built SQL reporting workflows using joins, subqueries, aggregations, and data validation checks.
-- Created dashboard-ready KPI reporting for fare analysis, vehicle tracking, payment behavior, and revenue trends.
-- Developed Power BI dashboard reporting for KPI monitoring and business intelligence.
+- Developed Power BI dashboards for KPI monitoring, fare analysis, vehicle tracking, and payment insights to support business intelligence reporting.
+- Created Excel pivot dashboards for stakeholder-ready reporting.
 
 **Outcome:**
-- Identified high-revenue airport routes.
-- Recommended optimized driver allocation strategies.
-- Improved ride availability and reduced passenger wait times by 20%.
+- Identified airport routes as high-revenue segments.
+- Recommended optimized driver allocation strategies, improving ride availability and reducing passenger wait times by 20%.
 
 **Project Link:** [View Ride Demand Project](./uber-trip-demand-analysis/)
 
@@ -54,10 +64,11 @@ I use data to answer business questions, monitor KPIs, build dashboards, and tur
 **Business Problem:** Analyze inventory, shipping cost, and delivery performance data to identify operational inefficiencies and support inventory optimization.
 
 **What I Built:**
+- Analyzed inventory, shipping costs, and delivery performance using Python and SQL to surface inefficiencies and reporting gaps.
 - Cleaned and transformed logistics data using Python for structured analytics reporting.
 - Used SQL queries for data validation, quality checks, and operational reporting.
-- Built Excel dashboards using pivot tables and charts for logistics reporting and delivery tracking.
-- Monitored KPIs to identify overstock, understock, fulfillment delays, and process inefficiencies.
+- Built interactive Excel dashboards using pivot tables and charts for logistics reporting, delivery tracking, and inventory analysis.
+- Monitored KPIs to detect overstock and understock conditions through data validation and trend analysis.
 
 **Outcome:**
 - Supported inventory optimization through KPI monitoring and trend analysis.
@@ -111,22 +122,30 @@ data-analytics-projects/
 
 ## Certifications
 
-- Deloitte Data Analytics Job Simulation
-- TATA GenAI-Powered Data Analytics Job Simulation
-- British Airways Data Science Job Simulation
+- **Deloitte Data Analytics Job Simulation** — Jun 2025
+- **TATA GenAI-Powered Data Analytics Job Simulation** — Jul 2025
+- **British Airways Data Science Job Simulation** — Aug 2025
+
+---
+
+## Education
+
+- **Master of Computer Applications (MCA)** — Ballarpur Institute of Technology | Pursuing, Expected: May 2027
+- **B.Sc. in Information Technology** — Gondwana University, Maharashtra | CGPA: 7.26/10 | Jul 2022 – May 2025
+- **Professional Training: Data Science & Analytics** — Digital Edify Institute, Hyderabad | Jun 2025 – Nov 2025
 
 ---
 
 ## Career Focus
 
-I am seeking entry-level opportunities in:
+I am seeking opportunities as a:
 
-- Data Analyst
 - Business Intelligence Analyst
+- Data Analyst
 - Reporting Analyst
 - Junior Data Engineer
 
-My focus is building analytics solutions using Python, SQL, Power BI, Excel, data validation, KPI reporting, dashboard development, workflow automation, and business intelligence.
+My focus is building analytics solutions using Power BI (DAX, Power Query), SQL, Python, Excel, data validation, KPI reporting, dashboard development, report automation, and business intelligence.
 
 ---
 
