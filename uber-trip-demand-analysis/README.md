@@ -57,6 +57,16 @@ Interactive dashboard for KPI monitoring and business intelligence reporting:
 * KPI cards for total trips, revenue, average fare, and average rating.
 * Route performance and demand trend visualizations.
 
+**Dashboard Screenshot:**
+
+![Power BI Dashboard](./image/PowerBi_Dashboard.png)
+
+**Demand Heatmap (Hour × Day of Week):**
+
+![Uber Trip Demand Heatmap](./image/Ubertrip_heatmap.png)
+
+> 📁 **Power BI File:** The interactive `.pbix` dashboard file is available [here](./image/UberTrip%20Dashboard.pbix).
+
 ---
 
 ## 📊 Core Analytical Insights
@@ -93,10 +103,18 @@ The hourly demand heatmap revealed two clear demand spikes:
 
 ```text
 uber-trip-demand-analysis/
-├── data/                    # Raw and cleaned datasets
-├── sql_queries/             # SQL cleaning & reporting scripts
-├── excel_analysis/          # Excel pivot dashboards
-├── image/                   # Dashboard screenshots & visual outputs
-├── UberTripAnalysis.ipynb   # Python EDA notebook
+├── data/
+│   └── Uber_Cleaned_data.csv       # Cleaned dataset (35K+ records)
+├── sql_queries/
+│   ├── 01_data_cleaning.sql        # Deduplication & validation pipeline
+│   └── 02_revenue_analysis.sql     # 8 layered BI reporting queries
+├── excel_analysis/
+│   └── uber_trips_data.xlsx        # Excel data for pivot analysis
+├── image/
+│   ├── PowerBi_Dashboard.png       # Power BI dashboard screenshot
+│   ├── Ubertrip_heatmap.png        # Demand heatmap (Hour × Day)
+│   └── UberTrip Dashboard.pbix     # Interactive Power BI file
+├── UberTripAnalysis.ipynb          # Python EDA notebook
+├── requirements.txt
 └── README.md
 ```

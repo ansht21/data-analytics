@@ -100,19 +100,21 @@ Recommended screenshots to keep in each project folder:
 ```text
 data-analytics-projects/
 ├── supply-chain-performance-analysis/
-│   ├── data/
-│   ├── excel_analysis/
-│   ├── sql_queries/
-│   ├── image/
-│   ├── Supplychain.ipynb
+│   ├── data/                          # Raw & cleaned CSV datasets
+│   ├── sql_queries/                   # SQL setup & analysis scripts
+│   ├── excel_analysis/                # Interactive Excel dashboard (.xlsm)
+│   ├── image/                         # Dashboard screenshots & heatmap
+│   ├── Supplychain.ipynb              # Python EDA & data cleaning
+│   ├── requirements.txt
 │   └── README.md
 │
 ├── uber-trip-demand-analysis/
-│   ├── data/
-│   ├── excel_analysis/
-│   ├── sql_queries/
-│   ├── image/
-│   ├── UberTripAnalysis.ipynb
+│   ├── data/                          # Cleaned trip data (35K+ records)
+│   ├── sql_queries/                   # SQL cleaning & BI reporting
+│   ├── excel_analysis/                # Excel data for pivot analysis
+│   ├── image/                         # Power BI dashboard, heatmap & .pbix
+│   ├── UberTripAnalysis.ipynb         # Python EDA notebook
+│   ├── requirements.txt
 │   └── README.md
 │
 └── README.md

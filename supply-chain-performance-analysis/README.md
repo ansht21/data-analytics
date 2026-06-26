@@ -53,6 +53,14 @@ Instead of static sheets, the final deliverable includes a fully automated, inte
   * Warehouse Dispatch Speeds (Avg Delivery Days by Hub).
   * Time-Series Revenue Trends and Yearly Over-Year Comparisons.
 
+**Dashboard Screenshot:**
+
+![Supply Chain Excel Dashboard](./image/Supplychain%20Dashboard_screenshot.png)
+
+**Correlation Heatmap:**
+
+![Supply Chain Heatmap](./image/Supplychain_Heatmap.png)
+
 ---
 
 ## 📊 Core Analytical Insights
@@ -86,10 +94,19 @@ By classifying items based on cumulative financial contribution, the analysis co
 
 ```text
 supply-chain-performance-analysis/
-├── data/                  # Raw and cleaned datasets
-├── sql_queries/           # SQL setup & analysis scripts
-├── excel_analysis/        # Interactive Excel dashboard
-├── image/                 # Dashboard screenshots & visual outputs
-├── Supplychain.ipynb      # Python EDA & data cleaning notebook
+├── data/
+│   ├── Supplychain_rawData.csv              # Raw transactional data
+│   └── Supplychain_Data.csv                 # Cleaned & engineered data
+├── sql_queries/
+│   ├── 01_database_setup.sql                # Schema & bulk data load
+│   └── 02_sales_analysis.sql                # Multi-dimensional reporting
+├── excel_analysis/
+│   ├── Cleaned_Supplychain_SQLData.xlsx     # Cleaned SQL data export
+│   └── Supplychain_Data_Dashboard.xlsm      # Interactive macro-enabled dashboard
+├── image/
+│   ├── Supplychain Dashboard_screenshot.png # Excel dashboard screenshot
+│   └── Supplychain_Heatmap.png              # Correlation heatmap
+├── Supplychain.ipynb                        # Python EDA & data cleaning
+├── requirements.txt
 └── README.md
 ```
