@@ -12,6 +12,13 @@ USE SupplyChainDB;
 -- 2. Drop the table if it already exists to ensure a clean setup
 DROP TABLE IF EXISTS SupplyChainSales;
 
+-- IMPORTANT: This script loads the CLEANED pipeline output
+--   data/Cleaned_Supplychain_Data.csv  (produced by src/data_cleaning.py)
+-- The cleaning step already standardizes headers, strips '$'/',' from currency
+-- columns, and writes ISO (YYYY-MM-DD) dates -- so the load below works directly.
+-- (Loading the RAW csv would fail: it has '$1,001.18' currency strings and
+--  day-first dates like '31/5/18'. Always run src/data_cleaning.py first.)
+
 -- 3. Create the transactions table schema with appropriate data types
 CREATE TABLE SupplyChainSales (
     OrderNumber VARCHAR(20) NOT NULL,
@@ -30,6 +37,12 @@ CREATE TABLE SupplyChainSales (
     DiscountApplied DECIMAL(5,4), -- Stores discount values (e.g., 0.0500 for 5%)
     UnitCost DECIMAL(10,2),       -- Cost per unit in USD
     UnitPrice DECIMAL(10,2),      -- Selling price per unit in USD
+    DeliveryDays INT,
+    OrderToShipDays INT,
+    ProcureToOrderDays INT,
+    Revenue DECIMAL(14,2),
+    TotalCost DECIMAL(14,2),
+    Profit DECIMAL(14,2),
     PRIMARY KEY (OrderNumber)
 );
 
@@ -38,10 +51,10 @@ CREATE TABLE SupplyChainSales (
 -- SHOW VARIABLES LIKE 'secure_file_priv';
 
 -- 4. Bulk Import Transaction Data
--- Ensure the file path matches the location of your raw dataset.
--- Replace 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Supplychain_Data.csv'
--- with the appropriate file path.
-LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Supplychain_Data.csv'
+-- Replace the path below with the location of Cleaned_Supplychain_Data.csv.
+-- The trailing engineered columns (profit_margin, on_time, order_year,
+-- order_month) are skipped via throwaway @vars.
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Cleaned_Supplychain_Data.csv'
 INTO TABLE SupplyChainSales
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
@@ -51,10 +64,10 @@ IGNORE 1 ROWS
     OrderNumber,
     SalesChannel,
     WarehouseCode,
-    @ProcuredDate,
-    @OrderDate,
-    @ShipDate,
-    @DeliveryDate,
+    ProcuredDate,
+    OrderDate,
+    ShipDate,
+    DeliveryDate,
     CurrencyCode,
     SalesTeamID,
     CustomerID,
@@ -63,13 +76,18 @@ IGNORE 1 ROWS
     OrderQuantity,
     DiscountApplied,
     UnitCost,
-    UnitPrice
-)
-SET
-    ProcuredDate = STR_TO_DATE(@ProcuredDate, '%Y-%m-%d'),
-    OrderDate = STR_TO_DATE(@OrderDate, '%Y-%m-%d'),
-    ShipDate = STR_TO_DATE(@ShipDate, '%Y-%m-%d'),
-    DeliveryDate = STR_TO_DATE(@DeliveryDate, '%Y-%m-%d');
+    UnitPrice,
+    DeliveryDays,
+    OrderToShipDays,
+    ProcureToOrderDays,
+    Revenue,
+    TotalCost,
+    Profit,
+    @profit_margin,
+    @on_time,
+    @order_year,
+    @order_month
+);
 
 -- 5. Data Validation Check
 SELECT COUNT(*) AS total_rows_imported FROM SupplyChainSales;
