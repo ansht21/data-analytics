@@ -8,7 +8,7 @@
 | Question | Finding (verified from the data) | Business decision it drives |
 | :--- | :--- | :--- |
 | 💰 **Which channel makes us the most money?** | **In-Store leads** at $34.0M revenue / **$12.7M profit (37.4%)**, ahead of Online ($24.6M), Distributor ($14.8M), Wholesale ($9.2M). | Concentrate sales investment & inventory in the highest-return channels. |
-| ✅ **Are discounts eating our margin?** | Discounts range **5%–40%** (avg 11.6%), yet margin holds at **37.4%** with **zero loss-making orders**. | Add a discount guardrail to **protect margin as volume grows**. |
+| ✅ **Are discounts eating our margin?** | Discounts range **5%–40%** (avg 11.6%) and overall margin holds at **37.4%**, but SQL audits flagged **1.4% of orders as unprofitable**. | Add a discount guardrail to **protect margin as volume grows**. |
 | 📦 **Where is revenue concentrated?** | **35 of 47 products drive 78.7% of revenue.** | Stock high-value items tightly; run the long tail lean → **lower holding cost, same revenue**. |
 
 > 💡 **My edge — I read the data critically, not just optimistically.** While analysing delivery times I noticed they are *uniformly distributed* (≈800 orders at every value from 1–10 days), a sign the delivery dates are synthetic. So instead of overselling a fake "on-time delivery crisis," I lead with the **channel-profitability and margin findings the data genuinely supports.** Knowing which insights to *trust* is the business judgment companies pay for.
