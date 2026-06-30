@@ -1,15 +1,15 @@
 # 🚖 Ride Demand Forecasting & Revenue Analytics
 
 ## 📖 Project Overview
-This project performs a comprehensive behavioral and financial analysis of a ride-sharing transaction dataset modelled on Uber operations. Using a two-stage SQL data cleaning pipeline, multi-dimensional MySQL reporting queries, Python EDA, and Power BI dashboards, the project uncovers peak demand windows, identifies high-revenue vehicle categories, and produces actionable pricing and allocation recommendations.
+This project performs a comprehensive behavioral and financial analysis of a **synthetic ride-sharing transaction dataset** (35,000 trips, generated for portfolio demonstration). Using a two-stage SQL data cleaning pipeline, multi-dimensional MySQL reporting queries, Python EDA, and Power BI dashboards, the project uncovers peak demand windows, identifies high-revenue vehicle categories, and produces actionable pricing and allocation recommendations.
 
-**Dataset:** 35K+ ride records analyzed using SQL and Python to identify demand, profitability, and revenue trends across routes and segments.
+> ℹ️ *Data note: this is a simulated dataset (uniform monthly volume, 5 pickup zones). The workflow and analytical techniques are the deliverable, not real Uber metrics — and every figure below is computed directly from the data.*
 
 ### 🌟 Business Impact Highlights
-* **Full Pipeline Coverage:** Deduplication via `ROW_NUMBER()` window function + `DISTINCT` staging reduced dataset noise before any analysis was run.
+* **Full Pipeline Coverage:** Built a `ROW_NUMBER()` + `DISTINCT` deduplication safeguard. The source data was already clean (it removed **0 rows**), so the value is a reusable, production-style integrity step — not a fabricated cleanup claim.
 * **Revenue Deep-Dive:** Analyzed fare amounts, distances, and durations across **vehicle types, pickup zones, time periods, and weekend/weekday segments**.
-* **Airport Insights:** Identified airport routes as high-revenue segments, quantifying airport trip share and its premium fare contribution relative to standard bookings.
-* **Operational Impact:** Recommended optimized driver allocation, improving ride availability and reducing passenger wait times by 20%.
+* **Airport Insights:** Airport trips are **39.6%** of bookings and carry a genuine fare premium (**₹535.77 vs ₹289.40**, ≈1.85×) — supporting a dedicated airport dispatch strategy.
+* **Operational Recommendations:** Hourly demand heatmap used to define evening-peak (5–7 PM) dispatch and pricing windows.
 
 ---
 
@@ -39,7 +39,7 @@ Eight layered analytical queries that build from portfolio-level KPIs down to gr
 | **Hourly Demand Heatmap** | Which hours generate the most trips and highest revenue? |
 | **Vehicle Performance** | Which vehicle type earns the most per km driven? |
 | **Airport Trip Analysis** | What % of trips are airport-bound and at what fare premium? |
-| **Pickup Location Hotspots** | Top 10 zones by revenue for premium fleet positioning |
+| **Pickup Location Comparison** | Revenue across the 5 pickup zones (near-uniform in this dataset) |
 | **Weekend vs. Weekday** | Do weekends produce higher average fares? |
 | **Time-of-Day Periods** | Morning / Afternoon / Evening / Night demand breakdown |
 | **Monthly Revenue Trend** | Seasonal demand cycles and month-over-month growth |
@@ -72,30 +72,28 @@ Interactive dashboard for KPI monitoring and business intelligence reporting:
 ## 📊 Core Analytical Insights
 
 ### 1. Peak Demand Windows
-The hourly demand heatmap revealed two clear demand spikes:
-* **Morning Rush (7–9 AM):** High trip volume with moderate average fares — primarily commuter traffic.
-* **Evening Peak (5–8 PM):** Highest combined revenue window driven by after-work demand and premium vehicle bookings.
-* **Late Night (11 PM–1 AM):** Lower volume but significantly elevated average fares driven by airport and long-distance trips.
+The hourly demand heatmap shows a clear **evening peak**: the busiest hours are **6 PM (4,053 trips), 5 PM (3,467), and 7 PM (3,411)** — a textbook after-work commute surge. Late-night fares are *not* meaningfully elevated in this data (≈2% above average), so the genuine operational signal is the **evening volume spike**, not a late-night fare premium.
 
 ### 2. Vehicle Category Revenue Efficiency
-* **Premium/SUV categories** generated the highest **revenue-per-km**, often 2.3× the rate of standard economy vehicles.
-* **Economy vehicles** dominated total trip count but showed lower margin efficiency — indicating they serve high-frequency, price-sensitive customer segments.
+* **Revenue-per-km by tier:** Uber Black **₹40.68**, UberXL ₹27.19, Uber Comfort ₹25.89, UberX ₹20.81, Uber Pool ₹14.57. Premium (Black) earns ≈ **1.95× UberX** and **2.79× Uber Pool**.
+* **But total revenue tells a different story:** UberX leads total revenue (**₹4.91M**) on sheer volume, while Black is high-margin-per-km but lower volume — a classic **premium-vs-volume trade-off**.
 
 ### 3. Airport Trip Premium
-* Airport-related trips represented a significant share of total bookings while generating a **disproportionately higher average fare** compared to standard city trips — validating a dedicated airport dispatch strategy.
+* Airport trips are **39.6%** of bookings (high, reflecting the synthetic data) and carry a real fare premium: **₹535.77 vs ₹289.40** for city trips (≈ **1.85×**) — supporting a dedicated airport dispatch strategy.
 
 ### 4. Weekend Fare Behavior
-* Weekend trips showed **higher average fares** despite lower total trip counts, suggesting longer average distances and a shift toward leisure and entertainment destinations rather than commuter patterns.
+* Weekend vs weekday average fare is **₹389.34 vs ₹386.05** — a **<1% difference**. Honest read: there is *no* material weekend fare effect in this dataset, so a weekend-specific pricing rule isn't justified by the data.
 
 ---
 
 ## 💡 Business Recommendations
 
-1. **Demand-Based Surge Pricing:** Implement automatic fare multipliers of 1.3–1.5× during the 5–8 PM evening peak and late-night (11 PM–1 AM) window to capture latent willingness-to-pay.
-2. **Airport Zone Premium Fleet Allocation:** Pre-position premium and SUV-category drivers at the top airport pickup zone during identified high-demand hours, improving match rates and reducing empty miles.
-3. **Top-10 Hotspot Driver Incentives:** Offer zone-specific bonuses to incentivize driver availability in the top 10 revenue-generating pickup locations during peak hours.
-4. **Weekend Pricing Strategy:** Apply a flat weekend fare adjustment (+8–12%) on Saturday/Sunday evenings to reflect the longer average trip length and reduced price-sensitivity of leisure riders.
-5. **Driver Rating Baseline:** Use the average driver rating metric from the KPI summary as a service quality benchmark; flag drivers consistently below threshold for retraining.
+1. **Demand-Based Surge Pricing:** Focus fare multipliers on the **5–7 PM evening peak**, where trip volume is genuinely highest — this is the strongest, data-backed lever.
+2. **Airport Fleet Allocation:** With airport trips earning ≈1.85× the average fare, pre-position premium/SUV drivers for airport demand to maximise revenue per dispatch.
+3. **Premium-vs-Volume Mix:** Keep UberX as the volume/revenue backbone while protecting Uber Black's high per-km margin — don't over-discount the premium tier.
+4. **Driver Rating Baseline:** Use the average driver rating (**4.32**) as a service-quality benchmark; flag drivers consistently below threshold for retraining.
+
+> *Note: an earlier draft recommended a weekend surcharge and late-night surge — the data shows neither effect is real here, so those were removed. Knowing which recommendations the data does **not** support is part of the analysis.*
 
 ---
 

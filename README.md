@@ -52,8 +52,8 @@ I use data to answer business questions, monitor KPIs, build dashboards, automat
 - Created Excel pivot dashboards for stakeholder-ready reporting.
 
 **Outcome:**
-- Identified airport routes as high-revenue segments.
-- Recommended optimized driver allocation strategies, improving ride availability and reducing passenger wait times by 20%.
+- Quantified the airport fare premium (≈1.85× city trips) and identified the 5–7 PM evening demand peak.
+- Recommended evening-peak surge windows and airport fleet pre-positioning — and flagged which patterns (weekend/late-night premiums) the data does *not* support.
 
 **Project Link:** [View Ride Demand Project](./uber-trip-demand-analysis/)
 
