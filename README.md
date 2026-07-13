@@ -6,13 +6,6 @@ As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in transla
 
 ---
 
-## 🌐 Quick Links
-* **Portfolio Website:** [ansh-thakur.netlify.app](https://ansh-thakur.netlify.app/)
-* **LinkedIn:** [linkedin.com/in/ansh-thakur-5407192b4](https://www.linkedin.com/in/ansh-thakur-5407192b4/)
-* **GitHub Profile:** [github.com/ansht120](https://github.com/ansht120)
-
----
-
 ## 🛠️ Core Analytical Skills & Tools
 
 | Category | Technologies & Libraries | Key Methodologies |
