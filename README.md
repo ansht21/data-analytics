@@ -1,8 +1,32 @@
 # 📊 Data Analytics Portfolio: Turning Raw Data into Business Strategy
 
-Welcome to my Data Analytics Projects repository! This repository showcases end-to-end data lifecycle projects—ranging from automated ETL pipelines and SQL data warehousing to exploratory analysis and interactive executive dashboards. 
+**I answer business questions with data — including the ones where the answer is "don't do it."**
+
+Two end-to-end analytics projects covering **43,000 records**: a supply-chain P&L and
+fulfilment audit, and a ride-demand and pricing analysis. Every figure below is
+reproducible from the committed SQL and Python in this repository.
 
 As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in translating complex datasets into clean, reliable, and actionable business insights.
+
+![Executive Supply Chain Analytics Dashboard](supply-chain-performance-analysis/image/Supplychain_Dashboard_screenshot.png)
+
+---
+
+## 🎯 Business Questions I Answered
+
+If an interviewer asks one of these, the query and the number are already in this repo.
+
+| Business Question | Finding | Decision It Drives |
+|:--|:--|:--|
+| Half our orders are late — which warehouse is at fault? | **None.** Only **0.08%** of delivery-time variance is between warehouses; all six have 2.82–2.88 day spread. | Fix upstream scheduling, not a facility — a per-site project would fix nothing |
+| Isn't our biggest warehouse the worst offender? | **No — a volume illusion.** It causes 31.9% of late orders but handles 31.4% of all orders. | Always normalise counts by volume before ranking anything |
+| Are discounts eating our margin? Should we cap them? | **No.** Orders at 20%+ discount return **38.28%** margin — *higher* than the 5–10% band. | Don't cap discounts; you'd lose revenue protecting nothing |
+| When should a ride-hailing firm surge-price? | **5–7 PM carries 31.2% of demand** in 3 of 24 hours — and the surge *starts* at 5 PM, not 6 PM when volume peaks. | Launch driver incentives by 4:30 PM, an hour ahead of peak |
+| Do higher-rated drivers earn more per trip? | **No, and the obvious read is backwards.** Low-rated drivers show higher fares — but only because they drive longer trips. Fare-per-km is flat at ₹22.06–22.41. | Investigate long-trip rider experience; don't penalise drivers |
+| Can we focus on just our top revenue zones? | **No.** It takes **4 of 5 zones** to reach 80% of revenue. | Keep coverage city-wide — the 80/20 assumption fails here |
+
+**Six of these; four say "don't act."** Knowing where *not* to spend is the part that
+saves budget.
 
 ---
 
@@ -10,6 +34,35 @@ As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in transla
 * **Portfolio Website:** [ansh-thakur.netlify.app](https://ansh-thakur.netlify.app/)
 * **LinkedIn:** [linkedin.com/in/ansh-thakur-5407192b4](https://www.linkedin.com/in/ansh-thakur-5407192b4/)
 * **GitHub Profile:** [github.com/ansht120](https://github.com/ansht120)
+
+---
+
+## 📊 Featured Analytical Projects
+
+### 1. 📦 [Inventory & Logistics Performance Analytics](./supply-chain-performance-analysis/)
+*An end-to-end operational analytics project featuring a Python data cleaning pipeline, custom SQL metrics, and an automated, fully interactive 10-chart Excel dashboard.*
+* **Business Challenge:** Half of all orders miss the 5-day delivery target, with $41.0M of revenue exposed — and leadership needs to know whether to invest in a specific warehouse or the network.
+* **Tech Stack:** Python (Pandas, openpyxl), SQL (MySQL — CTEs, `STDDEV`, `LAG`, window functions), Microsoft Excel (VBA, Macros, Pivot Tables).
+* **Key Achievements:**
+  * **Disproved the obvious answer.** Ranking warehouses by late-order count blames the largest site; variance decomposition shows only **0.08%** of delivery-time variance is between warehouses. Prevented a misdirected improvement programme.
+  * Cleaned and processed raw transactional data, generating dynamic metrics like **Delivery Days**, **Order-to-Ship Days**, and **Profit Margins** ($82.7M gross revenue / $30.9M profit across 7,991 orders).
+  * Implemented an automated Excel workbook generator (`build_excel_dashboard.py`) using `openpyxl` with dynamic dropdown selectors, date-range inputs, and custom formula-driven pivot tables.
+  * Used **ABC Classification** to segment the 47-SKU catalogue by revenue contribution (A-items = 78.7% of revenue) — with an honest read that this catalogue shows only moderate, not textbook 80/20, concentration.
+  * Shipped a reproducible Python pipeline (`src/data_cleaning.py`, `src/analytics.py`, `src/build_excel_dashboard.py`) so every quoted figure regenerates from the raw data.
+
+### 2. 🚖 [Ride Demand Forecasting & Revenue Analytics](./uber-trip-demand-analysis/)
+*A comprehensive revenue and behavioral analysis of ride-sharing transactions using SQL data warehousing, Python visualization, and Excel dashboarding.*
+
+![Uber Trip Analysis Dashboard](uber-trip-demand-analysis/image/PowerBi_Dashboard.png)
+
+* **Business Challenge:** Identifying when to surge-price, where to position premium vehicles, and which fleet tier to grow across 35,000 trips.
+* **Tech Stack:** MySQL (window functions, CTEs, `LAG`, running totals), Python (Seaborn, Matplotlib), Advanced Excel, Power BI.
+* **Key Achievements:**
+  * Used `LAG()` to separate peak *volume* from peak *growth* — demand accelerates at **5 PM (+138%)**, an hour before the 6 PM volume peak, moving the incentive trigger an hour earlier.
+  * Caught a confounded metric: lower-rated drivers appear to earn more, but the effect vanishes once trip distance is controlled for (**fare-per-km flat at ₹22.06–22.41**).
+  * Quantified that **airport trips are 39.6% of volume but 54.8% of revenue** (₹535.77 vs ₹289.40 avg fare).
+  * Built a MySQL schema over 35,000 records with `ROW_NUMBER()` deduplication and null validation.
+  * Reported three **negative findings** (no weekend fare effect, no seasonality, no zone concentration) that removed unjustified recommendations from an earlier draft.
 
 ---
 
@@ -21,31 +74,7 @@ As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in transla
 | **Data Libraries** | Pandas, NumPy, Scikit-Learn, Matplotlib, Seaborn | Data Cleaning, Feature Engineering, Outlier Detection |
 | **BI & Visualization** | Power BI, Advanced Microsoft Excel (VBA, Power Query, Pivots) | Interactive Dashboard Design, Executive KPI Reporting |
 | **Development Workflow** | Jupyter Notebooks, Git & GitHub, PowerShell / Bash | Automation Scripting, ETL Pipeline Construction |
-
----
-
-## 📊 Featured Analytical Projects
-
-### 1. 📦 [Inventory & Logistics Performance Analytics](./supply-chain-performance-analysis/)
-*An end-to-end operational analytics project featuring a Python data cleaning pipeline, custom SQL metrics, and an automated, fully interactive 10-chart Excel dashboard.*
-* **Business Challenge:** Inefficient stock management leading to bloated holding costs and high supplier lead-time variability.
-* **Tech Stack:** Python (Pandas, openpyxl), SQL (MySQL), Microsoft Excel (VBA, Macros, Pivot Tables).
-* **Key Achievements:**
-  * Cleaned and processed raw transactional data, generating dynamic metrics like **Delivery Days**, **Order-to-Ship Days**, and **Profit Margins** ($82.6M total revenue / $30.8M total profit).
-  * Implemented an automated Excel workbook generator (`build_excel_dashboard.py`) using `openpyxl` with dynamic dropdown selectors, date-range inputs, and custom formula-driven pivot tables.
-  * Designed an executive **Summary** sheet containing KPI cards, performance grids, and narrative insights rating warehouse efficiency (identifying bottlenecks and safety stock recommendations).
-  * Used **ABC Classification** to segment the 47-SKU catalogue by revenue contribution (A-items = 78.7% of revenue) and recommend tiered stocking levels — with an honest read that this catalogue shows only moderate, not textbook 80/20, concentration.
-  * Shipped a reproducible Python pipeline (`src/data_cleaning.py`, `src/analytics.py`, `src/build_excel_dashboard.py`) so every quoted figure regenerates from the raw data.
-
-### 2. 🚖 [Ride Demand Forecasting & Revenue Analytics](./uber-trip-demand-analysis/)
-*A comprehensive revenue and behavioral analysis of ride-sharing transactions using SQL data warehousing, Python visualization, and Excel dashboarding.*
-* **Business Challenge:** Identifying key revenue drivers, peak operational demand windows, and efficiency improvements across different vehicle categories.
-* **Tech Stack:** MySQL (Window functions, CTEs), Python (Seaborn, Matplotlib), Advanced Excel.
-* **Key Achievements:**
-  * Built a MySQL database schema and handled 35,000 trip records, implementing robust deduplication using `ROW_NUMBER()` window functions and subqueries.
-  * Extracted trip characteristics (peak times, airport trip percentages, and weekend vs. weekday fare variations).
-  * Conducted vehicle-category analysis to measure revenue per ride and revenue-to-distance efficiency.
-  * Provided operational recommendations including 5-7 PM evening surge windows and localized premium vehicle allocation.
+| **SQL Techniques** | CTEs, `LAG()`, `RANK()`, `ROW_NUMBER()`, running `SUM() OVER`, `STDDEV_SAMP` | Cohort Banding, Pareto Analysis, Trend Detection |
 
 ---
 

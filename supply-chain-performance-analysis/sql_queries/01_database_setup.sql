@@ -90,4 +90,6 @@ IGNORE 1 ROWS
 );
 
 -- 5. Data Validation Check
+-- Expect 7,991 rows. If this returns fewer, the LOAD DATA step silently
+-- skipped malformed rows and every downstream KPI will be understated.
 SELECT COUNT(*) AS total_rows_imported FROM SupplyChainSales;
