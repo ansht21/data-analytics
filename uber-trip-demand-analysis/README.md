@@ -45,7 +45,7 @@ This project performs a comprehensive behavioral and financial analysis of a **s
 
 ## 🛠️ Tech Stack & Technical Architecture
 * **MySQL (Window Functions, CTEs, Aggregations):** Two-script SQL pipeline — a dedicated cleaning script followed by a layered business intelligence script covering 11 analytical dimensions, including `LAG()` trend detection and running-total Pareto analysis.
-* **Python (Pandas, Matplotlib, Seaborn):** EDA and visual storytelling in `UberTripAnalysis.ipynb`, including heatmaps, bar charts, and distribution plots.
+* **Python (Pandas, Matplotlib, Seaborn):** EDA and visual storytelling in the `UberTripAnalysis.ipynb` Google Colab notebook, including heatmaps, bar charts, and distribution plots.
 * **Microsoft Excel (Pivot Tables, Charts):** Summary dashboard for stakeholder-ready reporting covering peak hours, vehicle revenue, and location performance.
 * **Power BI:** Interactive `.pbix` dashboard for executive-level KPI monitoring.
 
@@ -77,7 +77,7 @@ Eleven layered analytical queries that build from portfolio-level KPIs down to g
 | **10. Zone Revenue Concentration** | *Can we focus on a few zones? (Pareto test)* | **Running `SUM() OVER`** |
 | **11. Rating Band vs Fare** | *Do better-rated drivers earn more?* | **`CASE WHEN` banding** |
 
-### 3. Visual EDA (`UberTripAnalysis.ipynb`)
+### 3. Visual EDA (`UberTripAnalysis.ipynb` in Google Colab)
 Python-driven exploration of cleaned trip data including:
 * **Heatmaps:** Hour × Day-of-Week demand matrix to visualize peak traffic windows.
 * **Vehicle Revenue Charts:** Side-by-side comparison of total and per-km revenue.

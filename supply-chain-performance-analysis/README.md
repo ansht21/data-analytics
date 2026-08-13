@@ -83,7 +83,7 @@ This project delivers a comprehensive, end-to-end data analytics solution design
 
 ## 🔄 End-to-End Pipeline Architecture
 
-### 1. Data Cleaning & Feature Engineering (`src/data_cleaning.py` · `Supplychain.ipynb`)
+### 1. Data Cleaning & Feature Engineering (`src/data_cleaning.py` · `Supplychain.ipynb` in Google Colab)
 The raw transactional log (`Supplychain_rawData.csv`) is ingested by `src/data_cleaning.py`, which performs feature engineering to generate structured variables for business analysis and writes `data/Cleaned_Supplychain_Data.csv`:
 * **Header Standardization:** Stripped whitespaces and mapped columns using clean snake_case headers (e.g., `Order_Quantity`, `Unit_Cost`, `Unit_Price`).
 * **Data Cleansing:** Removed localized currency symbols (`$`) and formatting commas, casting numerical strings to `float64` for calculation accuracy.
