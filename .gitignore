@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary
+*.tmp
+*.bak
+tempCodeRunnerFile.py
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Power BI source file (kept locally, not pushed)
+*.pbix
+*.pbit
+
+# PyPI configuration
+.pypirc
