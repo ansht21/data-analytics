@@ -6,8 +6,7 @@
 
 [![Profile](https://img.shields.io/badge/GitLab-Profile-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121)
 [![Portfolio](https://img.shields.io/badge/Portfolio-Live_Site-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://ansh-thakur.netlify.app/)
-[![Machine Learning](https://img.shields.io/badge/GitLab-Machine_Learning-FF6F00?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121/machine-learning-project)
-[![Full-Stack](https://img.shields.io/badge/GitLab-Full_Stack-6C8CFF?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121/college-full-stack-project)
+[![Data Science & ML](https://img.shields.io/badge/GitLab-Data_Science_%26_ML-FF6F00?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121/machine-learning-project)
 
 <br/>
 
@@ -140,7 +139,7 @@ data-analytics-projects/
 
 ## 📬 Contact & Collaboration
 
-I am actively seeking entry-level **Data Analyst**, **Business Intelligence Analyst**, or **Data Engineer** roles where I can help teams turn complex data into clean, business-boosting decisions. Beyond analytics, I also build [machine learning models](https://gitlab.com/ansht_121/machine-learning-project) and [full-stack applications](https://gitlab.com/ansht_121/college-full-stack-project).
+I am actively seeking entry-level **Data Analyst**, **Business Intelligence Analyst**, or **Data Engineer** roles where I can help teams turn complex data into clean, business-boosting decisions. Beyond analytics, I also build [data science & ML projects](https://gitlab.com/ansht_121/machine-learning-project).
 
 <div align="center">
 
