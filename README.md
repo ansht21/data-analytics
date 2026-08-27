@@ -1,7 +1,15 @@
 <div align="center">
 
 # 📊 Data Analytics Portfolio
-### Turning Raw Data into Business Strategy
+
+### Turning Raw Data into Business Strategy — Honest, Reproducible, Decision-Driving
+
+[![Profile](https://img.shields.io/badge/GitLab-Profile-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Live_Site-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://ansh-thakur.netlify.app/)
+[![Machine Learning](https://img.shields.io/badge/GitLab-Machine_Learning-FF6F00?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121/machine-learning-project)
+[![Full-Stack](https://img.shields.io/badge/GitLab-Full_Stack-6C8CFF?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121/college-full-stack-project)
+
+<br/>
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
@@ -132,10 +140,11 @@ data-analytics-projects/
 
 ## 📬 Contact & Collaboration
 
-I am actively seeking entry-level **Data Analyst**, **Business Intelligence Analyst**, or **Data Engineer** roles where I can help teams turn complex data into clean, business-boosting decisions.
+I am actively seeking entry-level **Data Analyst**, **Business Intelligence Analyst**, or **Data Engineer** roles where I can help teams turn complex data into clean, business-boosting decisions. Beyond analytics, I also build [machine learning models](https://gitlab.com/ansht_121/machine-learning-project) and [full-stack applications](https://gitlab.com/ansht_121/college-full-stack-project).
 
 <div align="center">
 
+[![Profile](https://img.shields.io/badge/GitLab-ansht__121-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121)
 [![Portfolio](https://img.shields.io/badge/Portfolio-ansh--thakur.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://ansh-thakur.netlify.app/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ansh-thakur-5407192b4/)
 [![Email](https://img.shields.io/badge/Email-ansht1194@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ansht1194@gmail.com)
