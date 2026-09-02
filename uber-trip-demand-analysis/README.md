@@ -12,6 +12,16 @@ to position premium vehicles, and *which* fleet tier to grow — using 35,000 tr
 
 ---
 
+## ▶ How to Run
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn statsmodels jupyter
+# 1. Run the SQL queries in order: 01_data_cleaning.sql → 02_revenue_analysis.sql
+# 2. Generate visuals: jupyter notebook Forecast_Clustering_Analysis.ipynb
+```
+All charts are saved to `image/` and cluster assignments to `outputs/demand_cluster_cells.csv` by the notebook itself. Power BI report: [`powerbi/UberTrip_Dashboard.pbix`](powerbi/UberTrip_Dashboard.pbix).
+
+---
+
 ## Business Questions Answered
 
 Every figure below is reproducible from the committed SQL. Click a query link to verify.
@@ -138,7 +148,7 @@ validated on a held-out Nov–Dec test window. The forecasting/clustering work l
 the fare model lives in [`UberTripAnalysis.ipynb`](./UberTripAnalysis.ipynb).
 
 
-### Daily Demand Forecasting (SARIMA)
+### 1 · Daily Demand Forecasting (SARIMA)
 * Weekly-seasonal SARIMA(1,1,1)(1,0,1,7) trained on Jan–Oct, validated on a held-out Nov–Dec test window.
 * **Held-out results: MAE 7.6 · RMSE 9.6 · MAPE 8.3%** — a **~20% error reduction vs the seasonal-naive baseline (MAE 9.5)**.
 * Refit on all data to produce a 14-day operational forecast with 95% confidence intervals.
@@ -146,7 +156,7 @@ the fare model lives in [`UberTripAnalysis.ipynb`](./UberTripAnalysis.ipynb).
 
 ![Held-out forecast](image/forecast_daily_demand.png)
 
-### Demand Clustering (K-Means, silhouette-validated)
+### 2 · Demand Clustering (K-Means, silhouette-validated)
 * Each **zone × hour cell** (5 zones × 24 hours) profiled on volume, fare, distance and duration; k selected by silhouette score (k=2, silhouette **0.675**).
 * **Cluster 0 — long-haul premium cells (24 cells):** avg fare **₹507**, avg distance **24.9 km** — align with airport/premium dispatch.
 * **Cluster 1 — high-volume short-trip cells (96 cells):** avg fare **₹331**, avg distance **15.6 km** — the volume backbone for standard fleet positioning.
