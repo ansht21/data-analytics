@@ -1,4 +1,4 @@
-# 📦 Supply Chain Performance & Inventory Optimization Dashboard
+# Supply Chain Performance & Inventory Optimization Dashboard
 
 **Business problem:** Half of all orders arrive late and $41M of revenue is exposed.
 Is that one bad warehouse, or the whole network? 7,991 orders, 2018–2020.
@@ -6,7 +6,7 @@ Is that one bad warehouse, or the whole network? 7,991 orders, 2018–2020.
 ![Executive Supply Chain Analytics Dashboard](image/Supplychain_Dashboard_screenshot.png)
 *Six warehouses, near-identical delivery curves. The "Avg Delivery Days by Timeline" panel stays flat at ~5.5 days for three straight years — the lateness never improves and never varies by site.*
 
-> 📐 **Reading the KPI cards:** the dashboard shows **$73.04M net revenue** (after
+> **Reading the KPI cards:** the dashboard shows **$73.04M net revenue** (after
 > discounts) while this README quotes **$82.69M gross** (`Order_Quantity × Unit_Price`,
 > as defined in `src/data_cleaning.py`). Both are correct — they are different measures,
 > and the $9.66M gap is exactly the discount given. The dashboard's on-time card uses a
@@ -14,7 +14,7 @@ Is that one bad warehouse, or the whole network? 7,991 orders, 2018–2020.
 
 ---
 
-## 🎯 Business Questions Answered
+## Business Questions Answered
 
 Every figure is reproducible: run `python src/analytics.py`, or click through to the SQL.
 
@@ -35,7 +35,7 @@ launching a warehouse improvement project that would have fixed nothing.
 
 ---
 
-## 🔍 The Analysis I'm Most Proud Of
+## The Analysis I'm Most Proud Of
 
 The brief was *"find the warehouse causing our delivery problem."* The obvious approach —
 rank sites by late-order count — points straight at **NMK1003 (31.9% of all late orders)**.
@@ -55,17 +55,17 @@ volume-normalised share side by side, so this trap is visible rather than hidden
 
 ---
 
-## 🎯 Business Purpose & Impact
+## Business Purpose & Impact
 > **Why I built this:** Companies don't hire analysts to make charts — they hire people who can answer *"where are we making or losing money, and what should we do about it?"* This project proves I can take **7,991 raw order records ($82.7M revenue)** and turn them into **profit-and-loss decisions**.
 
-> 💡 **My edge — I read the data critically, not just optimistically.** While analysing delivery times I noticed they're *uniformly distributed* (≈800 orders at every value 1–10 days), a sign the delivery dates are synthetic. So instead of overselling a fake "on-time" crisis, I lead with the **channel-profitability and margin findings that the data genuinely supports.** Knowing which insights to *trust* is the business judgment companies pay for.
+> **My edge — I read the data critically, not just optimistically.** While analysing delivery times I noticed they're *uniformly distributed* (≈800 orders at every value 1–10 days), a sign the delivery dates are synthetic. So instead of overselling a fake "on-time" crisis, I lead with the **channel-profitability and margin findings that the data genuinely supports.** Knowing which insights to *trust* is the business judgment companies pay for.
 
 ---
 
-## 📖 Project Overview
+## Project Overview
 This project delivers a comprehensive, end-to-end data analytics solution designed to optimize warehouse inventory, streamline order fulfillment, and boost profit margins. By building a Python-based data cleaning pipeline, executing deep-dive SQL warehousing audits, and designing a fully interactive, macro-enabled Excel dashboard, this project models real-world corporate supply chain challenges and provides data-backed operational solutions.
 
-### 🌟 Business Impact Highlights
+### Business Impact Highlights
 *All figures are reproducible — run `python src/analytics.py` to regenerate `outputs/kpi_summary.json`.*
 * **Revenue Analyzed:** **$82.69 Million** gross transactional revenue.
 * **Profit Analyzed:** **$30.87 Million** net profitability with a healthy **37.4% average margin**.
@@ -74,39 +74,39 @@ This project delivers a comprehensive, end-to-end data analytics solution design
 
 ---
 
-## 🛠️ Tech Stack & Technical Architecture
+## Tech Stack & Technical Architecture
 * **Python (Pandas, NumPy, openpyxl, Matplotlib, Seaborn):** Raw data engineering, data cleaning, date parsing, calculated metric formulation, and automated Excel dashboard styling.
 * **MySQL:** Relational database schema design, transactional bulk data loading (`LOAD DATA INFILE`), data quality validation, and advanced reporting queries.
 * **Microsoft Excel (VBA/Macros, Advanced Formulas):** Interactive workbook design, dynamic slicing, custom `SUMIFS`/`COUNTIFS` aggregate reporting, and conditional alerts.
 
 ---
 
-## 🔄 End-to-End Pipeline Architecture
+## End-to-End Pipeline Architecture
 
 ### 1. Data Cleaning & Feature Engineering (`src/data_cleaning.py` · `Supplychain.ipynb`)
 The raw transactional log (`Supplychain_rawData.csv`) is ingested by `src/data_cleaning.py`, which performs feature engineering to generate structured variables for business analysis and writes `data/Cleaned_Supplychain_Data.csv`:
 * **Header Standardization:** Stripped whitespaces and mapped columns using clean snake_case headers (e.g., `Order_Quantity`, `Unit_Cost`, `Unit_Price`).
 * **Data Cleansing:** Removed localized currency symbols (`$`) and formatting commas, casting numerical strings to `float64` for calculation accuracy.
 * **Fulfillment Metrics:**
-  * `delivery_days` = `DeliveryDate - ShipDate` *(Avg: 5.5 days; Min: 1 day; Max: 10 days)*.
-  * `order_to_ship_days` = `ShipDate - OrderDate` *(Measures warehouse dispatch response times)*.
-  * `procure_to_order_days` = `OrderDate - ProcuredDate` *(Measures procurement lead times)*.
+ * `delivery_days` = `DeliveryDate - ShipDate` *(Avg: 5.5 days; Min: 1 day; Max: 10 days)*.
+ * `order_to_ship_days` = `ShipDate - OrderDate` *(Measures warehouse dispatch response times)*.
+ * `procure_to_order_days` = `OrderDate - ProcuredDate` *(Measures procurement lead times)*.
 * **Financial Formulas:**
-  * `revenue` = `Order_Quantity * Unit_Price`
-  * `total_cost` = `Order_Quantity * Unit_Cost`
-  * `profit` = `revenue - total_cost`
+ * `revenue` = `Order_Quantity * Unit_Price`
+ * `total_cost` = `Order_Quantity * Unit_Cost`
+ * `profit` = `revenue - total_cost`
 
 ### 2. Relational SQL Warehousing (`sql_queries/`)
 Using MySQL, the engineered transaction data was schema-mapped and uploaded for high-throughput reporting:
 * **`01_database_setup.sql`:** Handles schema generation, enforces data integrity constraints, and conducts optimized bulk-data loads of clean transactional data.
 * **`02_sales_analysis.sql`:** Eight aggregated reports, of which sections 6–8 use CTEs and window functions:
-  * **Data Quality Audit:** Measures and reports null dates across the workflow.
-  * **Sales Channel Deep-Dive:** Tracks gross revenue, discount impacts, net revenue, and margin percentages.
-  * **Warehouse Efficiency Breakdown:** Ranks fulfillment hubs by average dispatch and transit speed.
-  * **Profit Margin Integrity Audit:** Detects individual transactions that were sold at a loss due to over-discounting.
-  * **Warehouse Reliability Decomposition** *(CTE + `STDDEV_SAMP` + window share)*: separates "slow" from "large" by comparing each site's share of late orders against its share of total orders.
-  * **Margin Trend Detection** *(`LAG()`)*: flags month-over-month margin swings beyond ±1.5pp.
-  * **Discount Band Impact** *(`CASE WHEN` + window share)*: tests whether deeper discounts actually cost margin.
+ * **Data Quality Audit:** Measures and reports null dates across the workflow.
+ * **Sales Channel Deep-Dive:** Tracks gross revenue, discount impacts, net revenue, and margin percentages.
+ * **Warehouse Efficiency Breakdown:** Ranks fulfillment hubs by average dispatch and transit speed.
+ * **Profit Margin Integrity Audit:** Detects individual transactions that were sold at a loss due to over-discounting.
+ * **Warehouse Reliability Decomposition** *(CTE + `STDDEV_SAMP` + window share)*: separates "slow" from "large" by comparing each site's share of late orders against its share of total orders.
+ * **Margin Trend Detection** *(`LAG()`)*: flags month-over-month margin swings beyond ±1.5pp.
+ * **Discount Band Impact** *(`CASE WHEN` + window share)*: tests whether deeper discounts actually cost margin.
 
 ### 3. Interactive Excel Dashboard (`src/build_excel_dashboard.py` → `excel_analysis/`)
 `src/build_excel_dashboard.py` reads the cleaned data and generates a styled,
@@ -124,18 +124,18 @@ A Power BI report built on the cleaned CSV, with DAX measures and a 3-page layou
 
 ---
 
-## ▶️ How to Run
+## ▶ How to Run
 
 ```bash
 pip install -r requirements.txt
-python src/data_cleaning.py        # -> data/Cleaned_Supplychain_Data.csv
-python src/analytics.py            # -> outputs/kpi_summary.json, abc_classification.csv, warehouse_performance.csv
+python src/data_cleaning.py # -> data/Cleaned_Supplychain_Data.csv
+python src/analytics.py # -> outputs/kpi_summary.json, abc_classification.csv, warehouse_performance.csv
 python src/build_excel_dashboard.py # -> excel_analysis/Supplychain_Dashboard.xlsx
 ```
 
 ---
 
-## 📊 Core Analytical Insights
+## Core Analytical Insights
 *Generated by `src/analytics.py`; see `outputs/` for the raw tables.*
 
 ![Correlation Matrix](image/Supplychain_Heatmap.png)
@@ -167,7 +167,7 @@ Classifying the **47 distinct products** by cumulative revenue contribution show
 
 ---
 
-## 💡 Business Recommendations
+## Business Recommendations
 
 1. **Attack the systemic delivery gap, not a single hub.** With only 0.08% of delivery-time variance sitting between warehouses, a per-site improvement project would fix nothing. The fix is a network-wide carrier/SLA and scheduling review. **$41.0M of revenue rides on late orders** — this is the largest lever in the dataset.
 2. **Do not rank warehouses by late-order count.** NMK1003 tops that list purely because it handles 31.4% of volume. Normalise by order count before any site is held accountable.

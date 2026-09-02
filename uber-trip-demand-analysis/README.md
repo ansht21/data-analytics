@@ -1,4 +1,4 @@
-# 🚖 Ride Demand Forecasting & Revenue Analytics
+# Ride Demand Forecasting & Revenue Analytics
 
 **Business problem:** A ride-hailing operator needs to know *when* to surge-price, *where*
 to position premium vehicles, and *which* fleet tier to grow — using 35,000 trip records.
@@ -6,13 +6,13 @@ to position premium vehicles, and *which* fleet tier to grow — using 35,000 tr
 ![Uber Trip Analysis Dashboard](image/PowerBi_Dashboard.png)
 *Demand is not spread evenly across the day — a single evening spike drives the business. The hourly bars show ~350 trips at 3 AM against 4,053 at 6 PM.*
 
-> ℹ️ *Data note: this is a simulated dataset (uniform monthly volume, 5 pickup zones).
+> ℹ *Data note: this is a simulated dataset (uniform monthly volume, 5 pickup zones).
 > The workflow and analytical techniques are the deliverable, not real Uber metrics.
 > Fares are in ₹ (INR) — the dataset uses Indian payment methods including UPI.*
 
 ---
 
-## 🎯 Business Questions Answered
+## Business Questions Answered
 
 Every figure below is reproducible from the committed SQL. Click a query link to verify.
 
@@ -32,10 +32,10 @@ act — which prevents wasted spend. Reporting them is part of the job.
 
 ---
 
-## 📖 Project Overview
+## Project Overview
 This project performs a comprehensive behavioral and financial analysis of a **synthetic ride-sharing transaction dataset** (35,000 trips, generated for portfolio demonstration). Using a two-stage SQL data cleaning pipeline, multi-dimensional MySQL reporting queries, and Excel pivot dashboards, the project uncovers peak demand windows, identifies high-revenue vehicle categories, and produces actionable pricing and allocation recommendations.
 
-### 🌟 Business Impact Highlights
+### Business Impact Highlights
 * **Full Pipeline Coverage:** Built a `ROW_NUMBER()` + `DISTINCT` deduplication safeguard (the source data was already clean, so it removed 0 rows — the value is a reusable, production-style integrity step).
 * **Revenue Deep-Dive:** Analyzed fare amounts, distances, and durations across **vehicle types, pickup zones, time periods, and weekend/weekday segments**.
 * **Airport Insights:** Quantified airport trip share and its premium fare contribution relative to standard bookings.
@@ -43,7 +43,7 @@ This project performs a comprehensive behavioral and financial analysis of a **s
 
 ---
 
-## 🛠️ Tech Stack & Technical Architecture
+## Tech Stack & Technical Architecture
 * **MySQL (Window Functions, CTEs, Aggregations):** Two-script SQL pipeline — a dedicated cleaning script followed by a layered business intelligence script covering 11 analytical dimensions, including `LAG()` trend detection and running-total Pareto analysis.
 * **Python (Pandas, Matplotlib, Seaborn):** EDA and visual storytelling in `UberTripAnalysis.ipynb`, including heatmaps, bar charts, and distribution plots.
 * **Microsoft Excel (Pivot Tables, Charts):** Summary dashboard for stakeholder-ready reporting covering peak hours, vehicle revenue, and location performance.
@@ -51,7 +51,7 @@ This project performs a comprehensive behavioral and financial analysis of a **s
 
 ---
 
-## 🔄 End-to-End Pipeline Architecture
+## End-to-End Pipeline Architecture
 
 ### 1. Data Cleaning & Deduplication (`sql_queries/01_data_cleaning.sql`)
 The raw CSV is loaded into a MySQL staging table and processed through a **two-stage deduplication pipeline**:
@@ -86,7 +86,7 @@ Python-driven exploration of cleaned trip data including:
 
 ---
 
-## 📊 Core Analytical Insights
+## Core Analytical Insights
 
 ![Correlation Heatmap](image/Ubertrip_heatmap.png)
 *The correlation matrix independently confirms Q4: driver rating correlates **-0.13** with trip distance and only **-0.09** with fare. Longer trips rate worse — the rating gap is about trip length, not driver quality.*
@@ -117,7 +117,7 @@ lowest band) attract worse ratings.
 
 ---
 
-## 💡 Business Recommendations
+## Business Recommendations
 
 1. **Demand-Based Surge Pricing:** Focus fare multipliers on the **5–7 PM evening peak**, where trip volume is genuinely highest — this is the strongest, data-backed lever. Launch incentives by **4:30 PM**, since growth accelerates an hour before volume peaks.
 2. **Airport Fleet Allocation:** With airport trips earning ~1.85× the average fare and contributing 54.8% of revenue, pre-position premium/SUV drivers for airport demand.
@@ -129,7 +129,7 @@ lowest band) attract worse ratings.
 
 ---
 
-## 🔮 v2 — Forecasting & Clustering (`Forecast_Clustering_Analysis.ipynb`)
+## v2 — Forecasting & Clustering (`Forecast_Clustering_Analysis.ipynb`)
 
 The descriptive analysis above answers *what happened*; the v2 notebook adds **predictive and unsupervised modeling** on the same 35,000-trip dataset.
 

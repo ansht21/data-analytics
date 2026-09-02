@@ -1,4 +1,4 @@
-# 📊 Power BI Dashboard — Supply Chain Performance
+# Power BI Dashboard — Supply Chain Performance
 
 This folder holds the Power BI assets for the supply chain project. The model is
 built directly on `data/Cleaned_Supplychain_Data.csv` (produced by
@@ -14,17 +14,17 @@ built directly on `data/Cleaned_Supplychain_Data.csv` (produced by
 ## DAX measures
 
 ```dax
-Total Revenue   = SUM ( Supplychain[revenue] )
-Total Profit    = SUM ( Supplychain[profit] )
+Total Revenue = SUM ( Supplychain[revenue] )
+Total Profit = SUM ( Supplychain[profit] )
 Profit Margin % = DIVIDE ( [Total Profit], [Total Revenue] )
-Order Count     = COUNTROWS ( Supplychain )
+Order Count = COUNTROWS ( Supplychain )
 Avg Delivery Days = AVERAGE ( Supplychain[delivery_days] )
-On-Time Rate %  =
-    DIVIDE (
-        CALCULATE ( [Order Count], Supplychain[on_time] = TRUE () ),
-        [Order Count]
-    )
-Late Orders     = CALCULATE ( [Order Count], Supplychain[on_time] = FALSE () )
+On-Time Rate % =
+ DIVIDE (
+ CALCULATE ( [Order Count], Supplychain[on_time] = TRUE () ),
+ [Order Count]
+ )
+Late Orders = CALCULATE ( [Order Count], Supplychain[on_time] = FALSE () )
 ```
 
 ## Suggested report layout
