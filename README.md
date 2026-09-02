@@ -29,7 +29,7 @@ As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in transla
 | Project | Scale | Stack | Headline Result |
 |---------|-------|-------|-----------------|
 | **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel VBA | $82.7M revenue / $30.9M profit analysed; late delivery proven systemic, not warehouse-specific |
-| **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue |
+| **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue; Random Forest fare model R² 0.972 |
 
 ---
 
@@ -93,7 +93,8 @@ saves budget.
  * Quantified that **airport trips are 39.6% of volume but 54.8% of revenue** (₹535.77 vs ₹289.40 avg fare).
  * Built a MySQL schema over 35,000 records with `ROW_NUMBER()` deduplication and null validation.
  * Conducted vehicle-category analysis measuring revenue per ride and revenue-to-distance efficiency (Uber Black ₹40.06/km vs Uber Pool ₹14.08/km).
- * Reported three **negative findings** (no weekend fare effect, no seasonality, no zone concentration) that removed unjustified recommendations from an earlier draft.
+  * Reported three **negative findings** (no weekend fare effect, no seasonality, no zone concentration) that removed unjustified recommendations from an earlier draft.
+ * **Predictive extension:** SARIMA demand forecast (MAPE 8.3%, 20% better than baseline), K-Means demand clustering (silhouette 0.675), and a Random Forest fare predictor (R² 0.972 — explains 97% of fare variance).
 
 ---
 

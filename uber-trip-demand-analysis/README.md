@@ -129,9 +129,14 @@ lowest band) attract worse ratings.
 
 ---
 
-## v2 — Forecasting & Clustering (`Forecast_Clustering_Analysis.ipynb`)
+## Predictive & Unsupervised Modeling
+This layer turns the descriptive questions above into forward-looking levers —
+**demand forecasting** (SARIMA), **demand clustering** (K-Means), and a **fare
+prediction** model (Random Forest), all built on the same 35,000-trip dataset and
+validated on a held-out Nov–Dec test window. The forecasting/clustering work lives in
+[`Forecast_Clustering_Analysis.ipynb`](./Forecast_Clustering_Analysis.ipynb);
+the fare model lives in [`UberTripAnalysis.ipynb`](./UberTripAnalysis.ipynb).
 
-The descriptive analysis above answers *what happened*; the v2 notebook adds **predictive and unsupervised modeling** on the same 35,000-trip dataset.
 
 ### Daily Demand Forecasting (SARIMA)
 * Weekly-seasonal SARIMA(1,1,1)(1,0,1,7) trained on Jan–Oct, validated on a held-out Nov–Dec test window.
@@ -149,3 +154,13 @@ The descriptive analysis above answers *what happened*; the v2 notebook adds **p
 ![Cluster profiles](image/clustering_profiles.png)
 
 *Cell-level assignments exported to [`outputs/demand_cluster_cells.csv`](outputs/demand_cluster_cells.csv). Reproducible: fixed random_state, deterministic split, all metrics computed on held-out data.*
+
+### 3 · Route-Level Fare Prediction (Random Forest)
+
+* **Goal:** price fairness & surge calibration are only useful if you can predict the fare you *should* get for a trip. This model recovers trip fare from the trip-level features (distance, duration, hour, vehicle, zone) so the gap between expected and *charged* fare becomes an operational lever.
+* **Model:** `RandomForestRegressor`, deterministic `random_state`, trained on Jan–Oct with a held-out Nov–Dec test window (no leakage).
+* **Held-out performance:**
+  * **R² = 0.972** — the model explains **97% of fare variance**
+  * **RMSE = ₹37.4** against an average fare of ~₹289 — prediction error is ~13% of a typical trip
+* **Why it matters:** with a fair "expected fare" in hand, every observed discount, surge multiplier, or route deviation becomes directly attributable to policy rather than trip mix. The clusters above (premium long-haul vs volume short-haul) now have a per-trip revenue anchor, so the two analyses compound.
+* **Limitation flag:** like the SARIMA model, the fare model is built on a single 2024 year — seasonal fare swings are learned from the weekly/weekend patterns that *are* present, not from a recurring annual cycle.
