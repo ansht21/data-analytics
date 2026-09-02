@@ -174,3 +174,21 @@ Classifying the **47 distinct products** by cumulative revenue contribution show
 3. **Tier replenishment by the A/B/C split.** The 35 A-items drive ~79% of revenue — prioritise their stock availability; review the 4 C-items for JIT ordering to trim holding cost.
 4. **Do not impose a blanket discount cap.** Orders at 20%+ discount return a *higher* margin (38.28%) than mid-band ones. A cap would suppress revenue while protecting a margin that was never at risk. Monitor instead of restricting.
 5. **Investigate the 2020 growth stall.** Revenue flattened to +1.0% year-over-year while margin held. The profitability story is healthy; the growth story is not, and only one of those was in the original brief.
+
+---
+
+## 🤖 v2 — Late Delivery Risk Classification (`LateDelivery_Classification.ipynb`)
+
+Can we flag likely-late orders **at booking time**? Logistic Regression vs Random Forest, with
+**leakage-safe features** (all post-shipment fields excluded) and a stratified 80/20 hold-out.
+
+![Classification diagnostics](image/classification_cm_roc.png)
+
+**The result is a null result — and it matters.** Both models land at the coin-flip baseline
+(LogReg ROC-AUC **0.508**, RF **0.504** vs 0.50): late delivery behaves like independent noise
+around the systemic mean, unpredictable from anything known when the order is placed. Combined
+with Q2's 0.08% variance finding, **no order-targeting or per-site intervention can work — only
+a process-level fix upstream can move the on-time rate.** The model stops the business from
+funding an early-warning system the data says cannot exist.
+
+*Full metrics in [`outputs/classification_metrics.csv`](outputs/classification_metrics.csv); feature importances in [`image/classification_interpretation.png`](image/classification_interpretation.png). Reproducible: stratified split with fixed random_state, every metric computed on the untouched hold-out set.*
