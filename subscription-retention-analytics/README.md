@@ -1,18 +1,18 @@
-# Customer Churn Analysis — Subscription Retention Analytics
+# Subscription Retention Analytics — Customer Churn Risk & Revenue-at-Risk Intelligence
 
 **Business problem:** A subscription business (real-world telco data, 7,043 customers) is
 losing ~26% of customers. Which customers leave, why, and what does the revenue at risk
 look like?
 
 > Data note: real-world dataset (IBM Telco customer-churn sample). Every figure below is
-> reproducible from the committed notebook and dataset.
+> reproducible from the committed notebooks, SQL scripts, and dataset.
 
 ---
 
 ## Repository Structure
 
 ```
-customer-churn-prediction/
+subscription-retention-analytics/
 ├── Churn_EDA_Analysis.ipynb        # cleaning, KPI baseline, segment analysis, statistics
 ├── Churn_Prediction_Analysis.ipynb # classification: LogReg + Random Forest (engineered features)
 ├── sql_queries/                    # 01_data_cleaning.sql + 02_churn_analysis.sql
