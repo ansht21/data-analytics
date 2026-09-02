@@ -45,7 +45,7 @@ This project performs a comprehensive behavioral and financial analysis of a **s
 
 ## 🛠️ Tech Stack & Technical Architecture
 * **MySQL (Window Functions, CTEs, Aggregations):** Two-script SQL pipeline — a dedicated cleaning script followed by a layered business intelligence script covering 11 analytical dimensions, including `LAG()` trend detection and running-total Pareto analysis.
-* **Python (Pandas, Matplotlib, Seaborn):** EDA and visual storytelling in the `UberTripAnalysis.ipynb` Google Colab notebook, including heatmaps, bar charts, and distribution plots.
+* **Python (Pandas, Matplotlib, Seaborn):** EDA and visual storytelling in `UberTripAnalysis.ipynb`, including heatmaps, bar charts, and distribution plots.
 * **Microsoft Excel (Pivot Tables, Charts):** Summary dashboard for stakeholder-ready reporting covering peak hours, vehicle revenue, and location performance.
 * **Power BI:** Interactive `.pbix` dashboard for executive-level KPI monitoring.
 
@@ -77,7 +77,7 @@ Eleven layered analytical queries that build from portfolio-level KPIs down to g
 | **10. Zone Revenue Concentration** | *Can we focus on a few zones? (Pareto test)* | **Running `SUM() OVER`** |
 | **11. Rating Band vs Fare** | *Do better-rated drivers earn more?* | **`CASE WHEN` banding** |
 
-### 3. Visual EDA (`UberTripAnalysis.ipynb` in Google Colab)
+### 3. Visual EDA (`UberTripAnalysis.ipynb`)
 Python-driven exploration of cleaned trip data including:
 * **Heatmaps:** Hour × Day-of-Week demand matrix to visualize peak traffic windows.
 * **Vehicle Revenue Charts:** Side-by-side comparison of total and per-km revenue.
@@ -126,3 +126,26 @@ lowest band) attract worse ratings.
 5. **Maintain City-Wide Coverage:** With 4 of 5 zones needed to reach 80% of revenue, do not concentrate supply in a handful of areas.
 
 > *Note: an earlier draft recommended a weekend surcharge and late-night surge — the data shows neither effect is real here, so those were removed. Knowing which recommendations the data does **not** support is part of the analysis.*
+
+---
+
+## 🔮 v2 — Forecasting & Clustering (`Forecast_Clustering_Analysis.ipynb`)
+
+The descriptive analysis above answers *what happened*; the v2 notebook adds **predictive and unsupervised modeling** on the same 35,000-trip dataset.
+
+### Daily Demand Forecasting (SARIMA)
+* Weekly-seasonal SARIMA(1,1,1)(1,0,1,7) trained on Jan–Oct, validated on a held-out Nov–Dec test window.
+* **Held-out results: MAE 7.6 · RMSE 9.6 · MAPE 8.3%** — a **~20% error reduction vs the seasonal-naive baseline (MAE 9.5)**.
+* Refit on all data to produce a 14-day operational forecast with 95% confidence intervals.
+* **Residual diagnostics:** residual mean −1.57 (≈unbiased); **Ljung-Box p = 0.54 (lag 7) / 0.86 (lag 14)** → no leftover autocorrelation; ACF + Q-Q plots in [`image/forecast_residuals.png`](image/forecast_residuals.png). The model captures the available structure — not just a good score on one metric.
+
+![Held-out forecast](image/forecast_daily_demand.png)
+
+### Demand Clustering (K-Means, silhouette-validated)
+* Each **zone × hour cell** (5 zones × 24 hours) profiled on volume, fare, distance and duration; k selected by silhouette score (k=2, silhouette **0.675**).
+* **Cluster 0 — long-haul premium cells (24 cells):** avg fare **₹507**, avg distance **24.9 km** — align with airport/premium dispatch.
+* **Cluster 1 — high-volume short-trip cells (96 cells):** avg fare **₹331**, avg distance **15.6 km** — the volume backbone for standard fleet positioning.
+
+![Cluster profiles](image/clustering_profiles.png)
+
+*Cell-level assignments exported to [`outputs/demand_cluster_cells.csv`](outputs/demand_cluster_cells.csv). Reproducible: fixed random_state, deterministic split, all metrics computed on held-out data.*
