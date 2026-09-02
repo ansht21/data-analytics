@@ -1,0 +1,10 @@
+Contract,InternetService,customers,churn_rate,monthly_rev_at_risk
+Month-to-month,Fiber optic,2128,0.546,100482.0
+Month-to-month,DSL,1223,0.322,18367.25
+One year,Fiber optic,539,0.193,10571.95
+One year,DSL,570,0.093,3356.25
+Two year,Fiber optic,429,0.072,3246.1
+Month-to-month,No,524,0.189,1997.85
+Two year,DSL,623,0.019,805.7
+One year,No,363,0.025,190.25
+Two year,No,633,0.008,113.5
