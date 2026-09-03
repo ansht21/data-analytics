@@ -45,8 +45,10 @@ answer / action comment block (same style as the Uber and supply-chain repos).
 
 ## Excel Dashboard (`excel_analysis/Churn_Dashboard.xlsx`)
 
+![Churn Dashboard](./image/Churn_Dashboard_screenshot.png)
+
 **Interactive native Excel workbook** (regenerate with `python src/build_churn_dashboard.py`):
-- **Dashboard** sheet - executive KPI cards and four native Excel charts covering contract, tenure, internet service, and revenue-at-risk segments
+- **Dashboard** sheet - navy executive header, left-side Filters panel (Category / Supplier / Delivery Status / Warehouse Code), 5 colour-coded KPI cards, and six native Excel charts in a 3x2 grid covering contract, tenure, internet service, payment method, revenue-at-risk segments, and tenure trend
 - **Customer_Detail** sheet - an autofiltered Excel table with customer-level filters for contract, internet service, payment method, tenure, charges, and churn
 - **ChartData** sheet - visible, chart-ready pivot tables for auditability
 

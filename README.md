@@ -30,7 +30,7 @@ As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in transla
 |---------|-------|-------|-----------------|
 | **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel | $73.0M net revenue / $21.2M profit analysed; late delivery proven systemic, not warehouse-specific |
 | **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue; Random Forest fare model R² 0.972 |
-| **Subscription Retention** | 7,032 customers | Python · SQL · Excel · Scikit-learn | 26.6% churn; contract, tenure, service, and payment method identify retention risk and revenue at risk |
+| **Subscription Retention** | 7,032 customers | Python · SQL · Excel · Scikit-learn | 26.6% churn; month-to-month + fiber = 72% of revenue at risk; LogReg AUC 0.839 |
 
 ---
 
@@ -97,6 +97,20 @@ saves budget.
   * Reported three **negative findings** (no weekend fare effect, no seasonality, no zone concentration) that removed unjustified recommendations from an earlier draft.
  * **Predictive extension:** SARIMA demand forecast (MAPE 8.3%, 20% better than baseline), K-Means demand clustering (silhouette 0.675), and a Random Forest fare predictor (R² 0.972 — explains 97% of fare variance).
 
+### 3. [Subscription Retention Analytics](./subscription-retention-analytics/)
+
+![Churn Dashboard](./subscription-retention-analytics/image/Churn_Dashboard_screenshot.png)
+
+*End-to-end churn risk and revenue-at-risk analysis on 7,032 customers, delivered through a custom Python pipeline, SQL cohort analysis, an interactive Excel dashboard, and two classification models.*
+* **Business Challenge:** A subscription business is losing ~26% of customers. Which customers leave, when, why, and what revenue is exposed — so retention spend can be prioritised by dollars saved, not by gut feel.
+* **Tech Stack:** Python (Pandas, Scikit-Learn, Seaborn, openpyxl), SQL (MySQL — `LAG`, `RANK`, `STDDEV_SAMP`, CTEs), Microsoft Excel (native charts, filterable table), Jupyter.
+* **Key Achievements:**
+  * Built a 5-KPI, 6-chart executive Excel dashboard with a left-side Filters panel matching the supply-chain reference style — native, filterable, formula-driven from the ChartData sheet.
+  * Identified **Month-to-month contracts churn at 42.7%** versus near-zero on two-year plans (chi-square = 1179.5, Cramér's V 0.41) and quantified that **month-to-month + fiber-optic = 72% of revenue at risk**.
+  * Caught a confounder: fiber-optic customers churn more, but a large part of the effect is the contract mix, not the service itself — the dashboard splits the two.
+  * LogReg AUC 0.839 and Random Forest AUC 0.837 on a held-out set; engineered features (`charge_ratio`, `tenure_x_monthly`, `monthly_above_avg`) raised AUC from 0.833 to 0.839 with no leakage, model drivers confirmed the EDA in three independent ways.
+  * Reported three **negative findings** (senior citizen flag not material, partner/dependents effect only via tenure, paperless billing not independent of payment method) that kept the recommendations honest.
+
 ---
 
 ## Repository Architecture
@@ -128,12 +142,12 @@ data-analytics-projects/
 │ └── README.md # Complete project brief and recommendations
 │
 ├── subscription-retention-analytics/ # Customer churn risk and retention analysis
-│ ├── src/ # Excel dashboard generator
+│ ├── src/ # Excel dashboard + screenshot generators
 │ ├── data/ # IBM Telco churn dataset
 │ ├── outputs/ # Segment and model metrics
 │ ├── excel_analysis/ # Native Excel dashboard
 │ ├── sql_queries/ # MySQL cleaning and churn analysis
-│ ├── image/ # EDA and model visuals
+│ ├── image/ # EDA, model and dashboard visuals
 │ ├── requirements.txt # Python dependencies
 │ └── README.md # Detailed retention analysis
 │

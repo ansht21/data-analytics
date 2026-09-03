@@ -139,6 +139,17 @@ python src/build_excel_dashboard.py # -> excel_analysis/Supplychain_Dashboard.xl
 ![Correlation Matrix](image/Supplychain_Heatmap.png)
 *Two findings confirmed independently of the SQL. `Discount_Applied` vs `profit` is **+0.018** — discounting has no measurable margin cost (Q4). And `delivery_days` correlates **0.0003** with revenue: late deliveries are unrelated to order value, so lateness is not concentrated in big orders.*
 
+### Per-chart visuals
+The full Excel dashboard sits in `excel_analysis/Supplychain_Dashboard.xlsx` (regenerate with `python src/build_excel_dashboard.py`). The PNGs below show the same charts in a viewable form for the README.
+
+| Revenue by Channel | Avg Delivery by Warehouse | Monthly Revenue Trend |
+|:--|:--|:--|
+| ![](image/supply_revenue_by_channel.png) | ![](image/supply_avg_delivery_by_warehouse.png) | ![](image/supply_monthly_revenue_trend.png) |
+
+| ABC Classification | Discount Margin Impact | On-Time % by Warehouse |
+|:--|:--|:--|
+| ![](image/supply_abc_classification.png) | ![](image/supply_discount_margin.png) | ![](image/supply_warehouse_ontime.png) |
+
 ### 1. Inventory Concentration (ABC Classification)
 Classifying the **47 distinct products** by cumulative revenue contribution shows a
 **moderate** concentration rather than a strict 80/20 split:

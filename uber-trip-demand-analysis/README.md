@@ -101,6 +101,17 @@ Python-driven exploration of cleaned trip data including:
 ![Correlation Heatmap](image/Ubertrip_heatmap.png)
 *The correlation matrix independently confirms Q4: driver rating correlates **-0.13** with trip distance and only **-0.09** with fare. Longer trips rate worse — the rating gap is about trip length, not driver quality.*
 
+### Per-chart visuals
+The interactive Power BI dashboard sits in `powerbi/UberTrip_Dashboard.pbix` and the Excel summary in `excel_analysis/`. The PNGs below surface the same charts in a viewable form for the README.
+
+| Hourly Demand | Vehicle Revenue | Airport Trip Share |
+|:--|:--|:--|
+| ![](image/uber_hourly_demand.png) | ![](image/uber_vehicle_revenue.png) | ![](image/uber_airport_share.png) |
+
+| Zone Pareto | Fare by Driver Rating |
+|:--|:--|
+| ![](image/uber_zone_pareto.png) | ![](image/uber_rating_vs_fare.png) |
+
 ### 1. Peak Demand Windows
 The hourly demand heatmap shows a clear **evening peak**: the busiest hours are **6 PM (4,053 trips), 5 PM (3,467), and 7 PM (3,411)** — a textbook after-work commute surge. Late-night fares are *not* meaningfully elevated in this data (≈2% above average), so the genuine operational signal is the evening volume spike, not a late-night premium.
 
