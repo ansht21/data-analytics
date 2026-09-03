@@ -1,7 +1,7 @@
 """
-Render a PNG screenshot of the Subscription Retention Dashboard
-that matches the rebuilt Excel layout (Filters left, KPI cards top
-right, 3x2 chart grid below, footer).
+Render a PNG screenshot of the Subscription Retention & Churn Dashboard
+that mirrors the rebuilt Excel layout (Filters left, KPI cards top
+right, 3x2 chart grid, Executive Insights, footer).
 """
 from __future__ import annotations
 
@@ -16,18 +16,17 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "Telco_Customer_Churn.csv"
 OUT_PATH = ROOT / "image" / "Churn_Dashboard_screenshot.png"
 
-# Palette - more saturated/darker tones
 NAVY = "#1F3864"
 NAVY_DARK = "#0F2A4D"
 BLUE = "#2F75B5"
 BG = "#E9EDF4"
 WHITE = "#FFFFFF"
 RED = "#B0252A"
-ORANGE = "#C65911"
 ORANGE_DARK = "#A14E0C"
 GREEN = "#3E7C2A"
 PANEL_BLUE = "#1F4E79"
 TEXT = "#1F2937"
+LIGHT_BLUE = "#DDEBF7"
 PANEL_BG = "#FFFFFF"
 
 
@@ -55,8 +54,6 @@ def _chip(ax, x, y, w, h, text):
 
 
 def _filter_section(ax, x_top, y_top, w, items, label):
-    """Draw one slicer box: dark header + white body with chips (2 per row)."""
-    # Box dimensions
     chip_h = 0.018
     chip_gap_y = 0.003
     chip_pad_x = 0.004
@@ -65,22 +62,18 @@ def _filter_section(ax, x_top, y_top, w, items, label):
     body_h = chip_pad_y * 2 + rows * chip_h + (rows - 1) * chip_gap_y
     header_h = 0.020
     box_h = header_h + body_h + 0.004
-    # White body with rounded corners
     box_y = y_top - box_h
     ax.add_patch(FancyBboxPatch((x_top, box_y), w, box_h,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
                                 linewidth=0.6, edgecolor="#C0C8D8",
                                 facecolor=WHITE, transform=ax.transAxes))
-    # Dark header strip (top portion of the box)
     ax.add_patch(FancyBboxPatch((x_top, y_top - header_h), w, header_h,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
                                 linewidth=0, facecolor=NAVY_DARK, transform=ax.transAxes))
-    # Cover the bottom rounding of the header to make it flush with the body
     ax.add_patch(Rectangle((x_top, y_top - header_h), w, header_h * 0.55,
                            facecolor=NAVY_DARK, transform=ax.transAxes))
     ax.text(x_top + 0.008, y_top - header_h / 2, label, color=WHITE, fontsize=9.5, weight="bold",
             transform=ax.transAxes, ha="left", va="center")
-    # Chips inside the body
     chip_w = (w - 3 * chip_pad_x) / 2
     for i, item in enumerate(items):
         row = i // 2
@@ -109,15 +102,15 @@ def main() -> None:
 
     # Title bar
     ax.add_patch(Rectangle((0, 0.94), 1, 0.06, facecolor=NAVY, transform=ax.transAxes))
-    ax.text(0.5, 0.97, "Executive Supply Chain Analytics  Dashboard", color=WHITE,
-            fontsize=22, weight="bold", ha="center", va="center", transform=ax.transAxes)
+    ax.text(0.5, 0.97, "Subscription Retention & Churn Analytics  Dashboard",
+            color=WHITE, fontsize=22, weight="bold",
+            ha="center", va="center", transform=ax.transAxes)
 
-    # Filters panel (each section is its own white slicer box)
+    # Filters panel
     panel_w = 0.135
     panel_x = 0.010
     panel_top_y = 0.91
-    panel_bottom_y = 0.05
-    # Dark background panel for the Filters header
+    panel_bottom_y = 0.32
     ax.add_patch(FancyBboxPatch((panel_x, panel_bottom_y), panel_w, panel_top_y - panel_bottom_y,
                                 boxstyle="round,pad=0.002,rounding_size=0.006",
                                 linewidth=0, facecolor=NAVY_DARK, transform=ax.transAxes))
@@ -127,10 +120,11 @@ def main() -> None:
             ha="center", va="center", transform=ax.transAxes)
 
     sections = [
-        ("Category", ["Month-to-month", "One year", "Two year"]),
-        ("Supplier", ["DSL", "Fiber optic", "No Internet"]),
-        ("Delivery Status", ["Churned", "Retained"]),
-        ("Warehouse Code", ["0-6m", "7-12m", "13-24m", "25-48m", "49-72m"]),
+        ("Contract", ["Month-to-month", "One year", "Two year"]),
+        ("Internet", ["DSL", "Fiber optic", "No"]),
+        ("Payment", ["Bank transfer", "Credit card", "Electronic check", "Mailed check"]),
+        ("Tenure", ["0-6m", "7-12m", "13-24m", "25-48m", "49-72m"]),
+        ("Churn", ["Churned", "Retained"]),
     ]
     y_cursor = panel_top_y - header_h - 0.010
     inner_x = panel_x + 0.005
@@ -143,11 +137,11 @@ def main() -> None:
     kpis = [
         ("Total Customers", f"{len(df):,}", GREEN),
         ("Churn Rate", f"{df['ChurnFlag'].mean():.1%}", RED),
-        ("Avg Tenure", f"{df['tenure'].mean():.1f} mo", ORANGE_DARK),
-        ("Revenue at Risk", f"${df['RevenueAtRisk'].sum()/1000:,.0f}K", RED),
+        ("Avg Tenure (mo)", f"{df['tenure'].mean():.1f}", ORANGE_DARK),
+        ("Revenue at Risk", f"${df['RevenueAtRisk'].sum()/1000:,.0f}", RED),
         ("Retention Rate", f"{1-df['ChurnFlag'].mean():.1%}", GREEN),
     ]
-    kpi_x0 = panel_x + panel_w + 0.012
+    kpi_x0 = panel_x + panel_w + 0.045
     kpi_total_w = 1 - kpi_x0 - 0.012
     kpi_w = (kpi_total_w - 0.012) / 5
     kpi_h = 0.10
@@ -161,23 +155,27 @@ def main() -> None:
         ("Churn Rate by Contract", "contract"),
         ("Churn Rate by Tenure Band", "tenure"),
         ("Customer Mix by Internet Service", "service"),
-        ("Top Revenue-at-Risk Segments", "risk"),
-        ("Churn Rate by Payment Method", "payment"),
+        ("Top Revenue-at-Risk Segments ($K)", "risk"),
+        ("Revenue at Risk by Contract", "rev_by_contract"),
         ("Churn Rate by Tenure (months)", "tenure_trend"),
     ]
     grid_x0 = kpi_x0
     grid_x1 = 1 - 0.012
-    grid_y0 = 0.07
-    grid_y1 = 0.80
+    grid_y0 = 0.36
+    grid_y1 = 0.78
     cell_w = (grid_x1 - grid_x0) / 3
     cell_h = (grid_y1 - grid_y0) / 2
 
     for i, (title, key) in enumerate(chart_specs):
         row, col = divmod(i, 3)
         x = grid_x0 + col * cell_w + 0.006
-        # Stack top and bottom row with a visible gap between them
-        y = grid_y1 - (row + 1) * cell_h + 0.040 if row == 0 else grid_y1 - (row + 1) * cell_h + 0.005
+        y = grid_y1 - (row + 1) * cell_h + (0.040 if row == 0 else 0.005)
         cax = fig.add_axes([x, y, cell_w - 0.012, cell_h - 0.050])
+        cax.set_facecolor(PANEL_BG)
+        for spine in cax.spines.values():
+            spine.set_color("#B8C0D0")
+            spine.set_linewidth(0.8)
+        cax.set_title(title, fontsize=10, weight="bold", color=NAVY_DARK, pad=8)
         cax.set_facecolor(PANEL_BG)
         for spine in cax.spines.values():
             spine.set_color("#B8C0D0")
@@ -221,33 +219,39 @@ def main() -> None:
                 t.set_fontsize(8)
                 t.set_weight("bold")
         elif key == "payment":
-            data = df.groupby("PaymentMethod", observed=True)["ChurnFlag"].mean().mul(100).sort_values()
-            cax.barh(data.index, data.values, color=BLUE)
-            cax.set_xlabel("Churn Rate %", fontsize=8, color=TEXT)
-            cax.tick_params(axis="x", labelsize=8)
+            pass  # unused
+        elif key == "rev_by_contract":
+            data = (df.assign(rar=df["MonthlyCharges"] * df["ChurnFlag"])
+                      .groupby("Contract", observed=True)["rar"].sum().div(1000).round(1))
+            cax.bar(data.index, data.values, color=BLUE, width=0.55)
+            cax.set_ylabel("Revenue at Risk ($K)", fontsize=8, color=TEXT)
+            cax.tick_params(axis="x", labelsize=8, rotation=0)
             cax.tick_params(axis="y", labelsize=8)
-            for j, v in enumerate(data.values):
-                cax.text(v + 0.6, j, f"{v:.1f}", va="center", fontsize=8, color=TEXT, weight="bold")
             for s in cax.spines.values():
                 s.set_visible(False)
-            cax.set_xlim(0, max(data.values) * 1.18)
+            for j, v in enumerate(data.values):
+                cax.text(j, v + 1, f"${v:.0f}K", ha="center", fontsize=8, color=TEXT, weight="bold")
+            cax.set_ylim(0, max(data.values) * 1.20)
         elif key == "risk":
-            grp = (df.groupby(["Contract", "InternetService"], observed=True)
-                     .agg(rev=("RevenueAtRisk", "sum"))
-                     .sort_values("rev", ascending=False).head(8))
-            grp["label"] = [f"{c} | {i}" for c, i in grp.index]
-            grp["rev"] = grp["rev"] / 1000
-            cax.barh(grp["label"][::-1], grp["rev"][::-1], color=GREEN)
+            grp = (df.assign(rar=df["MonthlyCharges"] * df["ChurnFlag"])
+                     .groupby(["Contract", "InternetService"], observed=True)["rar"].sum()
+                     .div(1000).round(1).sort_values(ascending=False).head(6))
+            grp = grp.reset_index()
+            grp["label"] = grp["Contract"].str.replace("Month-to-month", "M2M") + " | " + grp["InternetService"].replace({"Fiber optic": "Fiber", "No": "None"})
+            cax.barh(grp["label"][::-1], grp["rar"][::-1], color=GREEN)
             cax.set_xlabel("Revenue at Risk ($K)", fontsize=8, color=TEXT)
             cax.tick_params(axis="x", labelsize=8)
-            cax.tick_params(axis="y", labelsize=7)
+            cax.tick_params(axis="y", labelsize=8)
             for s in cax.spines.values():
                 s.set_visible(False)
+            for j, (lbl, v) in enumerate(zip(grp["label"][::-1], grp["rar"][::-1])):
+                cax.text(v + grp["rar"].max() * 0.015, j, f"${v:.0f}K",
+                         va="center", fontsize=7, color=TEXT, weight="bold")
         elif key == "tenure_trend":
             t = df.groupby("tenure")["ChurnFlag"].mean().mul(100)
             t = t.iloc[::3]
-            cax.plot(t.index, t.values, color=ORANGE, linewidth=2.2)
-            cax.fill_between(t.index, t.values, color=ORANGE, alpha=0.30)
+            cax.plot(t.index, t.values, color=ORANGE_DARK, linewidth=2.2)
+            cax.fill_between(t.index, t.values, color=ORANGE_DARK, alpha=0.30)
             cax.set_ylabel("Churn Rate %", fontsize=8, color=TEXT)
             cax.set_xlabel("Tenure (months)", fontsize=8, color=TEXT)
             cax.tick_params(axis="x", labelsize=7)
@@ -255,10 +259,39 @@ def main() -> None:
             for s in cax.spines.values():
                 s.set_visible(False)
 
+    # Key Findings panel
+    ax.add_patch(FancyBboxPatch((panel_x, 0.04), 1 - 2 * panel_x, 0.27,
+                                boxstyle="round,pad=0.002,rounding_size=0.006",
+                                linewidth=0.6, edgecolor="#C0C8D8", facecolor=WHITE,
+                                transform=ax.transAxes))
+    ax.add_patch(Rectangle((panel_x, 0.04), 1 - 2 * panel_x, 0.028,
+                           facecolor=NAVY, transform=ax.transAxes))
+    ax.text(panel_x + (1 - 2 * panel_x) / 2, 0.054, "Key Findings  |  Executive Insights",
+            color=WHITE, fontsize=11, weight="bold",
+            ha="center", va="center", transform=ax.transAxes)
+
+    by_contract = df.groupby("Contract", observed=True)["ChurnFlag"].mean().mul(100)
+    by_tenure = df.groupby("tenure_band", observed=True)["ChurnFlag"].mean().mul(100)
+    by_payment = df.groupby("PaymentMethod", observed=True)["ChurnFlag"].mean().mul(100)
+    by_service = df.groupby("InternetService", observed=True)["ChurnFlag"].mean().mul(100)
+    mt = by_contract.get("Month-to-month", 0)
+    ty = by_contract.get("Two year", 0)
+    findings = [
+        f"Month-to-month contracts churn at {mt:.1f}% vs only {ty:.1f}% on two-year contracts.",
+        f"Churn falls with tenure: {by_tenure.idxmax()} band {by_tenure.max():.1f}% -> {by_tenure.idxmin()} band {by_tenure.min():.1f}%.",
+        f"{by_payment.idxmax()} customers churn at {by_payment.max():.1f}% - highest of any payment method.",
+        f"{by_service.idxmax()} internet service shows {by_service.max():.1f}% churn - dominant service risk.",
+        "Top revenue-at-risk segment: Month-to-month + Fiber optic - protect by contract conversion.",
+    ]
+    for i, txt in enumerate(findings):
+        y = 0.085 + i * 0.038
+        c = ax.text(panel_x + 0.015, y, f"  -  {txt}", color=TEXT, fontsize=9.5,
+                    ha="left", va="center", transform=ax.transAxes)
+
     # Footer
-    ax.add_patch(Rectangle((0, 0), 1, 0.035, facecolor=WHITE, transform=ax.transAxes))
-    ax.text(0.5, 0.018, "Created by Ansh Thakur  |  Data Analyst Portfolio Dashboard",
-            color=NAVY_DARK, fontsize=11, weight="bold", style="italic",
+    ax.add_patch(Rectangle((0, 0), 1, 0.025, facecolor=WHITE, transform=ax.transAxes))
+    ax.text(0.5, 0.013, "Created by Ansh Thakur  |  Data Analyst Portfolio Dashboard",
+            color=NAVY_DARK, fontsize=10, weight="bold", style="italic",
             ha="center", va="center", transform=ax.transAxes)
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
