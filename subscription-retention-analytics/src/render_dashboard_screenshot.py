@@ -48,31 +48,47 @@ def _kpi(ax, x, y, w, h, label, value, color):
 def _chip(ax, x, y, w, h, text):
     ax.add_patch(FancyBboxPatch((x, y), w, h,
                                 boxstyle="round,pad=0.001,rounding_size=0.008",
-                                linewidth=0.6, edgecolor=NAVY_DARK, facecolor=PANEL_BLUE,
+                                linewidth=0.6, edgecolor="#4A6FA8", facecolor=PANEL_BLUE,
                                 transform=ax.transAxes))
-    ax.text(x + w / 2, y + h / 2, text, color=WHITE, fontsize=8, weight="bold",
+    ax.text(x + w / 2, y + h / 2, text, color=WHITE, fontsize=7.5, weight="bold",
             transform=ax.transAxes, ha="center", va="center")
 
 
-def _filter_section(ax, x, y, w, items, label, section_w):
-    bar_h = 0.022
-    ax.add_patch(Rectangle((x, y - bar_h), section_w, bar_h,
+def _filter_section(ax, x_top, y_top, w, items, label):
+    """Draw one slicer box: dark header + white body with chips (2 per row)."""
+    # Box dimensions
+    chip_h = 0.018
+    chip_gap_y = 0.003
+    chip_pad_x = 0.004
+    chip_pad_y = 0.005
+    rows = math.ceil(len(items) / 2)
+    body_h = chip_pad_y * 2 + rows * chip_h + (rows - 1) * chip_gap_y
+    header_h = 0.020
+    box_h = header_h + body_h + 0.004
+    # White body with rounded corners
+    box_y = y_top - box_h
+    ax.add_patch(FancyBboxPatch((x_top, box_y), w, box_h,
+                                boxstyle="round,pad=0.001,rounding_size=0.006",
+                                linewidth=0.6, edgecolor="#C0C8D8",
+                                facecolor=WHITE, transform=ax.transAxes))
+    # Dark header strip (top portion of the box)
+    ax.add_patch(FancyBboxPatch((x_top, y_top - header_h), w, header_h,
+                                boxstyle="round,pad=0.001,rounding_size=0.006",
+                                linewidth=0, facecolor=NAVY_DARK, transform=ax.transAxes))
+    # Cover the bottom rounding of the header to make it flush with the body
+    ax.add_patch(Rectangle((x_top, y_top - header_h), w, header_h * 0.55,
                            facecolor=NAVY_DARK, transform=ax.transAxes))
-    ax.text(x + 0.008, y - bar_h / 2, label, color=WHITE, fontsize=9.5, weight="bold",
+    ax.text(x_top + 0.008, y_top - header_h / 2, label, color=WHITE, fontsize=9.5, weight="bold",
             transform=ax.transAxes, ha="left", va="center")
-    chip_h = 0.022
-    chip_gap_y = 0.005
-    chip_pad_x = 0.003
-    chip_w = (section_w - 3 * chip_pad_x) / 2
+    # Chips inside the body
+    chip_w = (w - 3 * chip_pad_x) / 2
     for i, item in enumerate(items):
         row = i // 2
         col = i % 2
-        cx = x + chip_pad_x + col * (chip_w + chip_pad_x)
-        cy = y - bar_h - chip_h - chip_gap_y - row * (chip_h + chip_gap_y)
+        cx = x_top + chip_pad_x + col * (chip_w + chip_pad_x)
+        cy = y_top - header_h - chip_pad_y - row * (chip_h + chip_gap_y) - chip_h
         _chip(ax, cx, cy, chip_w, chip_h, item)
-    rows_used = math.ceil(len(items) / 2)
-    total_h = bar_h + rows_used * chip_h + (rows_used - 1) * chip_gap_y + chip_gap_y
-    return total_h
+    return box_h + 0.006
 
 
 def main() -> None:
@@ -96,16 +112,16 @@ def main() -> None:
     ax.text(0.5, 0.97, "Executive Supply Chain Analytics  Dashboard", color=WHITE,
             fontsize=22, weight="bold", ha="center", va="center", transform=ax.transAxes)
 
-    # Filters panel
-    panel_w = 0.165
+    # Filters panel (each section is its own white slicer box)
+    panel_w = 0.135
     panel_x = 0.010
     panel_top_y = 0.91
     panel_bottom_y = 0.05
-    panel_h = panel_top_y - panel_bottom_y
-    ax.add_patch(FancyBboxPatch((panel_x, panel_bottom_y), panel_w, panel_h,
+    # Dark background panel for the Filters header
+    ax.add_patch(FancyBboxPatch((panel_x, panel_bottom_y), panel_w, panel_top_y - panel_bottom_y,
                                 boxstyle="round,pad=0.002,rounding_size=0.006",
                                 linewidth=0, facecolor=NAVY_DARK, transform=ax.transAxes))
-    header_h = 0.04
+    header_h = 0.034
     ax.text(panel_x + panel_w / 2, panel_top_y - header_h / 2, "Filters",
             color=WHITE, fontsize=14, weight="bold",
             ha="center", va="center", transform=ax.transAxes)
@@ -116,12 +132,12 @@ def main() -> None:
         ("Delivery Status", ["Churned", "Retained"]),
         ("Warehouse Code", ["0-6m", "7-12m", "13-24m", "25-48m", "49-72m"]),
     ]
-    y_cursor = panel_top_y - header_h - 0.012
-    inner_x = panel_x + 0.006
-    inner_w = panel_w - 0.012
+    y_cursor = panel_top_y - header_h - 0.010
+    inner_x = panel_x + 0.005
+    inner_w = panel_w - 0.010
     for label, items in sections:
-        used = _filter_section(ax, inner_x, y_cursor, inner_w, items, label, inner_w)
-        y_cursor -= used + 0.010
+        used = _filter_section(ax, inner_x, y_cursor, inner_w, items, label)
+        y_cursor -= used + 0.002
 
     # KPI cards
     kpis = [
