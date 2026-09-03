@@ -1,16 +1,14 @@
 # Supply Chain Performance & Inventory Optimization Dashboard
 
-**Business problem:** Half of all orders arrive late and $41M of revenue is exposed.
+**Business problem:** Half of all orders arrive late and $36.3M of net revenue is exposed.
 Is that one bad warehouse, or the whole network? 7,991 orders, 2018–2020.
 
 ![Executive Supply Chain Analytics Dashboard](image/Supplychain_Dashboard_screenshot.png)
 *Six warehouses, near-identical delivery curves. The "Avg Delivery Days by Timeline" panel stays flat at ~5.5 days for three straight years — the lateness never improves and never varies by site.*
 
-> **Reading the KPI cards:** the dashboard shows **$73.04M net revenue** (after
-> discounts) while this README quotes **$82.69M gross** (`Order_Quantity × Unit_Price`,
-> as defined in `src/data_cleaning.py`). Both are correct — they are different measures,
-> and the $9.66M gap is exactly the discount given. The dashboard's on-time card uses a
-> looser SLA than the ≤5-day target used throughout this analysis.
+> **Financial definition:** every KPI in the Python pipeline, SQL import, outputs, and
+> dashboard uses **net revenue** (`Order_Quantity × Unit_Price × (1 - Discount_Applied)`)
+> and **profit** (`net revenue - total cost`). The on-time target is delivery within five days.
 
 ---
 
@@ -20,17 +18,17 @@ Every figure is reproducible: run `python src/analytics.py`, or click through to
 
 | # | Business Question | Metric Used | Finding | Recommended Action | Query |
 |:--|:--|:--|:--|:--|:--|
-| **Q1** | Which channel makes us the most money? | Revenue & margin by channel | **In-Store leads on volume** ($34.0M / $12.7M profit) but **Wholesale has the best margin at 38.13%** on the smallest base ($9.2M). | Grow Wholesale — it keeps most of every dollar | [§2](sql_queries/02_sales_analysis.sql) |
+| **Q1** | Which channel makes us the most money? | Net revenue & margin by channel | **In-Store leads on volume** ($30.1M net revenue / $8.8M profit), while **Wholesale has the best margin at 30.15%** on the smallest base ($8.2M). | Protect In-Store scale and investigate the strongest-margin Wholesale mix | [§2](sql_queries/02_sales_analysis.sql) |
 | **Q2** | Half our orders are late. Which warehouse is at fault? | On-time rate + `STDDEV` of delivery days per site | **None — it's systemic.** On-time spans just 48.85%–53.69%, and delivery-time spread is 2.82–2.88 days at *every* site. Only **0.08%** of delivery-time variance is between-warehouse. | Fix the upstream scheduling process, not a facility | [§6](sql_queries/02_sales_analysis.sql) |
 | **Q3** | Is our worst-performing site really the worst? | Share of late orders vs share of all orders | **No — a volume illusion.** NMK1003 causes **31.9% of all late orders**, but handles **31.4% of all orders**. Its rate is average. Ranking by raw count would blame the wrong site. | Always normalise counts by volume before ranking | [§6](sql_queries/02_sales_analysis.sql) |
-| **Q4** | Are discounts eating our margin? Should we cap them? | Realised margin by discount band | **No.** Orders discounted **20%+ realise 38.28% margin — higher** than the 5–10% band's 37.07%. Discounts land on already-high-margin products. | A blanket discount cap would cost revenue for nothing | [§8](sql_queries/02_sales_analysis.sql) |
-| **Q5** | Are we losing money on any orders? | Order-level revenue vs cost | **Zero loss-making orders** across all 7,991. Worst SKU still holds a 34.44% margin. | Pricing floors are working — keep them | [§5](sql_queries/02_sales_analysis.sql) |
-| **Q6** | Is our margin eroding over time? | Monthly margin + `LAG()` change | **No.** Margin oscillates around 37% across all 32 months with no drift. Worst month (2020-10, 35.44%, a ~2pp drop) recovered the next month. | Treat 2020-10 as a one-off, not a trend | [§7](sql_queries/02_sales_analysis.sql) |
-| **Q7** | Where is revenue concentrated? | ABC / cumulative revenue share | **35 of 47 products drive 78.7%** — broadly distributed, *not* a textbook 80/20. | Don't cut the long tail; it isn't a tail | [`outputs/abc_classification.csv`](outputs/abc_classification.csv) |
-| **Q8** | Is the business still growing? | Revenue by year | Growth **flattened**: $31.53M (2019) → $31.86M (2020), just **+1.0%** after a strong 2018→2019 ramp. | Flag the stall — plan flat inventory, not growth | [§3](sql_queries/02_sales_analysis.sql) |
+| **Q4** | Are discounts eating our margin? Should we cap them? | Realised margin by discount band | **Yes at high discount levels.** 20%+ discounted orders realise only **4.64% margin**, versus 31.02% for the 5–10% band. | Review 20%+ discounts and enforce a product-level profit floor | [§8](sql_queries/02_sales_analysis.sql) |
+| **Q5** | Are we losing money on any orders? | Order-level net revenue vs cost | **373 orders (4.67%) are unprofitable** after discounts. | Investigate high-discount loss makers and protect pricing floors | [§5](sql_queries/02_sales_analysis.sql) |
+| **Q6** | Is our margin eroding over time? | Monthly margin + `LAG()` change | Use the regenerated net-revenue output to monitor monthly margin; the old gross-margin conclusion is retired. | Investigate material month-over-month declines after discounts | [§7](sql_queries/02_sales_analysis.sql) |
+| **Q7** | Where is revenue concentrated? | ABC / cumulative revenue share | **36 of 47 products drive 80.6%** of net revenue. | Prioritise availability for A-items while reviewing the long tail by profit, not revenue alone | [`outputs/abc_classification.csv`](outputs/abc_classification.csv) |
+| **Q8** | Is the business still growing? | Net revenue by year | Net revenue grew from **$27.81M (2019)** to **$28.14M (2020)**, only **+1.2%**. | Plan conservatively and investigate the stalled top line | [§3](sql_queries/02_sales_analysis.sql) |
 
-**Four of these eight say "don't act" (Q2, Q4, Q5, Q6).** Telling the business where
-*not* to spend is as valuable as finding a problem — and it is what stops a team from
+The corrected net-revenue view preserves the systemic-delivery finding, but it also reveals
+that high discounts require targeted margin controls.
 launching a warehouse improvement project that would have fixed nothing.
 
 ---
@@ -56,19 +54,19 @@ volume-normalised share side by side, so this trap is visible rather than hidden
 ---
 
 ## Business Purpose & Impact
-> **Why I built this:** Companies don't hire analysts to make charts — they hire people who can answer *"where are we making or losing money, and what should we do about it?"* This project proves I can take **7,991 raw order records ($82.7M revenue)** and turn them into **profit-and-loss decisions**.
+> **Why I built this:** Companies don't hire analysts to make charts — they hire people who can answer *"where are we making or losing money, and what should we do about it?"* This project proves I can take **7,991 raw order records ($73.0M net revenue)** and turn them into **profit-and-loss decisions**.
 
 > **My edge — I read the data critically, not just optimistically.** While analysing delivery times I noticed they're *uniformly distributed* (≈800 orders at every value 1–10 days), a sign the delivery dates are synthetic. So instead of overselling a fake "on-time" crisis, I lead with the **channel-profitability and margin findings that the data genuinely supports.** Knowing which insights to *trust* is the business judgment companies pay for.
 
 ---
 
 ## Project Overview
-This project delivers a comprehensive, end-to-end data analytics solution designed to optimize warehouse inventory, streamline order fulfillment, and boost profit margins. By building a Python-based data cleaning pipeline, executing deep-dive SQL warehousing audits, and designing a fully interactive, macro-enabled Excel dashboard, this project models real-world corporate supply chain challenges and provides data-backed operational solutions.
+This project delivers a comprehensive, end-to-end data analytics solution designed to optimize warehouse inventory, streamline order fulfillment, and improve profit margins. It combines a Python-based cleaning pipeline, deep-dive SQL warehousing audits, and a native Excel dashboard with KPI cards and charts.
 
 ### Business Impact Highlights
 *All figures are reproducible — run `python src/analytics.py` to regenerate `outputs/kpi_summary.json`.*
-* **Revenue Analyzed:** **$82.69 Million** gross transactional revenue.
-* **Profit Analyzed:** **$30.87 Million** net profitability with a healthy **37.4% average margin**.
+* **Revenue Analyzed:** **$73.04 Million** realised net revenue after discounts.
+* **Profit Analyzed:** **$21.22 Million** realised profit with a **29.1% aggregate margin**.
 * **Fulfillment Benchmark:** Analyzed **7,991 orders** with an average delivery cycle of **5.5 days** (range 1–10 days).
 * **Fulfillment Gap:** Only **50.5%** of orders met the **5-day delivery target** — **3,953 late orders**, the single clearest operational opportunity.
 
@@ -77,7 +75,7 @@ This project delivers a comprehensive, end-to-end data analytics solution design
 ## Tech Stack & Technical Architecture
 * **Python (Pandas, NumPy, openpyxl, Matplotlib, Seaborn):** Raw data engineering, data cleaning, date parsing, calculated metric formulation, and automated Excel dashboard styling.
 * **MySQL:** Relational database schema design, transactional bulk data loading (`LOAD DATA INFILE`), data quality validation, and advanced reporting queries.
-* **Microsoft Excel (VBA/Macros, Advanced Formulas):** Interactive workbook design, dynamic slicing, custom `SUMIFS`/`COUNTIFS` aggregate reporting, and conditional alerts.
+* **Microsoft Excel / openpyxl:** Native chart dashboard design, KPI cards, chart-ready aggregation tables, and audit-friendly workbook outputs.
 
 ---
 
@@ -115,7 +113,7 @@ multi-sheet workbook (`Supplychain_Dashboard.xlsx`) with `openpyxl`:
 * **ChartData Sheet:** Formula-free aggregated pivots (revenue by channel, avg delivery days by warehouse, monthly revenue) driving the charts.
 * **Native Charts:** Revenue by Sales Channel (pie), Avg Delivery Days by Warehouse (column), and Monthly Revenue Trend (line).
 
-> A separate macro-enabled workbook (`Supplychain_Data_Dashboard.xlsm`) with
+> An optional legacy macro-enabled workbook (`Supplychain_Data_Dashboard.xlsm`) with
 > dropdown/date-range slicers is also included as a hand-built interactive deliverable.
 
 ### 4. Power BI Model (`powerbi/`)
@@ -144,35 +142,35 @@ python src/build_excel_dashboard.py # -> excel_analysis/Supplychain_Dashboard.xl
 ### 1. Inventory Concentration (ABC Classification)
 Classifying the **47 distinct products** by cumulative revenue contribution shows a
 **moderate** concentration rather than a strict 80/20 split:
-* **A-Items:** 35 products (74.5%) → **78.7%** of revenue — high-velocity goods needing tight replenishment control.
-* **B-Items:** 8 products (17.0%) → **14.7%** of revenue — bi-weekly review cycle.
-* **C-Items:** 4 products (8.5%) → **6.5%** of revenue — candidates for Just-In-Time stocking.
+* **A-Items:** 36 products (76.6%) → **80.6%** of net revenue — high-velocity goods needing tight replenishment control.
+* **B-Items:** 8 products (17.0%) → **14.5%** of net revenue — bi-weekly review cycle.
+* **C-Items:** 3 products (6.4%) → **4.9%** of net revenue — candidates for Just-In-Time stocking.
 
 > *Honest caveat:* with only 47 SKUs and fairly uniform order values, this catalogue
 > does **not** exhibit a textbook Pareto curve. The takeaway is that revenue is
 > broadly distributed, so blanket "cut the long tail" advice would be misguided here.
 
 ### 2. Fulfillment Performance
-* **On-time rate (≤5-day target): 50.5%** — **3,953 of 7,991 orders ran late**, with **$41.0M (49.6% of all revenue)** riding on those late orders.
+* **On-time rate (≤5-day target): 50.5%** — **3,953 of 7,991 orders ran late**, with **$36.3M (49.7% of net revenue)** riding on those late orders.
 * Delivery speed is **remarkably uniform across warehouses** (avg **5.35–5.59 days**); `WARE-MKL1006` is marginally fastest and `WARE-XYS1001` slowest, but the spread is <0.3 days. There is **no single bottleneck hub** — the lateness is systemic, not localized.
 * Quantified: **only 0.08% of delivery-time variance is between warehouses**, and the standard deviation is 2.82–2.88 days at every single site. The inconsistency lives *inside* each warehouse's process, not in the choice between them.
 
 ### 3. Profitability
-* Margins are healthy and consistent (**37.4% average**); **zero orders were sold at a loss**, indicating disciplined pricing even with discounts applied.
-* Margin is stable over time — 32 months of `LAG()` comparison show oscillation around 37% with **no downward drift**.
-* Counter-intuitively, **heavier discounts do not reduce realised margin** (38.28% at 20%+ discount vs 37.07% at 5–10%), because discounts are applied to higher-margin products in the first place.
+* Net margin is **29.1%** and **373 orders (4.67%) are unprofitable** after discounts.
+* Discounts materially affect margin: **20%+ discount orders return 4.64% margin**, versus **31.02%** in the 5–10% band.
+* Monitor monthly margin on the consistent net-revenue basis; do not reuse the retired gross-revenue conclusion.
 
 ### 4. Growth
-* Revenue grew strongly from **$19.29M (2018, partial year)** to **$31.53M (2019)** — then **stalled at $31.86M in 2020 (+1.0%)**. The margin held, but the top line stopped growing. Worth flagging to a stakeholder even though it wasn't the original question.
+* Net revenue grew from **$17.08M (2018, partial year)** to **$27.81M (2019)** — then **stalled at $28.14M in 2020 (+1.2%)**. The top line stopped growing and needs investigation.
 
 ---
 
 ## Business Recommendations
 
-1. **Attack the systemic delivery gap, not a single hub.** With only 0.08% of delivery-time variance sitting between warehouses, a per-site improvement project would fix nothing. The fix is a network-wide carrier/SLA and scheduling review. **$41.0M of revenue rides on late orders** — this is the largest lever in the dataset.
+1. **Attack the systemic delivery gap, not a single hub.** With only 0.08% of delivery-time variance sitting between warehouses, a per-site improvement project would fix nothing. The fix is a network-wide carrier/SLA and scheduling review. **$36.3M of net revenue rides on late orders** — this is the largest lever in the dataset.
 2. **Do not rank warehouses by late-order count.** NMK1003 tops that list purely because it handles 31.4% of volume. Normalise by order count before any site is held accountable.
-3. **Tier replenishment by the A/B/C split.** The 35 A-items drive ~79% of revenue — prioritise their stock availability; review the 4 C-items for JIT ordering to trim holding cost.
-4. **Do not impose a blanket discount cap.** Orders at 20%+ discount return a *higher* margin (38.28%) than mid-band ones. A cap would suppress revenue while protecting a margin that was never at risk. Monitor instead of restricting.
-5. **Investigate the 2020 growth stall.** Revenue flattened to +1.0% year-over-year while margin held. The profitability story is healthy; the growth story is not, and only one of those was in the original brief.
+3. **Tier replenishment by the A/B/C split.** The 36 A-items drive ~81% of net revenue — prioritise their stock availability and review the 3 C-items for JIT ordering.
+4. **Apply targeted discount controls.** The 20%+ band has only 4.64% realised margin and contributes to 373 loss-making orders. Set product-level profit floors rather than relying on a blanket policy.
+5. **Investigate the 2020 growth stall.** Net revenue flattened to +1.2% year-over-year; plan conservatively until the driver is understood.
 
 ---

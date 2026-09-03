@@ -34,8 +34,8 @@ Every figure below is reproducible from the committed SQL. Click a query link to
 | **Q4** | Do higher-rated drivers earn more? | Avg fare by rating band | **No — and the obvious read is wrong.** Lowest-rated (<4.0) show the *highest* avg fare (₹419 vs ₹364). Cause is trip length (18.9 km vs 16.3 km), not driver quality: fare-per-km is flat at ₹22.06–22.41 across all bands. | Investigate rider experience on long trips — don't penalise drivers | [§11](sql_queries/02_revenue_analysis.sql) |
 | **Q5** | Can we focus on just our top zones? | Cumulative revenue share | **No.** It takes **4 of 5 zones to reach 80%** of revenue. Only Airport stands out (27.6%); the rest sit at 17–19% each. | Keep coverage city-wide; a "top zones" strategy fails here | [§10](sql_queries/02_revenue_analysis.sql) |
 | **Q6** | Should weekend pricing differ? | Avg fare by weekend flag | **No.** ₹389.34 vs ₹386.05 — a **0.9%** gap, with near-identical trip distance. | Do not build a weekend pricing tier | [§6](sql_queries/02_revenue_analysis.sql) |
-| **Q7** | When does the evening rush actually *start*? | Hour-over-hour % change (`LAG`) | The rush ignites at **5 PM (+138% over 4 PM)** — not at 6 PM when volume peaks. Biggest single jump is 8 AM (+176%). | Push incentives live by **4:30 PM**, an hour ahead of peak | [§9](sql_queries/02_revenue_analysis.sql) |
-| **Q8** | Is there a seasonal cycle to plan for? | Revenue by month | **No.** Best month (Oct, ₹11.87L) beats worst (Feb, ₹10.66L) by only **11%**. | Plan capacity on time-of-day, not season | [§8](sql_queries/02_revenue_analysis.sql) |
+| **Q7** | When does the evening rush actually *start*? | Hour-over-hour trip-volume change (`LAG`) | The query measures trip-volume acceleration separately from revenue, so incentive timing is based on demand rather than fare mix. | Use the highest positive trip-volume jump to schedule incentives; validate operationally | [§9](sql_queries/02_revenue_analysis.sql) |
+| **Q8** | Is there visible within-year variation? | Trips and revenue by month | Monthly results describe one simulated year only; they do not establish recurring annual seasonality. | Use time-of-day for current operations; validate seasonality with multi-year production data | [§8](sql_queries/02_revenue_analysis.sql) |
 
 **Three of these eight are negative findings.** Q5, Q6 and Q8 tell the business *not* to
 act — which prevents wasted spend. Reporting them is part of the job.
@@ -67,7 +67,7 @@ This project performs a comprehensive behavioral and financial analysis of a **s
 The raw CSV is loaded into a MySQL staging table and processed through a **two-stage deduplication pipeline**:
 
 * **Stage 1 — Exact Row Deduplication:** `CREATE TABLE ... AS SELECT DISTINCT *` eliminates fully identical records.
-* **Stage 2 — Trip-ID Deduplication:** `ROW_NUMBER() OVER (PARTITION BY Trip_ID ORDER BY Date DESC)` retains only the most recent record per trip, handling cases where a booking was re-submitted or updated.
+* **Stage 2 — Trip-ID Deduplication:** `ROW_NUMBER()` partitions by `Trip_ID` and uses deterministic date, time, fare, distance, and driver tie-breakers to retain one record per trip. The source does not contain an update timestamp, so the pipeline does not claim to identify the most recently updated record.
 * **Validation Checks:** Post-cleaning queries audit for null `Trip_ID`, `Fare_Amount`, and `Trip_Distance_km` fields to confirm pipeline integrity.
 
 ### 2. Business Intelligence Reporting (`sql_queries/02_revenue_analysis.sql`)

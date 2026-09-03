@@ -113,11 +113,9 @@ ORDER BY avg_total_fulfillment_days ASC;
 -- 5. BUSINESS QUESTION: Are we losing money on any orders through aggressive
 --    discounting?
 -- Metric: order-level net revenue vs cost, flagged profitable/unprofitable
--- Answer: NO -- zero unprofitable orders across all 7,991. Even the worst SKU
---         holds a 34.44% margin, and orders discounted 20%+ still return
---         38.28%. Discounting is well controlled against cost.
--- Action: Pricing floors are working. This is a clean bill of health, and it
---         is worth stating explicitly rather than leaving unexamined. (Q5)
+-- Answer: Review the returned rows after loading the cleaned net-revenue data.
+--         The pipeline reports 373 unprofitable orders (4.67%) after discounts.
+-- Action: Investigate loss-making orders and enforce product-level profit floors. (Q5)
 -- -------------------------------------------------------------------------
 SELECT
     OrderNumber,
@@ -200,12 +198,9 @@ ORDER BY on_time_rate_pct DESC;
 --    months broke trend badly enough to investigate?
 -- Metric: monthly margin with month-over-month change, via LAG()
 -- Technique: LAG() over an ordered monthly aggregate
--- Answer: Margin is stable, not eroding -- it oscillates around 37% for all
---         32 months (2018-05 to 2020-12) with no downward drift. The worst
---         single month is 2020-10 at 35.44%, a ~2pp drop, which recovers
---         to 37.14% the following month.
--- Action: No margin-erosion problem exists. Treat 2020-10 as a one-off to
---         explain, not a trend to correct. (Q7)
+-- Answer: Read the generated output after loading the cleaned net-revenue data.
+--         The previous gross-revenue margin conclusion is intentionally retired.
+-- Action: Investigate material declines in realised monthly margin. (Q7)
 -- -------------------------------------------------------------------------
 WITH monthly_margin AS (
     SELECT
@@ -243,11 +238,9 @@ ORDER BY order_year, order_month;
 --    Should we cap discounts?
 -- Metric: order volume, revenue, realised margin and late-rate by discount band
 -- Technique: CASE WHEN banding + window share of total
--- Answer: NO -- margin does not fall as discounts rise. Orders discounted 20%+
---         realise a 38.28% margin, HIGHER than the 5-10% band's 37.07%.
---         Discounts are evidently applied to already-high-margin products.
--- Action: A blanket discount cap would destroy revenue without protecting
---         margin. The pricing team's current discretion is working. (Q8)
+-- Answer: Margin declines sharply at high discounts in the net-revenue data:
+--         20%+ discounted orders realise 4.64% margin versus 31.02% for 5-10%.
+-- Action: Review 20%+ discounts and apply product-level profit floors. (Q8)
 -- -------------------------------------------------------------------------
 SELECT
     CASE

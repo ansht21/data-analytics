@@ -16,7 +16,7 @@ This document serves as your "cheat sheet" to explain how this project was built
 * **Steps:**
     1. **Cleaning:** I removed currency symbols (`$`) and commas from price columns so Python could do math on them.
     2. **Standardization:** I renamed headers to "snake_case" (e.g., `Unit_Price`) to make them SQL-friendly.
-    3. **Feature Engineering:** I created new columns that didn't exist in the raw data, like `profit` (`revenue - cost`) and `delivery_days` (`DeliveryDate - ShipDate`). These are the metrics that actually matter to a business.
+    3. **Feature Engineering:** I created new columns that didn't exist in the raw data, including realised net `revenue` (after discount), `profit` (`net revenue - cost`), and `delivery_days` (`DeliveryDate - ShipDate`).
 
 ### Phase 2: Data Warehousing (SQL)
 * **Tools:** `MySQL`.
@@ -28,18 +28,18 @@ This document serves as your "cheat sheet" to explain how this project was built
         * *Example:* "What is my Pareto split?" I used calculations to categorize items into A, B, and C groups based on their revenue contribution.
 
 ### Phase 3: Visualization & Dashboarding (Excel)
-* **Tools:** `Excel (VBA/Macros)`.
+* **Tools:** `Excel`, `openpyxl`.
 * **Action:** Created an interactive dashboard.
 * **Steps:**
-    1. **Dynamic Filtering:** I used Excel formulas (like `SUMIFS`) linked to input cells so that when you change a date range or filter by "Sales Channel," the whole dashboard updates instantly.
-    2. **Macro Automation:** I included VBA to handle repetitive formatting tasks, ensuring the dashboard looks clean every time new data is added.
+    1. **Dashboard generation:** I generate a consistent executive dashboard with KPI cards, native Excel charts, and chart-ready aggregates.
+    2. **Auditability:** The workbook includes the chart source data so results can be reviewed against the cleaned pipeline output.
 
 ---
 
 ## 3. The "Elevator Pitch" for Interviews
 When someone asks, "Tell me about this project," use this structure:
 
-> "For my Supply Chain project, I built a pipeline to help a company optimize inventory. I started by using Python to clean a messy transactional dataset and engineer new KPIs like profit margins and fulfillment speed. Then, I loaded that data into MySQL to perform a deep-dive analysis, where I used ABC classification to prove the Pareto principle—showing that 20% of their inventory was driving 80% of their revenue. Finally, I built an interactive Excel dashboard that allows stakeholders to filter data by date and channel, helping them identify which warehouse was causing 62% of their late deliveries."
+> "For my Supply Chain project, I built a pipeline to help a company optimize inventory. I used Python to clean a messy transactional dataset and calculate consistent net revenue, profit margins, and fulfillment speed. I loaded the cleaned output into MySQL for a reproducible deep-dive and used ABC classification to show that revenue is broadly distributed rather than a textbook 80/20 split. Finally, I built an executive Excel dashboard with KPI cards and native charts, which showed late delivery is systemic across warehouses rather than caused by one facility."
 
 ---
 

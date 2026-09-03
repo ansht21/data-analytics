@@ -67,7 +67,11 @@ def load_and_clean(raw_path: Path = RAW_PATH) -> pd.DataFrame:
     df["order_to_ship_days"] = (df["ShipDate"] - df["OrderDate"]).dt.days
     df["procure_to_order_days"] = (df["OrderDate"] - df["ProcuredDate"]).dt.days
 
-    df["revenue"] = df["Order_Quantity"] * df["Unit_Price"]
+    # Use realised (net) revenue consistently across Python, SQL and dashboards.
+    # Discount_Applied is stored as a decimal (for example, 0.08 for 8%).
+    df["revenue"] = (
+        df["Order_Quantity"] * df["Unit_Price"] * (1 - df["Discount_Applied"])
+    )
     df["total_cost"] = df["Order_Quantity"] * df["Unit_Cost"]
     df["profit"] = df["revenue"] - df["total_cost"]
     df["profit_margin"] = df["profit"] / df["revenue"]

@@ -16,8 +16,8 @@
 
 **I answer business questions with data — including the ones where the answer is "don't do it."**
 
-Two end-to-end analytics projects covering **43,000 records**: a supply-chain P&L and
-fulfilment audit, and a ride-demand and pricing analysis. Every figure below is
+Three end-to-end analytics projects covering **50,000+ records**: a supply-chain P&L and
+fulfilment audit, a ride-demand and pricing analysis, and subscription-retention analytics. Every figure below is
 reproducible from the committed SQL and Python in this repository.
 
 As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in translating complex datasets into clean, reliable, and actionable business insights.
@@ -28,8 +28,9 @@ As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in transla
 
 | Project | Scale | Stack | Headline Result |
 |---------|-------|-------|-----------------|
-| **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel VBA | $82.7M revenue / $30.9M profit analysed; late delivery proven systemic, not warehouse-specific |
+| **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel | $73.0M net revenue / $21.2M profit analysed; late delivery proven systemic, not warehouse-specific |
 | **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue; Random Forest fare model R² 0.972 |
+| **Subscription Retention** | 7,032 customers | Python · SQL · Excel · Scikit-learn | 26.6% churn; contract, tenure, service, and payment method identify retention risk and revenue at risk |
 
 ---
 
@@ -41,7 +42,7 @@ If an interviewer asks one of these, the query and the number are already in thi
 |:--|:--|:--|
 | Half our orders are late — which warehouse is at fault? | **None.** Only **0.08%** of delivery-time variance is between warehouses; all six have 2.82–2.88 day spread. | Fix upstream scheduling, not a facility — a per-site project would fix nothing |
 | Isn't our biggest warehouse the worst offender? | **No — a volume illusion.** It causes 31.9% of late orders but handles 31.4% of all orders. | Always normalise counts by volume before ranking anything |
-| Are discounts eating our margin? Should we cap them? | **No.** Orders at 20%+ discount return **38.28%** margin — *higher* than the 5–10% band. | Don't cap discounts; you'd lose revenue protecting nothing |
+| Are discounts eating our margin? Should we cap them? | **Yes, at high levels.** Orders at 20%+ discount return only **4.64%** margin versus 31.02% in the 5–10% band. | Apply product-level profit floors and review 20%+ discounts |
 | When should a ride-hailing firm surge-price? | **5–7 PM carries 31.2% of demand** in 3 of 24 hours — and the surge *starts* at 5 PM, not 6 PM when volume peaks. | Launch driver incentives by 4:30 PM, an hour ahead of peak |
 | Do higher-rated drivers earn more per trip? | **No, and the obvious read is backwards.** Low-rated drivers show higher fares — but only because they drive longer trips. Fare-per-km is flat at ₹22.06–22.41. | Investigate long-trip rider experience; don't penalise drivers |
 | Can we focus on just our top revenue zones? | **No.** It takes **4 of 5 zones** to reach 80% of revenue. | Keep coverage city-wide — the 80/20 assumption fails here |
@@ -57,7 +58,7 @@ saves budget.
 | :--- | :--- | :--- |
 | **Languages** | Python, SQL (MySQL / PostgreSQL), HTML/CSS | Exploratory Data Analysis (EDA), Statistical Analysis |
 | **Data Libraries** | Pandas, NumPy, Scikit-Learn, Matplotlib, Seaborn | Data Cleaning, Feature Engineering, Outlier Detection |
-| **BI & Visualization** | Power BI, Advanced Microsoft Excel (VBA, Power Query, Pivots) | Interactive Dashboard Design, Executive KPI Reporting |
+| **BI & Visualization** | Power BI, Microsoft Excel, openpyxl, Power Query, Pivots | Interactive Dashboard Design, Executive KPI Reporting |
 | **Development Workflow** | Jupyter Notebooks, Git & GitHub, PowerShell / Bash | Automation Scripting, ETL Pipeline Construction |
 | **SQL Techniques** | CTEs, `LAG()`, `RANK()`, `ROW_NUMBER()`, running `SUM() OVER`, `STDDEV_SAMP` | Cohort Banding, Pareto Analysis, Trend Detection |
 
@@ -70,14 +71,14 @@ saves budget.
 ![Supply Chain Dashboard](./supply-chain-performance-analysis/image/Supplychain_Dashboard_screenshot.png)
 
 *An end-to-end operational analytics project featuring a Python data cleaning pipeline, custom SQL metrics, and an automated, fully interactive 10-chart Excel dashboard.*
-* **Business Challenge:** Half of all orders miss the 5-day delivery target, with $41.0M of revenue exposed — and leadership needs to know whether to invest in a specific warehouse or the network.
-* **Tech Stack:** Python (Pandas, openpyxl), SQL (MySQL — CTEs, `STDDEV`, `LAG`, window functions), Microsoft Excel (VBA, Macros, Pivot Tables).
+* **Business Challenge:** Half of all orders miss the 5-day delivery target, with $36.3M of net revenue exposed — and leadership needs to know whether to invest in a specific warehouse or the network.
+* **Tech Stack:** Python (Pandas, openpyxl), SQL (MySQL — CTEs, `STDDEV`, `LAG`, window functions), Microsoft Excel (native charts and Pivot Tables).
 * **Key Achievements:**
  * **Disproved the obvious answer.** Ranking warehouses by late-order count blames the largest site; variance decomposition shows only **0.08%** of delivery-time variance is between warehouses. Prevented a misdirected improvement programme.
- * Cleaned and processed raw transactional data, generating dynamic metrics like **Delivery Days**, **Order-to-Ship Days**, and **Profit Margins** ($82.7M gross revenue / $30.9M profit across 7,991 orders).
+* Cleaned and processed raw transactional data, generating consistent net revenue, **Delivery Days**, **Order-to-Ship Days**, and **Profit Margins** ($73.0M net revenue / $21.2M profit across 7,991 orders).
  * Implemented an automated Excel workbook generator (`build_excel_dashboard.py`) using `openpyxl` with dynamic dropdown selectors, date-range inputs, and custom formula-driven pivot tables.
  * Designed an executive **Summary** sheet containing KPI cards, performance grids, and narrative insights on fulfilment performance.
- * Used **ABC Classification** to segment the 47-SKU catalogue by revenue contribution (A-items = 78.7% of revenue) — with an honest read that this catalogue shows only moderate, not textbook 80/20, concentration.
+* Used **ABC Classification** to segment the 47-SKU catalogue by net-revenue contribution (A-items = 80.6% of net revenue) — with an honest read that this catalogue shows only moderate, not textbook 80/20, concentration.
  * Shipped a reproducible Python pipeline (`src/data_cleaning.py`, `src/analytics.py`, `src/build_excel_dashboard.py`) so every quoted figure regenerates from the raw data.
 
 ### 2. [Ride Demand Forecasting & Revenue Analytics](./uber-trip-demand-analysis/)
@@ -125,6 +126,16 @@ data-analytics-projects/
 │ ├── image/ # Visual analysis plots & demand curves
 │ ├── UberTripAnalysis.ipynb # Interactive Python behavioral analytics
 │ └── README.md # Complete project brief and recommendations
+│
+├── subscription-retention-analytics/ # Customer churn risk and retention analysis
+│ ├── src/ # Excel dashboard generator
+│ ├── data/ # IBM Telco churn dataset
+│ ├── outputs/ # Segment and model metrics
+│ ├── excel_analysis/ # Native Excel dashboard
+│ ├── sql_queries/ # MySQL cleaning and churn analysis
+│ ├── image/ # EDA and model visuals
+│ ├── requirements.txt # Python dependencies
+│ └── README.md # Detailed retention analysis
 │
 └── README.md # Main portfolio lander (this file)
 ```

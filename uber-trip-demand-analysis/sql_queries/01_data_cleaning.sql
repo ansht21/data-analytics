@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS uber_trips;
 CREATE TABLE uber_trips (
     Trip_ID           VARCHAR(20),
     Date              DATE,
-    Time              DATETIME,
+    Time              TIME,
     Hour              INT,
     Day_of_Week       VARCHAR(20),
     Month             INT,
@@ -51,14 +51,19 @@ CREATE TABLE uber_trips_clean AS
 SELECT DISTINCT *
 FROM uber_trips;
 
--- 6. Stage 2 deduplication: Retain only the most-recent record per Trip_ID
---    (handles cases where a trip was updated/re-submitted)
+-- 6. Stage 2 deduplication: retain one record per Trip_ID deterministically.
+--    The source has no update timestamp, so Date/Time plus stable business
+--    attributes are used only as a tie-breaker; this does not claim recency.
 DROP TABLE IF EXISTS uber_trips_final;
 CREATE TABLE uber_trips_final AS
 SELECT *
 FROM (
     SELECT *,
-           ROW_NUMBER() OVER (PARTITION BY Trip_ID ORDER BY Date DESC) AS rn
+           ROW_NUMBER() OVER (
+               PARTITION BY Trip_ID
+               ORDER BY Date DESC, Time DESC, Fare_Amount DESC,
+                        Trip_Distance_km DESC, Driver_ID DESC
+           ) AS rn
     FROM uber_trips_clean
 ) ranked
 WHERE rn = 1;

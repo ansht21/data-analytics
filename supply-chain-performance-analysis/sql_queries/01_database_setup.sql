@@ -14,8 +14,9 @@ DROP TABLE IF EXISTS SupplyChainSales;
 
 -- IMPORTANT: This script loads the CLEANED pipeline output
 --   data/Cleaned_Supplychain_Data.csv  (produced by src/data_cleaning.py)
--- The cleaning step already standardizes headers, strips '$'/',' from currency
--- columns, and writes ISO (YYYY-MM-DD) dates -- so the load below works directly.
+-- The cleaning step strips '$'/',' from currency columns, writes ISO dates and
+-- calculates realised net Revenue/Profit after Discount_Applied. LOAD DATA maps
+-- fields by their documented CSV position; the database uses concise SQL names.
 -- (Loading the RAW csv would fail: it has '$1,001.18' currency strings and
 --  day-first dates like '31/5/18'. Always run src/data_cleaning.py first.)
 
@@ -46,15 +47,15 @@ CREATE TABLE SupplyChainSales (
     PRIMARY KEY (OrderNumber)
 );
 
--- Note: MySQL require checking local_infile variables or secure_file_priv paths
--- to load local dataset files into the database.
+-- Note: enable local_infile in the client/server when needed. Use LOCAL so this
+-- works from a checkout without copying the data into MySQL's server directory.
 -- SHOW VARIABLES LIKE 'secure_file_priv';
 
 -- 4. Bulk Import Transaction Data
 -- Replace the path below with the location of Cleaned_Supplychain_Data.csv.
 -- The trailing engineered columns (profit_margin, on_time, order_year,
 -- order_month) are skipped via throwaway @vars.
-LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Cleaned_Supplychain_Data.csv'
+LOAD DATA LOCAL INFILE 'C:/path/to/data-analytics/supply-chain-performance-analysis/data/Cleaned_Supplychain_Data.csv'
 INTO TABLE SupplyChainSales
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'

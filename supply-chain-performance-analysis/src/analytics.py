@@ -15,6 +15,8 @@ Output:
 from __future__ import annotations
 
 import json
+import hashlib
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -53,15 +55,18 @@ def abc_classification(df: pd.DataFrame) -> pd.DataFrame:
     )
     prod["cum_pct"] = prod["revenue"].cumsum() / prod["revenue"].sum() * 100
 
-    def bucket(cum: float) -> str:
-        if cum <= 80:
+    prod["prior_cum_pct"] = prod["cum_pct"].shift(fill_value=0)
+
+    def bucket(prior_cum: float) -> str:
+        # Include the SKU that crosses each threshold in the preceding class.
+        if prior_cum < 80:
             return "A"
-        if cum <= 95:
+        if prior_cum < 95:
             return "B"
         return "C"
 
-    prod["class"] = prod["cum_pct"].apply(bucket)
-    return prod
+    prod["class"] = prod["prior_cum_pct"].apply(bucket)
+    return prod.drop(columns="prior_cum_pct")
 
 
 def abc_summary(prod: pd.DataFrame) -> dict:
@@ -121,6 +126,14 @@ def main() -> None:
     (OUT_DIR / "kpi_summary.json").write_text(json.dumps(k, indent=2))
     prod.to_csv(OUT_DIR / "abc_classification.csv", index=False)
     wh.to_csv(OUT_DIR / "warehouse_performance.csv", index=False)
+    run_metadata = {
+        "source_file": CLEAN_PATH.name,
+        "source_rows": int(len(df)),
+        "source_sha256": hashlib.sha256(CLEAN_PATH.read_bytes()).hexdigest(),
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "financial_definition": "net revenue = quantity * unit price * (1 - discount); profit = net revenue - total cost",
+    }
+    (OUT_DIR / "run_metadata.json").write_text(json.dumps(run_metadata, indent=2))
 
     print(json.dumps(k, indent=2))
 

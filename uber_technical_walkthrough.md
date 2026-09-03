@@ -15,7 +15,7 @@ This document is your technical "cheat sheet" for explaining the Uber-themed rid
 * **Action:** Instead of just using a library, I built a two-stage SQL cleaning pipeline.
 * **Steps:**
     1. **Exact Deduplication:** Used `CREATE TABLE ... AS SELECT DISTINCT` to remove complete row duplicates.
-    2. **Logic-Based Cleaning:** Used the `ROW_NUMBER()` window function partitioned by `Trip_ID` to keep only the most recent record. This is a common enterprise task where records are updated/re-submitted.
+    2. **Logic-Based Cleaning:** Used `ROW_NUMBER()` partitioned by `Trip_ID` with deterministic business-field tie-breakers to retain one record per ID. The source does not contain an update timestamp, so the pipeline does not claim that the retained record is the most recently updated one.
     3. **Integrity Audit:** Ran queries to flag null values in critical fields like `Trip_Distance` or `Fare_Amount`.
 
 ### Phase 2: Exploratory Data Analysis (Python)
@@ -36,7 +36,7 @@ This document is your technical "cheat sheet" for explaining the Uber-themed rid
 ---
 
 ## 3. The "Elevator Pitch" for Interviews
-> "For my Uber ride demand project, I focused on identifying revenue drivers. I started by building a robust two-stage SQL data cleaning pipeline using window functions to ensure no duplicate trip records skewed our analysis. I then performed EDA in Python using heatmaps to identify specific demand spikes—like the evening rush and late-night airport trips. My analysis revealed that premium vehicle categories generated 2.3 times more revenue per kilometer than economy vehicles. Based on these insights, I recommended specific surge-pricing windows and a zone-based driver allocation strategy for high-revenue hotspots."
+> "For my Uber ride demand project, I focused on identifying revenue drivers. I built a two-stage SQL cleaning pipeline with deterministic trip-level deduplication, then performed EDA in Python using heatmaps to identify demand patterns. I separated trip-volume growth from revenue growth so incentive timing is based on demand rather than fare mix. The analysis found that premium vehicle categories earn substantially more revenue per kilometer and airport trips are especially valuable, supporting targeted fleet positioning while keeping city-wide coverage."
 
 ---
 

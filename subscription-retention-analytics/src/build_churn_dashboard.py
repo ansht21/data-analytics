@@ -136,6 +136,7 @@ def build_dashboard(ws, df: pd.DataFrame) -> None:
         "Revenue-at-risk view prioritizes retention spend by dollars",
         "Use Customer_Detail filters for Contract, Tenure Band, Service, Payment Method, and Churn",
     ]
+    # The action panel begins after the two aligned chart rows.
     ws.merge_cells("B40:K40")
     ws["B40"] = "Recommended Retention Actions"
     ws["B40"].font = Font(name="Calibri", size=14, bold=True, color=WHITE)
@@ -223,8 +224,8 @@ def add_charts(data_ws, anchors: dict[str, tuple[int, int, int]], dash_ws) -> No
     chart.add_data(Reference(data_ws, min_col=3, min_row=r0, max_row=r0 + n), titles_from_data=True)
     chart.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
     chart.legend = None
-    chart.width = 13
-    chart.height = 8
+    chart.width = 10.8
+    chart.height = 7.2
     dash_ws.add_chart(chart, "B10")
 
     r0, n, _ = anchors["tenure"]
@@ -234,17 +235,17 @@ def add_charts(data_ws, anchors: dict[str, tuple[int, int, int]], dash_ws) -> No
     chart.add_data(Reference(data_ws, min_col=3, min_row=r0, max_row=r0 + n), titles_from_data=True)
     chart.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
     chart.legend = None
-    chart.width = 13
-    chart.height = 8
-    dash_ws.add_chart(chart, "H10")
+    chart.width = 10.8
+    chart.height = 7.2
+    dash_ws.add_chart(chart, "G10")
 
     r0, n, _ = anchors["service"]
     chart = DoughnutChart()
     chart.title = "Customers by Internet Service"
     chart.add_data(Reference(data_ws, min_col=2, min_row=r0, max_row=r0 + n), titles_from_data=True)
     chart.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
-    chart.width = 13
-    chart.height = 8
+    chart.width = 10.8
+    chart.height = 7.2
     dash_ws.add_chart(chart, "B25")
 
     r0, n, _ = anchors["risk"]
@@ -255,9 +256,9 @@ def add_charts(data_ws, anchors: dict[str, tuple[int, int, int]], dash_ws) -> No
     chart.add_data(Reference(data_ws, min_col=4, min_row=r0, max_row=r0 + n), titles_from_data=True)
     chart.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
     chart.legend = None
-    chart.width = 13
-    chart.height = 8
-    dash_ws.add_chart(chart, "H25")
+    chart.width = 10.8
+    chart.height = 7.2
+    dash_ws.add_chart(chart, "G25")
 
 
 def build_customer_detail(ws, df: pd.DataFrame) -> None:

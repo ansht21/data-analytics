@@ -1,0 +1,7 @@
+{
+  "source_file": "Cleaned_Supplychain_Data.csv",
+  "source_rows": 7991,
+  "source_sha256": "620439344fc0c6f84f97fad23b75ef34b9a667a5c650b133f26bb91c501e4224",
+  "generated_at_utc": "2026-09-03T07:15:23.291310+00:00",
+  "financial_definition": "net revenue = quantity * unit price * (1 - discount); profit = net revenue - total cost"
+}

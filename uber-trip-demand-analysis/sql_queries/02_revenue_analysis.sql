@@ -139,13 +139,13 @@ ORDER BY total_revenue_inr DESC;
 
 
 -- -------------------------------------------------------------------------
--- 8. BUSINESS QUESTION: Is there a seasonal demand cycle we should plan around?
+-- 8. BUSINESS QUESTION: Is there visible within-year variation in this dataset?
 -- Metric: trips, revenue, avg fare by month
--- Answer: No meaningful seasonality. Monthly revenue sits in a narrow
---         Rs 10.7L-11.9L band; the spread between the best month (October,
---         Rs 11.87L) and the worst (February, Rs 10.66L) is only 11%.
--- Action: Plan capacity on time-of-day, not season -- the daily curve is where
---         the real variation lives (see section 2). (Q8)
+-- Answer: Monthly revenue sits in a narrow Rs 10.7L-11.9L band in this single
+--         simulated year. This is descriptive only, not evidence that recurring
+--         seasonality is absent.
+-- Action: Use time-of-day for current capacity decisions; validate seasonality
+--         with multiple years of production data before making annual plans. (Q8)
 -- -------------------------------------------------------------------------
 SELECT
     Month,
@@ -168,15 +168,15 @@ ORDER BY Month ASC;
 -- -------------------------------------------------------------------------
 -- 9. BUSINESS QUESTION: Which hour has the sharpest jump in demand -- i.e.
 --    where does the evening rush actually START, so incentives go live in time?
--- Metric: hour-over-hour % change in revenue, via LAG()
+-- Metric: hour-over-hour % change in trip volume, plus revenue for context, via LAG()
 -- Technique: LAG() window function to compare each hour to the previous one
--- Answer: The single biggest jump is 8 AM at +175.6% over 7 AM. The evening
---         rush ignites at 5 PM (+138.2% over 4 PM), NOT at 6 PM when volume
---         peaks -- by 6 PM the surge is already underway (+14.4%).
+-- Answer: The result reports the largest hour-over-hour change in trip volume.
+--         Read the output values after loading the dataset; revenue is retained
+--         as context but does not determine the demand-surge signal.
 -- Action: Push driver incentives live by 4:30 PM, an hour before the peak.
 --         Peak volume and peak GROWTH are different hours; only LAG shows this.
 -- -------------------------------------------------------------------------
-WITH hourly_revenue AS (
+WITH hourly_demand AS (
     SELECT
         Hour,
         COUNT(Trip_ID)             AS total_trips,
@@ -188,17 +188,17 @@ SELECT
     Hour,
     total_trips,
     revenue_inr,
-    LAG(revenue_inr) OVER (ORDER BY Hour) AS prev_hour_revenue_inr,
+    LAG(total_trips) OVER (ORDER BY Hour) AS prev_hour_trips,
     ROUND(
-        (revenue_inr - LAG(revenue_inr) OVER (ORDER BY Hour))
-        / LAG(revenue_inr) OVER (ORDER BY Hour) * 100
-    , 2) AS pct_change_vs_prev_hour,
+        (total_trips - LAG(total_trips) OVER (ORDER BY Hour))
+        / LAG(total_trips) OVER (ORDER BY Hour) * 100
+    , 2) AS trip_pct_change_vs_prev_hour,
     CASE
-        WHEN revenue_inr > LAG(revenue_inr) OVER (ORDER BY Hour) * 1.5 THEN 'DEMAND SURGE'
-        WHEN revenue_inr < LAG(revenue_inr) OVER (ORDER BY Hour) * 0.7 THEN 'SHARP DROP'
+        WHEN total_trips > LAG(total_trips) OVER (ORDER BY Hour) * 1.5 THEN 'DEMAND SURGE'
+        WHEN total_trips < LAG(total_trips) OVER (ORDER BY Hour) * 0.7 THEN 'SHARP DROP'
         ELSE 'STABLE'
     END AS demand_signal
-FROM hourly_revenue
+FROM hourly_demand
 ORDER BY Hour;
 
 
