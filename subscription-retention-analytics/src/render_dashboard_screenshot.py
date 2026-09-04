@@ -1,7 +1,9 @@
 """
-Render a PNG screenshot of the Subscription Retention & Churn Dashboard
-that mirrors the rebuilt Excel layout (Filters left, KPI cards top
-right, 3x2 chart grid, Executive Insights, footer).
+Render a PNG screenshot of the Subscription Retention & Churn Dashboard.
+Restyled to match the Supply Chain executive layout:
+  - KPI cards: white cards with colored left accent bars
+  - Consistent blue/teal palette across all charts
+  - Compact Key Findings panel with bold navy text
 """
 from __future__ import annotations
 
@@ -18,29 +20,32 @@ OUT_PATH = ROOT / "image" / "Churn_Dashboard_screenshot.png"
 
 NAVY = "#1F3864"
 NAVY_DARK = "#0F2A4D"
-BLUE = "#2F75B5"
+BLUE = "#2E5496"
+TEAL = "#00A6A6"
 BG = "#E9EDF4"
 WHITE = "#FFFFFF"
 RED = "#B0252A"
 ORANGE_DARK = "#A14E0C"
 GREEN = "#3E7C2A"
+PURPLE = "#7030A0"
 PANEL_BLUE = "#1F4E79"
 TEXT = "#1F2937"
 LIGHT_BLUE = "#DDEBF7"
 PANEL_BG = "#FFFFFF"
+GRAY_SLICE = "#8496B0"
 
 
 def _kpi(ax, x, y, w, h, label, value, color):
-    ax.add_patch(FancyBboxPatch((x, y - h * 0.28), w, h * 0.28,
-                                boxstyle="round,pad=0.003,rounding_size=0.008",
-                                linewidth=0, facecolor=color, transform=ax.transAxes))
-    ax.text(x + w * 0.018, y - h * 0.14, label, color=WHITE, fontsize=10, weight="bold",
-            transform=ax.transAxes, va="center", ha="left")
-    ax.add_patch(FancyBboxPatch((x, y - h * 0.92), w, h * 0.64,
+    """White KPI card with a colored left accent bar (supply-chain style)."""
+    ax.add_patch(FancyBboxPatch((x, y - h), w, h,
                                 boxstyle="round,pad=0.003,rounding_size=0.008",
                                 linewidth=0.8, edgecolor="#A8B0C0", facecolor=WHITE,
                                 transform=ax.transAxes))
-    ax.text(x + w * 0.018, y - h * 0.60, value, color=NAVY_DARK, fontsize=18, weight="bold",
+    ax.add_patch(Rectangle((x, y - h + 0.004), 0.0035, h - 0.008,
+                           facecolor=color, transform=ax.transAxes))
+    ax.text(x + 0.008, y - h * 0.28, label, color=NAVY, fontsize=10, weight="bold",
+            transform=ax.transAxes, va="center", ha="left")
+    ax.text(x + 0.008, y - h * 0.70, value, color=NAVY_DARK, fontsize=19, weight="bold",
             transform=ax.transAxes, va="center", ha="left")
 
 
@@ -60,7 +65,7 @@ def _filter_section(ax, x_top, y_top, w, items, label):
     chip_pad_y = 0.005
     rows = math.ceil(len(items) / 2)
     body_h = chip_pad_y * 2 + rows * chip_h + (rows - 1) * chip_gap_y
-    header_h = 0.020
+    header_h = 0.024
     box_h = header_h + body_h + 0.004
     box_y = y_top - box_h
     ax.add_patch(FancyBboxPatch((x_top, box_y), w, box_h,
@@ -79,9 +84,9 @@ def _filter_section(ax, x_top, y_top, w, items, label):
         row = i // 2
         col = i % 2
         cx = x_top + chip_pad_x + col * (chip_w + chip_pad_x)
-        cy = y_top - header_h - chip_pad_y - row * (chip_h + chip_gap_y) - chip_h
+        cy = y_top - header_h - chip_pad_y - chip_h - row * (chip_h + chip_gap_y)
         _chip(ax, cx, cy, chip_w, chip_h, item)
-    return box_h + 0.006
+    return box_h + 0.016
 
 
 def main() -> None:
@@ -133,21 +138,22 @@ def main() -> None:
         used = _filter_section(ax, inner_x, y_cursor, inner_w, items, label)
         y_cursor -= used + 0.002
 
-    # KPI cards
+    # KPI cards - distinct accent colors, supply-chain style
     kpis = [
         ("Total Customers", f"{len(df):,}", GREEN),
         ("Churn Rate", f"{df['ChurnFlag'].mean():.1%}", RED),
         ("Avg Tenure (mo)", f"{df['tenure'].mean():.1f}", ORANGE_DARK),
-        ("Revenue at Risk", f"${df['RevenueAtRisk'].sum()/1000:,.0f}", RED),
-        ("Retention Rate", f"{1-df['ChurnFlag'].mean():.1%}", GREEN),
+        ("Revenue at Risk", f"${df['RevenueAtRisk'].sum()/1000:,.0f}K", PURPLE),
+        ("Retention Rate", f"{1-df['ChurnFlag'].mean():.1%}", TEAL),
     ]
     kpi_x0 = panel_x + panel_w + 0.045
     kpi_total_w = 1 - kpi_x0 - 0.012
-    kpi_w = (kpi_total_w - 0.012) / 5
+    kpi_gap = 0.010
+    kpi_w = (kpi_total_w - 4 * kpi_gap) / 5
     kpi_h = 0.10
     kpi_top = 0.92
     for i, (label, value, color) in enumerate(kpis):
-        x = kpi_x0 + i * (kpi_w + 0.003)
+        x = kpi_x0 + i * (kpi_w + kpi_gap)
         _kpi(ax, x, kpi_top, kpi_w, kpi_h, label, value, color)
 
     # Chart grid
@@ -162,75 +168,70 @@ def main() -> None:
     grid_x0 = kpi_x0
     grid_x1 = 1 - 0.012
     grid_y0 = 0.36
-    grid_y1 = 0.78
+    grid_y1 = 0.80
+    row_gap = 0.030
     cell_w = (grid_x1 - grid_x0) / 3
-    cell_h = (grid_y1 - grid_y0) / 2
+    cell_h = (grid_y1 - grid_y0 - row_gap) / 2
 
     for i, (title, key) in enumerate(chart_specs):
         row, col = divmod(i, 3)
-        x = grid_x0 + col * cell_w + 0.006
-        y = grid_y1 - (row + 1) * cell_h + (0.040 if row == 0 else 0.005)
-        cax = fig.add_axes([x, y, cell_w - 0.012, cell_h - 0.050])
+        x = grid_x0 + col * cell_w
+        y_top = grid_y1 - row * (cell_h + row_gap)
+        cax = fig.add_axes([x + 0.004, y_top - cell_h + 0.012,
+                            cell_w - 0.014, cell_h - 0.030])
         cax.set_facecolor(PANEL_BG)
         for spine in cax.spines.values():
             spine.set_color("#B8C0D0")
             spine.set_linewidth(0.8)
-        cax.set_title(title, fontsize=10, weight="bold", color=NAVY_DARK, pad=8)
-        cax.set_facecolor(PANEL_BG)
-        for spine in cax.spines.values():
-            spine.set_color("#B8C0D0")
-            spine.set_linewidth(0.8)
-        cax.set_title(title, fontsize=10, weight="bold", color=NAVY_DARK, pad=8)
+        cax.set_title(title, fontsize=10.5, weight="bold", color=NAVY_DARK, pad=8)
 
         if key == "contract":
             data = df.groupby("Contract", observed=True)["ChurnFlag"].mean().mul(100).reindex(
                 ["Month-to-month", "One year", "Two year"])
             cax.bar(data.index, data.values, color=BLUE, width=0.55)
-            cax.set_ylabel("Churn Rate %", fontsize=8, color=TEXT)
-            cax.tick_params(axis="x", labelsize=8, rotation=0)
+            cax.tick_params(axis="x", labelsize=8.5, rotation=0)
             cax.tick_params(axis="y", labelsize=8)
             for s in cax.spines.values():
                 s.set_visible(False)
             for j, v in enumerate(data.values):
-                cax.text(j, v + 1, f"{v:.1f}", ha="center", fontsize=8, color=TEXT, weight="bold")
+                cax.text(j, v + 1, f"{v:.1f}%", ha="center", fontsize=8.5, color=NAVY, weight="bold")
             cax.set_ylim(0, max(data.values) * 1.20)
         elif key == "tenure":
             data = df.groupby("tenure_band", observed=True)["ChurnFlag"].mean().mul(100)
             cax.plot(data.index.astype(str), data.values, color=BLUE, marker="o", linewidth=2.2, markersize=5)
-            cax.fill_between(range(len(data)), data.values, color=BLUE, alpha=0.18)
-            cax.set_ylabel("Churn Rate %", fontsize=8, color=TEXT)
+            cax.fill_between(range(len(data)), data.values, color=BLUE, alpha=0.15)
             cax.tick_params(axis="x", labelsize=8)
             cax.tick_params(axis="y", labelsize=8)
             for j, v in enumerate(data.values):
-                cax.text(j, v + 1, f"{v:.1f}", ha="center", fontsize=8, color=TEXT, weight="bold")
+                cax.text(j, v + 1.5, f"{v:.1f}%", ha="center", fontsize=8, color=NAVY, weight="bold")
+            cax.set_ylim(0, max(data.values) * 1.18)
             for s in cax.spines.values():
                 s.set_visible(False)
         elif key == "service":
             data = df.groupby("InternetService", observed=True)["customerID"].count()
-            colors = ["#2F75B5", "#F4B183", "#7E3F98"]
+            colors = [BLUE, TEAL, GRAY_SLICE]
             wedges, _, autotexts = cax.pie(
                 data.values, labels=data.index, colors=colors,
-                autopct="%1.0f%%", startangle=90,
+                autopct="%1.0f%%", startangle=90, pctdistance=0.76,
                 wedgeprops=dict(width=0.42, edgecolor=WHITE),
-                textprops=dict(fontsize=8, color=TEXT),
+                textprops=dict(fontsize=8.5, color=TEXT),
             )
             for t in autotexts:
                 t.set_color(WHITE)
-                t.set_fontsize(8)
+                t.set_fontsize(8.5)
                 t.set_weight("bold")
-        elif key == "payment":
-            pass  # unused
+            cax.set_position([cax.get_position().x0 - 0.010, cax.get_position().y0,
+                              cax.get_position().width + 0.020, cax.get_position().height])
         elif key == "rev_by_contract":
             data = (df.assign(rar=df["MonthlyCharges"] * df["ChurnFlag"])
                       .groupby("Contract", observed=True)["rar"].sum().div(1000).round(1))
             cax.bar(data.index, data.values, color=BLUE, width=0.55)
-            cax.set_ylabel("Revenue at Risk ($K)", fontsize=8, color=TEXT)
-            cax.tick_params(axis="x", labelsize=8, rotation=0)
+            cax.tick_params(axis="x", labelsize=8.5, rotation=0)
             cax.tick_params(axis="y", labelsize=8)
             for s in cax.spines.values():
                 s.set_visible(False)
             for j, v in enumerate(data.values):
-                cax.text(j, v + 1, f"${v:.0f}K", ha="center", fontsize=8, color=TEXT, weight="bold")
+                cax.text(j, v + 2, f"${v:.0f}K", ha="center", fontsize=8.5, color=NAVY, weight="bold")
             cax.set_ylim(0, max(data.values) * 1.20)
         elif key == "risk":
             grp = (df.assign(rar=df["MonthlyCharges"] * df["ChurnFlag"])
@@ -238,36 +239,39 @@ def main() -> None:
                      .div(1000).round(1).sort_values(ascending=False).head(6))
             grp = grp.reset_index()
             grp["label"] = grp["Contract"].str.replace("Month-to-month", "M2M") + " | " + grp["InternetService"].replace({"Fiber optic": "Fiber", "No": "None"})
+            cax.set_position([cax.get_position().x0 + 0.020, cax.get_position().y0,
+                              cax.get_position().width - 0.020, cax.get_position().height])
             cax.barh(grp["label"][::-1], grp["rar"][::-1], color=GREEN)
-            cax.set_xlabel("Revenue at Risk ($K)", fontsize=8, color=TEXT)
             cax.tick_params(axis="x", labelsize=8)
             cax.tick_params(axis="y", labelsize=8)
             for s in cax.spines.values():
                 s.set_visible(False)
             for j, (lbl, v) in enumerate(zip(grp["label"][::-1], grp["rar"][::-1])):
                 cax.text(v + grp["rar"].max() * 0.015, j, f"${v:.0f}K",
-                         va="center", fontsize=7, color=TEXT, weight="bold")
+                         va="center", fontsize=8, color=NAVY, weight="bold")
+            cax.set_xlim(0, grp["rar"].max() * 1.18)
         elif key == "tenure_trend":
             t = df.groupby("tenure")["ChurnFlag"].mean().mul(100)
             t = t.iloc[::3]
-            cax.plot(t.index, t.values, color=ORANGE_DARK, linewidth=2.2)
-            cax.fill_between(t.index, t.values, color=ORANGE_DARK, alpha=0.30)
-            cax.set_ylabel("Churn Rate %", fontsize=8, color=TEXT)
-            cax.set_xlabel("Tenure (months)", fontsize=8, color=TEXT)
+            cax.plot(t.index, t.values, color=NAVY, linewidth=2.2)
+            cax.fill_between(t.index, t.values, color=BLUE, alpha=0.18)
             cax.tick_params(axis="x", labelsize=7)
             cax.tick_params(axis="y", labelsize=8)
             for s in cax.spines.values():
                 s.set_visible(False)
 
-    # Key Findings panel
-    ax.add_patch(FancyBboxPatch((panel_x, 0.04), 1 - 2 * panel_x, 0.27,
+    # Key Findings panel - fills the lower band, bold navy text
+    findings_top = 0.335
+    findings_h = 0.255
+    ax.add_patch(FancyBboxPatch((kpi_x0, findings_top - findings_h), grid_x1 - kpi_x0, findings_h,
                                 boxstyle="round,pad=0.002,rounding_size=0.006",
                                 linewidth=0.6, edgecolor="#C0C8D8", facecolor=WHITE,
                                 transform=ax.transAxes))
-    ax.add_patch(Rectangle((panel_x, 0.04), 1 - 2 * panel_x, 0.028,
+    ax.add_patch(Rectangle((kpi_x0, findings_top - 0.030), grid_x1 - kpi_x0, 0.030,
                            facecolor=NAVY, transform=ax.transAxes))
-    ax.text(panel_x + (1 - 2 * panel_x) / 2, 0.054, "Key Findings  |  Executive Insights",
-            color=WHITE, fontsize=11, weight="bold",
+    ax.text(kpi_x0 + (grid_x1 - kpi_x0) / 2, findings_top - 0.015,
+            "Key Findings  |  Executive Insights",
+            color=WHITE, fontsize=11.5, weight="bold",
             ha="center", va="center", transform=ax.transAxes)
 
     by_contract = df.groupby("Contract", observed=True)["ChurnFlag"].mean().mul(100)
@@ -284,9 +288,9 @@ def main() -> None:
         "Top revenue-at-risk segment: Month-to-month + Fiber optic - protect by contract conversion.",
     ]
     for i, txt in enumerate(findings):
-        y = 0.085 + i * 0.038
-        c = ax.text(panel_x + 0.015, y, f"  -  {txt}", color=TEXT, fontsize=9.5,
-                    ha="left", va="center", transform=ax.transAxes)
+        y = findings_top - 0.062 - i * 0.040
+        ax.text(kpi_x0 + 0.015, y, f"-  {txt}", color=NAVY_DARK, fontsize=10,
+                weight="bold", ha="left", va="center", transform=ax.transAxes)
 
     # Footer
     ax.add_patch(Rectangle((0, 0), 1, 0.025, facecolor=WHITE, transform=ax.transAxes))

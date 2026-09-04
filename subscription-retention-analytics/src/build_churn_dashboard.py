@@ -22,6 +22,7 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.chart import BarChart, DoughnutChart, LineChart, Reference
 from openpyxl.chart.label import DataLabelList
+from openpyxl.chart.marker import DataPoint
 from openpyxl.formatting.rule import CellIsRule
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
@@ -52,6 +53,7 @@ RED = "C00000"
 ORANGE = "F4B183"
 ORANGE_DARK = "C65911"
 GREEN = "548235"
+PURPLE = "7030A0"
 DARK_GRAY = "404040"
 BORDER_GRAY = "BFBFBF"
 PANEL_BLUE = "5B7BB7"
@@ -240,8 +242,8 @@ def build_kpi_cards(ws, df: pd.DataFrame, last_data_row: int) -> None:
         ("Total Customers", f'=SUBTOTAL(3,{cid})', GREEN, '#,##0'),
         ("Churn Rate", f'=IFERROR(SUBTOTAL(2,Customer_Detail!$M$4:$M$7034)/SUBTOTAL(3,{cid}),0)', RED, '0.0%'),
         ("Avg Tenure (mo)", f'=SUBTOTAL(1,{ten})', ORANGE_DARK, '0.0'),
-        ("Revenue at Risk", f'=SUBTOTAL(9,{mch})', RED, '"$"#,##0'),
-        ("Retention Rate", f'=IFERROR((SUBTOTAL(3,{cid})-SUBTOTAL(2,{chr_}))/SUBTOTAL(3,{cid}),0)', GREEN, '0.0%'),
+        ("Revenue at Risk", f'=SUBTOTAL(9,{mch})', PURPLE, '"$"#,##0'),
+        ("Retention Rate", f'=IFERROR((SUBTOTAL(3,{cid})-SUBTOTAL(2,{chr_}))/SUBTOTAL(3,{cid}),0)', TEAL, '0.0%'),
     ]
     kpi_cols = ["F:K", "L:Q", "R:W", "X:AC", "AD:AI"]
     for rng, (label, formula, color, fmt) in zip(kpi_cols, kpis):
@@ -251,14 +253,14 @@ def build_kpi_cards(ws, df: pd.DataFrame, last_data_row: int) -> None:
         # Label row
         ws.merge_cells(start_row=5, start_column=start_col, end_row=5, end_column=end_col)
         lc = ws.cell(row=5, column=start_col, value=label)
-        lc.font = kpi_label_font
-        lc.fill = _fill(color)
+        lc.font = Font(name="Calibri", size=11, bold=True, color=NAVY)
+        lc.fill = _fill(WHITE)
         lc.alignment = Alignment(horizontal="left", vertical="center", indent=1)
 
         # Value
         ws.merge_cells(start_row=6, start_column=start_col, end_row=8, end_column=end_col)
         vc = ws.cell(row=6, column=start_col, value=formula)
-        vc.font = kpi_value_font
+        vc.font = Font(name="Calibri", size=16, bold=True, color=NAVY_DARK)
         vc.fill = _fill(WHITE)
         vc.alignment = Alignment(horizontal="left", vertical="center", indent=1)
         vc.number_format = fmt
@@ -267,6 +269,15 @@ def build_kpi_cards(ws, df: pd.DataFrame, last_data_row: int) -> None:
         for rr in (5, 6, 7, 8):
             for cc in range(start_col, end_col + 1):
                 ws.cell(row=rr, column=cc).border = border
+        # Colored left accent bar (supply-chain style)
+        for rr in (5, 6, 7, 8):
+            acc = ws.cell(row=rr, column=start_col)
+            acc.border = Border(
+                left=Side(style="thick", color=color),
+                right=acc.border.right,
+                top=acc.border.top,
+                bottom=acc.border.bottom,
+            )
     ws.row_dimensions[5].height = 22
     ws.row_dimensions[6].height = 22
     ws.row_dimensions[7].height = 22
@@ -442,12 +453,11 @@ def add_charts(anchors: dict[str, tuple[int, int, int]], dash_ws, data_ws) -> No
     ch = BarChart()
     ch.type = "col"
     ch.title = "Churn Rate by Contract"
-    ch.y_axis.title = "Churn Rate %"
-    ch.x_axis.title = "Contract"
     ch.style = 12
     ch.add_data(Reference(data_ws, min_col=3, min_row=r0, max_row=r0 + n), titles_from_data=True)
     ch.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
     ch.legend = None
+    ch.series[0].graphicalProperties.solidFill = BLUE
     ch.dataLabels = DataLabelList(showVal=True)
     ch.width = 11
     ch.height = 7
@@ -456,8 +466,6 @@ def add_charts(anchors: dict[str, tuple[int, int, int]], dash_ws, data_ws) -> No
     r0, n, _ = anchors["tenure"]
     ch = LineChart()
     ch.title = "Churn Rate by Tenure Band"
-    ch.y_axis.title = "Churn Rate %"
-    ch.x_axis.title = "Tenure Band"
     ch.style = 12
     ch.add_data(Reference(data_ws, min_col=3, min_row=r0, max_row=r0 + n), titles_from_data=True)
     ch.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
@@ -465,6 +473,7 @@ def add_charts(anchors: dict[str, tuple[int, int, int]], dash_ws, data_ws) -> No
     ch.dataLabels = DataLabelList(showVal=True)
     for s in ch.series:
         s.smooth = True
+        s.graphicalProperties.line.solidFill = BLUE
     ch.width = 11
     ch.height = 7
     dash_ws.add_chart(ch, "N10")
@@ -474,6 +483,12 @@ def add_charts(anchors: dict[str, tuple[int, int, int]], dash_ws, data_ws) -> No
     ch.title = "Customer Mix by Internet Service"
     ch.add_data(Reference(data_ws, min_col=2, min_row=r0, max_row=r0 + n), titles_from_data=True)
     ch.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
+    _pts = []
+    for _idx, _hex in enumerate([BLUE, TEAL, "8496B0"]):
+        _dp = DataPoint(idx=_idx)
+        _dp.graphicalProperties.solidFill = _hex
+        _pts.append(_dp)
+    ch.series[0].data_points = _pts
     ch.dataLabels = DataLabelList(showPercent=True, showCatName=True)
     ch.width = 11
     ch.height = 7
@@ -484,11 +499,11 @@ def add_charts(anchors: dict[str, tuple[int, int, int]], dash_ws, data_ws) -> No
     ch = BarChart()
     ch.type = "bar"
     ch.title = "Top Revenue-at-Risk Segments ($K)"
-    ch.x_axis.title = "Revenue at Risk ($K)"
     ch.style = 11
     ch.add_data(Reference(data_ws, min_col=4, min_row=r0, max_row=r0 + n), titles_from_data=True)
     ch.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
     ch.legend = None
+    ch.series[0].graphicalProperties.solidFill = GREEN
     ch.dataLabels = DataLabelList(showVal=True)
     ch.width = 11
     ch.height = 7
@@ -498,12 +513,11 @@ def add_charts(anchors: dict[str, tuple[int, int, int]], dash_ws, data_ws) -> No
     ch = BarChart()
     ch.type = "col"
     ch.title = "Revenue at Risk by Contract"
-    ch.y_axis.title = "Revenue at Risk ($K)"
-    ch.x_axis.title = "Contract"
     ch.style = 12
     ch.add_data(Reference(data_ws, min_col=3, min_row=r0, max_row=r0 + n), titles_from_data=True)
     ch.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
     ch.legend = None
+    ch.series[0].graphicalProperties.solidFill = BLUE
     ch.dataLabels = DataLabelList(showVal=True)
     ch.width = 11
     ch.height = 7
@@ -512,12 +526,12 @@ def add_charts(anchors: dict[str, tuple[int, int, int]], dash_ws, data_ws) -> No
     r0, n, _ = anchors["tenure_trend"]
     ch = LineChart()
     ch.title = "Churn Rate by Tenure (months)"
-    ch.y_axis.title = "Churn Rate %"
-    ch.x_axis.title = "Tenure (months)"
     ch.style = 12
     ch.add_data(Reference(data_ws, min_col=3, min_row=r0, max_row=r0 + n), titles_from_data=True)
     ch.set_categories(Reference(data_ws, min_col=1, min_row=r0 + 1, max_row=r0 + n))
     ch.legend = None
+    for s in ch.series:
+        s.graphicalProperties.line.solidFill = NAVY
     ch.width = 11
     ch.height = 7
     dash_ws.add_chart(ch, "V24")
