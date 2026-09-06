@@ -1,4 +1,4 @@
-# Project Technical Deep-Dive: Uber Ride Demand Forecasting & Revenue Analytics
+# Project Technical Deep-Dive: Uber Ride Demand & Revenue Analytics
 
 This document is your technical "cheat sheet" for explaining the Uber-themed ride-sharing analytics project. Use this during interviews to demonstrate your data warehousing, cleaning, and visualization skills.
 

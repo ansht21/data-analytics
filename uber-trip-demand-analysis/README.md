@@ -1,4 +1,4 @@
-# Ride Demand Forecasting & Revenue Analytics
+# Ride Demand & Revenue Analytics
 
 **Business problem:** A ride-hailing operator needs to know *when* to surge-price, *where*
 to position premium vehicles, and *which* fleet tier to grow — using 35,000 trip records.
@@ -14,11 +14,11 @@ to position premium vehicles, and *which* fleet tier to grow — using 35,000 tr
 
 ## ▶ How to Run
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn statsmodels jupyter
+pip install pandas numpy matplotlib seaborn jupyter
 # 1. Run the SQL queries in order: 01_data_cleaning.sql → 02_revenue_analysis.sql
-# 2. Generate visuals: jupyter notebook Forecast_Clustering_Analysis.ipynb
+# 2. Generate visuals: jupyter notebook UberTripAnalysis.ipynb
 ```
-All charts are saved to `image/` and cluster assignments to `outputs/demand_cluster_cells.csv` by the notebook itself. Power BI report: [`powerbi/UberTrip_Dashboard.pbix`](powerbi/UberTrip_Dashboard.pbix).
+All charts are saved to `image/` by the notebook itself. Power BI report: [`powerbi/UberTrip_Dashboard.pbix`](powerbi/UberTrip_Dashboard.pbix).
 
 ---
 
@@ -147,41 +147,3 @@ lowest band) attract worse ratings.
 5. **Maintain City-Wide Coverage:** With 4 of 5 zones needed to reach 80% of revenue, do not concentrate supply in a handful of areas.
 
 > *Note: an earlier draft recommended a weekend surcharge and late-night surge — the data shows neither effect is real here, so those were removed. Knowing which recommendations the data does **not** support is part of the analysis.*
-
----
-
-## Predictive & Unsupervised Modeling
-This layer turns the descriptive questions above into forward-looking levers —
-**demand forecasting** (SARIMA), **demand clustering** (K-Means), and a **fare
-prediction** model (Random Forest), all built on the same 35,000-trip dataset and
-validated on a held-out Nov–Dec test window. The forecasting/clustering work lives in
-[`Forecast_Clustering_Analysis.ipynb`](./Forecast_Clustering_Analysis.ipynb);
-the fare model lives in [`UberTripAnalysis.ipynb`](./UberTripAnalysis.ipynb).
-
-
-### 1 · Daily Demand Forecasting (SARIMA)
-* Weekly-seasonal SARIMA(1,1,1)(1,0,1,7) trained on Jan–Oct, validated on a held-out Nov–Dec test window.
-* **Held-out results: MAE 7.6 · RMSE 9.6 · MAPE 8.3%** — a **~20% error reduction vs the seasonal-naive baseline (MAE 9.5)**.
-* Refit on all data to produce a 14-day operational forecast with 95% confidence intervals.
-* **Residual diagnostics:** residual mean −1.57 (≈unbiased); **Ljung-Box p = 0.54 (lag 7) / 0.86 (lag 14)** → no leftover autocorrelation; ACF + Q-Q plots in [`image/forecast_residuals.png`](image/forecast_residuals.png). The model captures the available structure — not just a good score on one metric.
-
-![Held-out forecast](image/forecast_daily_demand.png)
-
-### 2 · Demand Clustering (K-Means, silhouette-validated)
-* Each **zone × hour cell** (5 zones × 24 hours) profiled on volume, fare, distance and duration; k selected by silhouette score (k=2, silhouette **0.675**).
-* **Cluster 0 — long-haul premium cells (24 cells):** avg fare **₹507**, avg distance **24.9 km** — align with airport/premium dispatch.
-* **Cluster 1 — high-volume short-trip cells (96 cells):** avg fare **₹331**, avg distance **15.6 km** — the volume backbone for standard fleet positioning.
-
-![Cluster profiles](image/clustering_profiles.png)
-
-*Cell-level assignments exported to [`outputs/demand_cluster_cells.csv`](outputs/demand_cluster_cells.csv). Reproducible: fixed random_state, deterministic split, all metrics computed on held-out data.*
-
-### 3 · Route-Level Fare Prediction (Random Forest)
-
-* **Goal:** price fairness & surge calibration are only useful if you can predict the fare you *should* get for a trip. This model recovers trip fare from the trip-level features (distance, duration, hour, vehicle, zone) so the gap between expected and *charged* fare becomes an operational lever.
-* **Model:** `RandomForestRegressor`, deterministic `random_state`, trained on Jan–Oct with a held-out Nov–Dec test window (no leakage).
-* **Held-out performance:**
-  * **R² = 0.972** — the model explains **97% of fare variance**
-  * **RMSE = ₹37.4** against an average fare of ~₹289 — prediction error is ~13% of a typical trip
-* **Why it matters:** with a fair "expected fare" in hand, every observed discount, surge multiplier, or route deviation becomes directly attributable to policy rather than trip mix. The clusters above (premium long-haul vs volume short-haul) now have a per-trip revenue anchor, so the two analyses compound.
-* **Limitation flag:** like the SARIMA model, the fare model is built on a single 2024 year — seasonal fare swings are learned from the weekly/weekend patterns that *are* present, not from a recurring annual cycle.
