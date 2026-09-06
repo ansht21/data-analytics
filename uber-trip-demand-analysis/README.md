@@ -18,7 +18,7 @@ pip install pandas numpy matplotlib seaborn jupyter
 # 1. Run the SQL queries in order: 01_data_cleaning.sql → 02_revenue_analysis.sql
 # 2. Generate visuals: jupyter notebook UberTripAnalysis.ipynb
 ```
-All charts are saved to `image/` by the notebook itself. Power BI report: [`powerbi/UberTrip_Dashboard.pbix`](powerbi/UberTrip_Dashboard.pbix).
+All charts are saved to `image/` by the notebook itself. Power BI report: [`powerbi/UberTrip_Dashboard.pbix`](powerbi/UberTrip_Dashboard.pbix). Excel dashboard: [`excel_analysis/uber_trips_data.xlsx`](excel_analysis/uber_trips_data.xlsx).
 
 ---
 
