@@ -20,7 +20,7 @@ Three end-to-end analytics projects covering **50,000+ records**: a supply-chain
 fulfilment audit, a ride-demand and pricing analysis, and subscription-retention analytics. Every figure below is
 reproducible from the committed SQL and Python in this repository.
 
-As a **B.Sc IT graduate** and **aspiring Data Analyst**, I specialize in translating complex datasets into clean, reliable, and actionable business insights.
+As a **B.Sc IT graduate** working across **Data Analytics and Data Science**, I specialize in translating complex datasets into clean, reliable, and actionable business insights — from SQL dashboards that answer today's questions to predictive models that flag tomorrow's risks.
 
 ---
 
@@ -158,11 +158,12 @@ data-analytics-projects/
 
 ## Contact & Collaboration
 
-I am actively seeking entry-level **Data Analyst**, **Business Intelligence Analyst**, or **Data Engineer** roles where I can help teams turn complex data into clean, business-boosting decisions.
+I am actively seeking entry-level **Data Analyst**, **Data Science Associate**, **Business Intelligence Analyst**, or **Data Engineer** roles where I can help teams turn complex data into clean, business-boosting decisions.
 
 <div align="center">
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-ansh--thakur.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://ansh-thakur.netlify.app/)
+[![ML Projects](https://img.shields.io/badge/GitLab-ML_Projects-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121/machine-learning-project)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ansh-thakur-5407192b4/)
 [![Email](https://img.shields.io/badge/Email-ansht1194@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ansht1194@gmail.com)
 
