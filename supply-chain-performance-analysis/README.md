@@ -12,6 +12,23 @@ Is that one bad warehouse, or the whole network? 7,991 orders, 2018–2020.
 
 ---
 
+## System Design Decisions
+
+| Decision | Rationale |
+| :--- | :--- |
+| **Net-revenue definition first** (`qty × price × (1 - discount)`) | One definition enforced across Python, the SQL import, and the dashboard — prevents the classic gross-vs-net KPI mismatch between analysts |
+| **Typed MySQL schema before EDA** | Window functions and variance decomposition run against indexed columns, not CSV scans |
+| **Python pipeline regenerates every output** | `src/analytics.py` rebuilds all KPI tables — no hand-edited numbers anywhere in the repo |
+| **Excel-native dashboard (VBA refresh)** | Stakeholders get filters and charts with no Power BI licence dependency |
+
+## The Story in 3 Charts
+
+1. **The assumption** — `image/supply_warehouse_ontime.png`: rank warehouses by late orders and the biggest site looks guilty.
+2. **The evidence** — `image/Supplychain_Heatmap.png`: six near-identical delivery curves (~5.5 days, flat for three years) — variance decomposition puts 0.08% of delivery-time variance between sites.
+3. **The decision** — `image/supply_discount_margin.png`: realised margin collapses past 20% discounts (4.64% vs 31.02%) — act on discount policy, not on a warehouse.
+
+---
+
 ## Business Questions Answered
 
 Every figure is reproducible: run `python src/analytics.py`, or click through to the SQL.

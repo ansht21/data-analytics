@@ -12,6 +12,23 @@ to position premium vehicles, and *which* fleet tier to grow — using 35,000 tr
 
 ---
 
+## System Design Decisions
+
+| Decision | Rationale |
+| :--- | :--- |
+| **MySQL warehouse over flat-file analysis** | 35,000 trips × multi-dimension queries (zone × hour × vehicle) need indexed, typed storage with window functions |
+| **`ROW_NUMBER()` dedup guard in staging** | Idempotent reloads — rerunning the pipeline can never duplicate trips |
+| **`LAG()` for growth vs totals for volume** | Peak-*growth* hour and peak-*volume* hour are different questions; the wrong window function picks the wrong surge window |
+| **Power BI delivery layer** | The hour × zone demand matrix stays filterable for the operations team, not just a static image |
+
+## The Story in 3 Charts
+
+1. **The assumption** — `image/uber_zone_pareto.png`: concentrate on the top revenue zones — 80/20 says yes.
+2. **The evidence** — `image/uber_hourly_demand.png`: one evening spike carries the day, and growth starts at 5 PM — an hour before the 6 PM volume peak. It takes 4 of 5 zones to reach 80% of revenue, so coverage stays city-wide.
+3. **The decision** — `image/uber_vehicle_revenue.png`: Uber Black earns ₹40.06/km versus Pool's ₹14.08 — grow the premium tier on the routes where distance pays.
+
+---
+
 ## ▶ How to Run
 ```bash
 pip install pandas numpy matplotlib seaborn jupyter

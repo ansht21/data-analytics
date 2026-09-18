@@ -9,6 +9,23 @@ look like?
 
 ---
 
+## System Design Decisions
+
+| Decision | Rationale |
+| :--- | :--- |
+| **EDA before modeling** | `Churn_EDA_Analysis.ipynb` establishes the KPI baseline and statistical validation (chi-square, Cramér's V) so modeling is built on verified segments, not raw flags |
+| **Modular `src/` pipeline with tests** | data_processing → feature_engineering → modeling → evaluation → explainability — each stage pytest-covered, rerunnable, and independently debuggable |
+| **Excel-native delivery dashboard** | A filterable customer table and charts the retention team can drive themselves |
+| **Revenue-at-risk output over leaderboard** | The model's job is a ranked customer list with revenue exposure (`churn_segment_revenue.csv`), not an accuracy trophy |
+
+## The Story in 3 Charts
+
+1. **The assumption** — `image/churn_by_service_payment.png`: fiber-optic service looks like the churn villain.
+2. **The evidence** — `image/churn_by_contract.png`: month-to-month contracts churn at 42.7% (chi-square 1179.5) — contract mix drives most of the fiber effect, and the dashboard splits the two.
+3. **The decision** — `image/Churn_Dashboard_screenshot.png`: target month-to-month + fiber first — 72% of revenue at risk sits in one filterable segment.
+
+---
+
 ## Repository Structure
 
 ```
