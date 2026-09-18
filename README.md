@@ -111,6 +111,22 @@ saves budget.
 
 ---
 
+## 🤝 AI-Assisted Workflow & Validation Gates
+
+AI accelerates every stage of my pipeline — it does not decide what ships. Each AI-assisted step passes a human validation gate before its output is trusted:
+
+| Stage | AI Assists With | My Validation Gate |
+| :--- | :--- | :--- |
+| **Data cleaning** | Drafting dedup / null-handling logic | Row-count reconciliation against source; spot-checks on edge cases |
+| **SQL analytics** | Query scaffolding & window-function drafts | Every query executed and its output reconciled with Python cross-checks |
+| **EDA & visuals** | Chart selection, formatting, narrative drafts | Distribution and correlation checks that confirm or *challenge* the AI's framing |
+| **Dashboards** | Layout scaffolding, DAX snippets | KPI figures traced back to committed SQL — no number ships unverified |
+| **Documentation** | README structure & prose polish | Technical walkthroughs reviewed line-by-line against actual code behavior |
+
+The principle: **AI is a co-pilot, not an oracle.** It drafts, I verify — because a hallucinated SQL window function that *looks* right is more dangerous than one that obviously fails. My headline findings (0.08% between-warehouse variance, flat ₹22/km fare-per-km) all survived validation that would have caught AI shortcuts.
+
+---
+
 ## Repository Architecture
 
 Each directory is fully self-contained, including its own documentation, SQL scripts, raw/cleaned datasets, and Jupyter analysis files:
@@ -160,8 +176,8 @@ I am actively seeking entry-level **Data Analyst**, **Business Intelligence Anal
 
 <div align="center">
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-ansh--thakur.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://ansh-thakur.netlify.app/)
-[![ML Projects](https://img.shields.io/badge/GitLab-Data_Science-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121/data-science-projects)
+[![Portfolio](https://img.shields.io/badge/Portfolio-ansh--thakur.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://ansh-thakur-netlify.netlify.app/)
+[![ML Projects](https://img.shields.io/badge/GitLab-Data_Science_%26_ML-A97BFF?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/ansht_121/machine-learning-project)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ansh-thakur-5407192b4/)
 [![Email](https://img.shields.io/badge/Email-ansht1194@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ansht1194@gmail.com)
 
