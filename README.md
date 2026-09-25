@@ -20,7 +20,7 @@ Three end-to-end analytics projects covering **50,000+ records**: a supply-chain
 fulfilment audit, a ride-demand and pricing analysis, and subscription-retention analytics. Every figure below is
 reproducible from the committed SQL and Python in this repository.
 
-Plus a fourth, interactive capstone: a **Business Intelligence AI Agent** that lets anyone
+Plus a fourth, interactive capstone: an **Analytics Intelligence Copilot** that lets anyone
 query all three datasets in plain English — with the math shown, not hidden.
 
 As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating complex datasets into clean, reliable, and actionable business insights that drive real decisions.
@@ -34,7 +34,7 @@ As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating comp
 | **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel | $73.0M net revenue / $21.2M profit analysed; late delivery proven systemic, not warehouse-specific |
 | **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue |
 | **Subscription Retention** | 7,032 customers | Python · SQL · Excel | 26.6% churn; month-to-month + fiber = 72% of revenue at risk |
-| **🤖 BI AI Agent** *(interactive capstone)* | 50,034 records across all 3 | Streamlit · Pandas · Plotly · LangGraph · Groq | One-click insight chips, glass-box pandas logic, executive-brief generator — works offline, live chat with API key |
+| **🤖 Analytics Copilot** *(interactive capstone)* | 50,034 records across all 3 | Streamlit · Pandas · Plotly · LangGraph · Groq | One-click insight chips, glass-box pandas logic, executive-brief generator — works offline, live chat with API key |
 
 ---
 
@@ -114,7 +114,7 @@ saves budget.
   * Reported three **negative findings** (senior citizen flag not material, partner/dependents effect only via tenure, paperless billing not independent of payment method) that kept the recommendations honest.
 
 
-### 4. [Business Intelligence AI Agent](./business-intelligence-ai-agent/)
+### 4. [Analytics Intelligence Copilot](./analytics-intelligence-copilot/)
 
 *The interactive capstone over all three datasets (50,034 records): pick a dataset, tap a
 one-click insight chip, or ask anything in chat. Every answer ships as
@@ -185,7 +185,7 @@ data-analytics-projects/
 │ ├── requirements.txt # Python dependencies
 │ └── README.md # Detailed retention analysis
 │
-├── business-intelligence-ai-agent/ # Interactive AI agent over all 3 datasets
+├── analytics-intelligence-copilot/ # Interactive AI copilot over all 3 datasets
 │ ├── app.py # Streamlit: dataset switcher, insight chips, brief, chat
 │ ├── src/ # datasets, analytics, brief, agent (LangGraph + offline mode)
 │ ├── tests/ # 18 regression tests vs committed SQL/outputs

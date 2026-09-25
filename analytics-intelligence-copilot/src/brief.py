@@ -84,6 +84,6 @@ def brief_markdown(brief: dict, dataset_label: str) -> str:
     lines += [f"- **{t}:** {d}" for t, d in brief["risks"]]
     lines += ["", "## Recommended decisions", ""]
     lines += [f"{i}. {d}" for i, d in enumerate(brief["decisions"], 1)]
-    lines += ["", "_Generated offline by the Business Intelligence AI Agent — every figure "
+    lines += ["", "_Generated offline by the Analytics Intelligence Copilot — every figure "
                    "computed live with pandas; inspect-query expanders in the app show the code._"]
     return "\n".join(lines)

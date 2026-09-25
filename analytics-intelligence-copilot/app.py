@@ -1,5 +1,5 @@
 """
-🤖 Business Intelligence AI Agent
+🤖 Analytics Intelligence Copilot
 ==================================
 Interactive Streamlit app over the three committed portfolio datasets
 (Supply Chain, Uber Trips, Customer Churn) plus custom CSV/Excel upload.
@@ -33,7 +33,7 @@ from src.analytics import chip_labels, run_chip
 from src.brief import brief_markdown, build_brief
 from src.datasets import DATASETS, dataset_kpis, load_dataset
 
-st.set_page_config(page_title="Business Intelligence AI Agent", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="Analytics Intelligence Copilot", page_icon="🤖", layout="wide")
 
 defaults = {"dataset_key": "supply", "chat": [], "custom_df": None,
             "custom_name": None, "brief_open": False}
@@ -161,7 +161,7 @@ if key != "__custom__":
         st.divider()
 
 agent_layer.set_dataframe(df)
-st.title("🤖 Business Intelligence AI Agent")
+st.title("🤖 Analytics Intelligence Copilot")
 st.caption(f"{title} · {scale} — every number below is computed live from the data.")
 if key != "__custom__":
     st.caption(DATASETS[key]["blurb"])

@@ -1,4 +1,4 @@
-# 🤖 Business Intelligence AI Agent
+# 🤖 Analytics Intelligence Copilot
 
 <div align="center">
 
@@ -52,7 +52,7 @@ expandable **"🔍 Inspect logic & query"** panel showing the exact pandas code 
 ## 🚀 Getting Started
 
 ```bash
-cd data-analytics/business-intelligence-ai-agent
+cd data-analytics/analytics-intelligence-copilot
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1        # Windows
 pip install -r requirements.txt
@@ -64,7 +64,7 @@ streamlit run app.py
 ## 🏗️ Architecture
 
 ```
-business-intelligence-ai-agent/
+analytics-intelligence-copilot/
 ├── app.py               # Streamlit UI: switcher, chips, brief, chat
 ├── src/
 │   ├── datasets.py      # registry + loaders reading ../<project>/data/*.csv (no data copied)

@@ -1,4 +1,4 @@
-"""LLM chat layer for the BI AI Agent.
+"""LLM chat layer for the Analytics Intelligence Copilot.
 
 - With GROQ_API_KEY present: a LangGraph ReAct agent (create_react_agent) with
   three guarded tools over the active DataFrame — get_data_info, filter_tool,

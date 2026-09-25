@@ -1,4 +1,4 @@
-"""Dataset registry + loaders for the BI AI Agent.
+"""Dataset registry + loaders for the Analytics Intelligence Copilot.
 
 The agent reads the cleaned CSVs already committed in the sibling project
 folders — no data is duplicated inside this project.
