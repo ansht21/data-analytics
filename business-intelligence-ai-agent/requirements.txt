@@ -1,0 +1,21 @@
+# Business Intelligence AI Agent — dependencies
+# Fresh venv:  python -m venv .venv  →  .\.venv\Scripts\Activate.ps1  →  pip install -r requirements.txt
+
+# --- UI + charts ---
+streamlit>=1.36,<2
+plotly>=5.20
+
+# --- Data ---
+pandas>=2.0,<2.3
+openpyxl>=3.1.0
+
+# --- Agent (LLM + tools + memory). Optional at runtime: app works offline without GROQ_API_KEY ---
+langchain-core>=0.3.60
+langchain-groq>=0.2.0
+langgraph>=0.6.0
+
+# --- Config ---
+python-dotenv>=1.0.0
+
+# --- Testing ---
+pytest>=8.0.0
