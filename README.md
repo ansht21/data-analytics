@@ -1,27 +1,32 @@
 <div align="center">
 
 # Data Analytics Portfolio
-### Turning Raw Data into Business Strategy
+### Turning Raw Data into Business Strategy — Now Askable in Plain English
+
+[![Live Copilot](https://img.shields.io/badge/🤖_Try_the_Copilot-Streamlit_App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](./analytics-intelligence-copilot/)
+[![Tests](https://img.shields.io/badge/Tests-18_Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](./analytics-intelligence-copilot/tests/)
+[![Records](https://img.shields.io/badge/Records-50,034_V verified-00C7B7?style=for-the-badge&logo=database&logoColor=white)](#portfolio-at-a-glance)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![Excel](https://img.shields.io/badge/Excel-217346?style=for-the-badge&logo=microsoftexcel&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
 
 </div>
+
+> **Start here → [🤖 Analytics Intelligence Copilot](./analytics-intelligence-copilot/)** — pick a dataset, tap a one-click insight chip, or ask in chat. Every answer shows its finding, why it matters, what to do, a chart, and the exact pandas code. Recruiters: try the **Warehouse Trap Check** first — it catches a ₹-crore mistake in one click.
 
 ---
 
 **I answer business questions with data — including the ones where the answer is "don't do it."**
 
-Three end-to-end analytics projects covering **50,000+ records**: a supply-chain P&L and
+Three end-to-end analytics projects covering **50,034 records**: a supply-chain P&L and
 fulfilment audit, a ride-demand and pricing analysis, and subscription-retention analytics. Every figure below is
 reproducible from the committed SQL and Python in this repository.
 
-Plus a fourth, interactive capstone: an **Analytics Intelligence Copilot** that lets anyone
-query all three datasets in plain English — with the math shown, not hidden.
+Plus the interactive capstone — **[🤖 Analytics Intelligence Copilot](./analytics-intelligence-copilot/)** — that puts all three datasets behind one chat + 9 one-click insight chips. Ask in English, get **Finding → Why it matters → What to do** with a Plotly chart and the exact pandas code shown. **18/18 regression tests pass** — every chip figure asserted against the committed SQL. Works fully offline; live AI chat unlocks with a Groq key.
 
 As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating complex datasets into clean, reliable, and actionable business insights that drive real decisions.
 
@@ -33,8 +38,10 @@ As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating comp
 |---------|-------|-------|-----------------|
 | **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel | $73.0M net revenue / $21.2M profit analysed; late delivery proven systemic, not warehouse-specific |
 | **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue |
-| **Subscription Retention** | 7,032 customers | Python · SQL · Excel | 26.6% churn; month-to-month + fiber = 72% of revenue at risk |
-| **🤖 Analytics Copilot** *(interactive capstone)* | 50,034 records across all 3 | Streamlit · Pandas · Plotly · LangGraph · Groq | One-click insight chips, glass-box pandas logic, executive-brief generator — works offline, live chat with API key |
+| **Subscription Retention** | 7,043 customers (7,032 after cleaning) | Python · SQL · Excel | 26.6% churn; month-to-month + fiber = 72% of revenue at risk |
+| **[🤖 Analytics Copilot](./analytics-intelligence-copilot/)** *(interactive capstone — start here)* | 50,034 records across all 3 | Streamlit · Pandas · Plotly · LangGraph · Groq | 9 one-click insight chips + chat + executive-brief generator — glass-box pandas logic, 18/18 tests pass, works offline |
+
+> **60-second recruiter tour:** open the [Copilot](./analytics-intelligence-copilot/) → Supply Chain → **Warehouse Trap Check** (catches the 31.9%-vs-0.08% volume illusion) → **Generate Executive Brief** → switch to Uber → **Peak Surge Detection**.
 
 ---
 
@@ -52,7 +59,7 @@ If an interviewer asks one of these, the query and the number are already in thi
 | Can we focus on just our top revenue zones? | **No.** It takes **4 of 5 zones** to reach 80% of revenue. | Keep coverage city-wide — the 80/20 assumption fails here |
 
 **Six of these; four say "don't act."** Knowing where *not* to spend is the part that
-saves budget.
+saves budget. Every one of them is explorable in one click inside the [Copilot](./analytics-intelligence-copilot/) — no SQL needed.
 
 ---
 
@@ -63,12 +70,17 @@ saves budget.
 | **Languages** | Python, SQL (MySQL / PostgreSQL), HTML/CSS | Exploratory Data Analysis (EDA), Statistical Analysis |
 | **Data Libraries** | Pandas, NumPy, Matplotlib, Seaborn | Data Cleaning, Feature Engineering, Outlier Detection |
 | **BI & Visualization** | Power BI, Microsoft Excel, openpyxl, Power Query, Pivots | Interactive Dashboard Design, Executive KPI Reporting |
-| **Development Workflow** | Jupyter Notebooks, Git & GitHub, PowerShell / Bash | Automation Scripting, ETL Pipeline Construction |
+| **Development Workflow** | Jupyter Notebooks, Git & GitLab, Streamlit, PowerShell / Bash | Automation Scripting, ETL Pipeline Construction |
 | **SQL Techniques** | CTEs, `LAG()`, `RANK()`, `ROW_NUMBER()`, running `SUM() OVER`, `STDDEV_SAMP` | Cohort Banding, Pareto Analysis, Trend Detection |
+| **AI Engineering** | Streamlit, LangGraph ReAct agents, Groq LLMs, Plotly | Deterministic-first design, glass-box validation, offline fallbacks |
+
+> Skill proof: the [Copilot](./analytics-intelligence-copilot/) uses all three layers — deterministic pandas for numbers (never hallucinated), Plotly for charts, and an optional LLM only for conversation.
 
 ---
 
 ## Featured Analytical Projects
+
+> 🖱️ **Don't want to read? [Run the Copilot](./analytics-intelligence-copilot/)** — all four projects below are clickable inside it.
 
 ### 1. [Inventory & Logistics Performance Analytics](./supply-chain-performance-analysis/)
 
@@ -124,10 +136,11 @@ runtime — 0% hallucination by construction for chips.*
 * **Business Challenge:** Recruiters and executives won't run SQL — but they will click one button. The agent makes every headline finding in this repo explorable in 60 seconds.
 * **Tech Stack:** Streamlit, Pandas (deterministic analytics), Plotly, LangGraph ReAct agent + Groq LLM (optional live chat; full offline insight mode without a key).
 * **Key Achievements:**
-  * **9 quick-insight chips** whose figures are regression-tested against the committed SQL/outputs (e.g. SQL Q8 margin bands, `warehouse_performance.csv`, `churn_segment_revenue.csv`) — `pytest` → 18 passed.
+  * **9 quick-insight chips** whose figures are regression-tested against the committed SQL/outputs (e.g. SQL Q8 margin bands, `warehouse_performance.csv`, `churn_segment_revenue.csv`) — `pytest` → **18 passed** (`$env:PYTHONPATH='.'; python -m pytest tests/ -q`).
   * **Analytical-trap guardrail:** the Warehouse Trap chip names the volume illusion (31.9% of late orders, 0.08% variance) and recommends *not* funding a per-site fix.
   * **Executive-brief generator:** one button → KPI cards, risks, decisions + Markdown download.
   * **Glass-box transparency:** no black-box numbers — pandas snippet + ms runtime under every card.
+* **Try it:** `cd analytics-intelligence-copilot; $env:PYTHONPATH='.'; python -m streamlit run app.py` → `http://localhost:8501`
 
 ---
 
@@ -152,7 +165,15 @@ The principle: **AI is a co-pilot, not an oracle.** It drafts, I verify — beca
 Each directory is fully self-contained, including its own documentation, SQL scripts, raw/cleaned datasets, and Jupyter analysis files:
 
 ```bash
-data-analytics-projects/
+data-analytics/
+│
+├── analytics-intelligence-copilot/ # ⭐ START HERE — interactive AI copilot over all 3 datasets
+│ ├── app.py # Streamlit: dataset switcher, insight chips, brief, chat
+│ ├── src/ # datasets, analytics, brief, agent (LangGraph + offline mode)
+│ ├── tests/ # 18 regression tests vs committed SQL/outputs
+│ ├── requirements.txt # streamlit, pandas, plotly, langchain, langgraph
+│ ├── FUTURE_IDEAS.md # 🔒 saved post-validation roadmap (locked)
+│ └── README.md # Agent walkthrough + validation table
 │
 ├── supply-chain-performance-analysis/ # Operational efficiency & inventory dashboards
 │ ├── src/ # Reproducible Python pipeline (clean, analytics, excel)
@@ -184,14 +205,6 @@ data-analytics-projects/
 │ ├── image/ # EDA and dashboard visuals
 │ ├── requirements.txt # Python dependencies
 │ └── README.md # Detailed retention analysis
-│
-├── analytics-intelligence-copilot/ # Interactive AI copilot over all 3 datasets
-│ ├── app.py # Streamlit: dataset switcher, insight chips, brief, chat
-│ ├── src/ # datasets, analytics, brief, agent (LangGraph + offline mode)
-│ ├── tests/ # 18 regression tests vs committed SQL/outputs
-│ ├── requirements.txt # streamlit, pandas, plotly, langchain, langgraph
-│ ├── FUTURE_IDEAS.md # 🔒 saved post-validation roadmap (locked)
-│ └── README.md # Agent walkthrough + validation table
 │
 └── README.md # Main portfolio lander (this file)
 ```
