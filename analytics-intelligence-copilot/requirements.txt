@@ -2,14 +2,18 @@
 # Fresh venv:  python -m venv .venv  →  .\.venv\Scripts\Activate.ps1  →  pip install -r requirements.txt
 
 # --- UI + charts ---
+# Verified 2026-09-26 on Python 3.11.15: streamlit==1.64.0, plotly==7.1.0
 streamlit>=1.36,<2
 plotly>=5.20
 
 # --- Data ---
+# Verified 2026-09-26: pandas==2.2.3 (pandas 3.x is NOT supported — dataset
+# loaders/analytics rely on pandas 2.x behaviour)
 pandas>=2.0,<2.3
 openpyxl>=3.1.0
 
 # --- Agent (LLM + tools + memory). Optional at runtime: app works offline without GROQ_API_KEY ---
+# Offline mode needs NONE of these installed. Install only to unlock live AI chat.
 langchain-core>=0.3.60
 langchain-groq>=0.2.0
 langgraph>=0.6.0

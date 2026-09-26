@@ -36,7 +36,27 @@ expandable **"🔍 Inspect logic & query"** panel showing the exact pandas code 
 | 🔍 **Glass-box transparency** | Every card shows its pandas snippet + runtime in ms |
 | 📄 **Executive brief** | One button → KPIs, findings, risks, decisions + Markdown download |
 | 💬 **Live AI chat (optional)** | LangGraph ReAct agent; degrades gracefully offline |
-| 🧪 **17 regression tests** | Every chip figure asserted vs committed SQL/outputs |
+| 🧪 **17 regression tests** | Every chip figure asserted vs committed SQL/outputs (`pytest tests/test_analytics.py -q`) |
+| 🟡 **Offline-first** | No API key needed; sidebar banner always shows the active mode |
+
+---
+
+## ✅ Tested 2026-09-26 (what was verified)
+
+| Check | Result |
+|-------|--------|
+| Fresh `.venv` on **Python 3.11.15** + `pip install pandas==2.2.3 python-dotenv pytest streamlit plotly openpyxl` | Clean install, no errors |
+| `pytest tests/test_analytics.py -q` | **17 passed in ~4s** |
+| `streamlit run app.py --server.port 8501` (headless) | Server up, no `Error/Traceback/ModuleNotFound` in logs |
+| `GET http://localhost:8501` | **HTTP 200** |
+| Dataset loads | supply **7,991** · uber **35,000** · churn **7,043** |
+
+> If `streamlit run app.py` fails with `ModuleNotFoundError: No module named
+> 'plotly'` (or `pandas`), your `.venv` is empty or on the wrong Python —
+> recreate it with Python 3.11 and reinstall `requirements.txt`.
+> The empty-`.venv` case is what broke the run on 2026-09-26.
+
+---
 
 ---
 
@@ -57,8 +77,19 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1        # Windows
 pip install -r requirements.txt
 copy .env.example .env              # optional — only for live AI chat
-streamlit run app.py
+streamlit run app.py                # opens http://localhost:8501
 ```
+
+> **Verified 2026-09-26 on Python 3.11.15** — use Python 3.11 (`requirements.txt`
+> pins `pandas<2.3`; pandas 3.x is not supported). After install:
+> `pytest tests/test_analytics.py -q` → **17 passed**, `streamlit run app.py` →
+> **HTTP 200 on http://localhost:8501**, all 3 datasets load
+> (supply 7,991 · uber 35,000 · churn 7,043).
+>
+> **Offline first:** without `GROQ_API_KEY` the app runs fully offline
+> (chips + KPIs + charts + executive brief). The sidebar banner shows
+> 🟡 *Offline insight mode*. No `langchain`/`langgraph` install needed for that.
+> Add the key to `.env` to unlock 🟢 live AI chat (requires the agent libs).
 
 
 ## 🏗️ Architecture

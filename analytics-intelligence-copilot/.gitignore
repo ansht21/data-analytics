@@ -9,3 +9,6 @@ __pycache__/
 
 # Local notes / scratch
 install.log
+install.err.log
+streamlit_run.log
+streamlit_run.err.log
