@@ -68,10 +68,11 @@ saves budget. Every one of them is explorable in one click inside the [Copilot](
 | Category | Technologies & Libraries | Key Methodologies |
 | :--- | :--- | :--- |
 | **Languages** | Python, SQL (MySQL / PostgreSQL), HTML/CSS | Exploratory Data Analysis (EDA), Statistical Analysis |
-| **Data Libraries** | Pandas, NumPy, Matplotlib, Seaborn | Data Cleaning, Feature Engineering, Outlier Detection |
-| **BI & Visualization** | Power BI, Microsoft Excel, openpyxl, Power Query, Pivots | Interactive Dashboard Design, Executive KPI Reporting |
-| **Development Workflow** | Jupyter Notebooks, Git & GitLab, Streamlit, PowerShell / Bash | Automation Scripting, ETL Pipeline Construction |
-| **SQL Techniques** | CTEs, `LAG()`, `RANK()`, `ROW_NUMBER()`, running `SUM() OVER`, `STDDEV_SAMP` | Cohort Banding, Pareto Analysis, Trend Detection |
+| **Data & Stats Libraries** | Pandas, NumPy, SciPy (`stats`), Matplotlib, Seaborn | Hypothesis Testing (Chi-Square, $p$-values, Cramér's V), ANOVA Variance Decomposition, Outlier Auditing |
+| **Machine Learning** | Scikit-learn (`RandomForestRegressor`, Classifiers, `train_test_split`) | Predictive Modeling, Feature Engineering, Label Encoding, Metric Evaluation ($R^2$, RMSE) |
+| **BI & Visualization** | Power BI, Microsoft Excel, openpyxl, Power Query, Pivots | Interactive Dashboard Design, Executive KPI Reporting, Star Schema Data Modeling |
+| **Development Workflow** | Jupyter Notebooks, Git & GitLab, Streamlit, PowerShell / Bash | Automation Scripting, ETL Pipeline Construction, Reproducible Workflows |
+| **SQL Techniques** | CTEs, `LAG()`, `RANK()`, `ROW_NUMBER()`, running `SUM() OVER`, `STDDEV_SAMP` | Cohort Banding, Pareto Analysis, Deduplication Pipelines, Trend Detection |
 | **AI Engineering** | Streamlit, LangGraph ReAct agents, Groq LLMs, Plotly | Deterministic-first design, glass-box validation, offline fallbacks |
 
 > Skill proof: the [Copilot](./analytics-intelligence-copilot/) uses all three layers — deterministic pandas for numbers (never hallucinated), Plotly for charts, and an optional LLM only for conversation.
@@ -88,28 +89,29 @@ saves budget. Every one of them is explorable in one click inside the [Copilot](
 
 *An end-to-end operational analytics project featuring a Python data cleaning pipeline, custom SQL metrics, and an automated, fully interactive 10-chart Excel dashboard.*
 * **Business Challenge:** Half of all orders miss the 5-day delivery target, with $36.3M of net revenue exposed — and leadership needs to know whether to invest in a specific warehouse or the network.
-* **Tech Stack:** Python (Pandas, openpyxl), SQL (MySQL — CTEs, `STDDEV`, `LAG`, window functions), Microsoft Excel (native charts and Pivot Tables).
+* **Tech Stack:** Python (Pandas, openpyxl), SQL (MySQL — CTEs, `STDDEV`, `LAG`, window functions), Statistical Variance Decomposition (ANOVA principles), Microsoft Excel (native charts and Pivot Tables).
 * **Key Achievements:**
- * **Disproved the obvious answer.** Ranking warehouses by late-order count blames the largest site; variance decomposition shows only **0.08%** of delivery-time variance is between warehouses. Prevented a misdirected improvement programme.
-* Cleaned and processed raw transactional data, generating consistent net revenue, **Delivery Days**, **Order-to-Ship Days**, and **Profit Margins** ($73.0M net revenue / $21.2M profit across 7,991 orders).
- * Implemented an automated Excel workbook generator (`build_excel_dashboard.py`) using `openpyxl` with dynamic dropdown selectors, date-range inputs, and custom formula-driven pivot tables.
- * Designed an executive **Summary** sheet containing KPI cards, performance grids, and narrative insights on fulfilment performance.
-* Used **ABC Classification** to segment the 47-SKU catalogue by net-revenue contribution (A-items = 80.6% of net revenue) — with an honest read that this catalogue shows only moderate, not textbook 80/20, concentration.
- * Shipped a reproducible Python pipeline (`src/data_cleaning.py`, `src/analytics.py`, `src/build_excel_dashboard.py`) so every quoted figure regenerates from the raw data.
+  * **Disproved the obvious answer via statistical hypothesis testing ($H_0$).** Ranking warehouses by late-order count blames the largest site; ANOVA-style variance decomposition shows only **0.08%** of delivery-time variance is between warehouses. Prevented a misdirected improvement programme.
+  * Cleaned and processed raw transactional data, generating consistent net revenue, **Delivery Days**, **Order-to-Ship Days**, and **Profit Margins** ($73.0M net revenue / $21.2M profit across 7,991 orders).
+  * Implemented an automated Excel workbook generator (`build_excel_dashboard.py`) using `openpyxl` with dynamic dropdown selectors, date-range inputs, and custom formula-driven pivot tables.
+  * Designed an executive **Summary** sheet containing KPI cards, performance grids, and narrative insights on fulfilment performance.
+  * Used **ABC Classification** to segment the 47-SKU catalogue by net-revenue contribution (A-items = 80.6% of net revenue) — with an honest read that this catalogue shows only moderate, not textbook 80/20, concentration.
+  * Shipped a reproducible Python pipeline (`src/data_cleaning.py`, `src/analytics.py`, `src/build_excel_dashboard.py`) so every quoted figure regenerates from the raw data.
 
 ### 2. [Ride Demand & Revenue Analytics](./uber-trip-demand-analysis/)
 
 ![Uber Power BI Dashboard](./uber-trip-demand-analysis/image/PowerBi_Dashboard.png)
 
-*A comprehensive revenue and behavioral analysis of ride-sharing transactions using SQL data warehousing, Python visualization, and Excel dashboarding.*
+*A comprehensive revenue, behavioral, and predictive analysis of ride-sharing transactions using SQL data warehousing, Python visualization, Scikit-learn modeling, and Power BI dashboarding.*
 * **Business Challenge:** Identifying when to surge-price, where to position premium vehicles, and which fleet tier to grow across 35,000 trips.
-* **Tech Stack:** MySQL (window functions, CTEs, `LAG`, running totals), Python (Seaborn, Matplotlib), Advanced Excel, Power BI.
+* **Tech Stack:** MySQL (window functions, CTEs, `LAG`, running totals), Python (Seaborn, Matplotlib), Scikit-learn (`RandomForestRegressor`), Advanced Excel, Power BI.
 * **Key Achievements:**
- * Used `LAG()` to separate peak *volume* from peak *growth* — demand accelerates at **5 PM (+138%)**, an hour before the 6 PM volume peak, moving the incentive trigger an hour earlier.
- * Caught a confounded metric: lower-rated drivers appear to earn more, but the effect vanishes once trip distance is controlled for (**fare-per-km flat at ₹22.06–22.41**).
- * Quantified that **airport trips are 39.6% of volume but 54.8% of revenue** (₹535.77 vs ₹289.40 avg fare).
- * Built a MySQL schema over 35,000 records with `ROW_NUMBER()` deduplication and null validation.
- * Conducted vehicle-category analysis measuring revenue per ride and revenue-to-distance efficiency (Uber Black ₹40.06/km vs Uber Pool ₹14.08/km).
+  * Used `LAG()` to separate peak *volume* from peak *growth* — demand accelerates at **5 PM (+138%)**, an hour before the 6 PM volume peak, moving the incentive trigger an hour earlier.
+  * Caught a confounded metric: lower-rated drivers appear to earn more, but the effect vanishes once trip distance is controlled for (**fare-per-km flat at ₹22.06–22.41**).
+  * Quantified that **airport trips are 39.6% of volume but 54.8% of revenue** (₹535.77 vs ₹289.40 avg fare).
+  * Built a MySQL schema over 35,000 records with `ROW_NUMBER()` deduplication and null validation.
+  * Built a **Machine Learning predictive fare model** with Scikit-learn (`RandomForestRegressor`, train-test split, label encoding) evaluated with RMSE and $R^2$ to capture multi-variable fare and duration dynamics.
+  * Conducted vehicle-category analysis measuring revenue per ride and revenue-to-distance efficiency (Uber Black ₹40.06/km vs Uber Pool ₹14.08/km).
   * Reported three **negative findings** (no weekend fare effect, no seasonality, no zone concentration) that removed unjustified recommendations from an earlier draft.
 
 ### 3. [Subscription Retention Analytics](./subscription-retention-analytics/)

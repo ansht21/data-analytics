@@ -72,7 +72,8 @@ This project performs a comprehensive behavioral and financial analysis of a **s
 
 ## Tech Stack & Technical Architecture
 * **MySQL (Window Functions, CTEs, Aggregations):** Two-script SQL pipeline — a dedicated cleaning script followed by a layered business intelligence script covering 11 analytical dimensions, including `LAG()` trend detection and running-total Pareto analysis.
-* **Python (Pandas, Matplotlib, Seaborn):** EDA and visual storytelling in `UberTripAnalysis.ipynb`, including heatmaps, bar charts, and distribution plots.
+* **Python (Pandas, Matplotlib, Seaborn, Scikit-learn):** EDA, visual storytelling, and predictive modeling in `UberTripAnalysis.ipynb`, including heatmaps, distribution plots, and fare regression.
+* **Machine Learning (Scikit-learn):** Predictive modeling using `RandomForestRegressor` evaluated via RMSE and $R^2$ score to model fare dynamics across trip features.
 * **Microsoft Excel (Pivot Tables, Charts):** Summary dashboard for stakeholder-ready reporting covering peak hours, vehicle revenue, and location performance.
 * **Power BI:** Interactive `.pbix` dashboard for executive-level KPI monitoring.
 
@@ -110,6 +111,12 @@ Python-driven exploration of cleaned trip data including:
 * **Vehicle Revenue Charts:** Side-by-side comparison of total and per-km revenue.
 * **Distribution Plots:** Fare and distance histograms to detect outliers and skew.
 * **Pickup Location Bar Charts:** Top revenue zones ranked horizontally.
+
+### 4. Predictive Fare Modeling (`UberTripAnalysis.ipynb`)
+Predictive modeling implemented via Scikit-learn to forecast trip fare amounts and validate non-linear fare drivers:
+* **Feature Engineering & Preprocessing:** Label encoding on categorical variables (`Vehicle_Type`, `Pickup_Location`) alongside continuous features (`Trip_Distance_km`, `Hour`, `Duration_Minutes`).
+* **Model Implementation:** `RandomForestRegressor` trained on an 80/20 train-test split (`test_size=0.2, random_state=42`) to capture non-linear distance and time-of-day interactions.
+* **Evaluation & Metric Tracking:** Quantified predictive accuracy using **Root Mean Squared Error (RMSE)** and **$R^2$ Score** ($R^2$ benchmarked against baseline linear fare expectations), confirming high fidelity between model predictions and realized trip revenues.
 
 ---
 
