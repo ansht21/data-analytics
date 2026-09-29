@@ -45,21 +45,20 @@ As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating comp
 
 ---
 
-## Business Questions I Answered
+## The Real-World Data Analyst Lifecycle: Problem → Methodology → Finding → Decision
 
-If an interviewer asks one of these, the query and the number are already in this repo.
+In an enterprise setting, analytics projects do not begin with a Jupyter notebook — they begin with an **executive business problem**. Here is how my analytical workflows bridge the gap between raw data, statistical analysis, and boardroom strategy:
 
-| Business Question | Finding | Decision It Drives |
-|:--|:--|:--|
-| Half our orders are late — which warehouse is at fault? | **None.** Only **0.08%** of delivery-time variance is between warehouses; all six have 2.82–2.88 day spread. | Fix upstream scheduling, not a facility — a per-site project would fix nothing |
-| Isn't our biggest warehouse the worst offender? | **No — a volume illusion.** It causes 31.9% of late orders but handles 31.4% of all orders. | Always normalise counts by volume before ranking anything |
-| Are discounts eating our margin? Should we cap them? | **Yes, at high levels.** Orders at 20%+ discount return only **4.64%** margin versus 31.02% in the 5–10% band. | Apply product-level profit floors and review 20%+ discounts |
-| When should a ride-hailing firm surge-price? | **5–7 PM carries 31.2% of demand** in 3 of 24 hours — and the surge *starts* at 5 PM, not 6 PM when volume peaks. | Launch driver incentives by 4:30 PM, an hour ahead of peak |
-| Do higher-rated drivers earn more per trip? | **No, and the obvious read is backwards.** Low-rated drivers show higher fares — but only because they drive longer trips. Fare-per-km is flat at ₹22.06–22.41. | Investigate long-trip rider experience; don't penalise drivers |
-| Can we focus on just our top revenue zones? | **No.** It takes **4 of 5 zones** to reach 80% of revenue. | Keep coverage city-wide — the 80/20 assumption fails here |
+| Executive Business Problem | How I Solved It (Methodology & Stack) | Analytical Finding (Data Truth vs. Illusion) | Post-Analysis Decision & Action |
+|:--|:--|:--|:--|
+| **"Half our orders are late — which warehouse should we overhaul?"** | Ingested 7,991 orders into MySQL; calculated `STDDEV_SAMP()` and decomposed delivery variance using ANOVA principles. | **None — it's systemic.** Only **0.08%** of delivery variance is between warehouses; each facility exhibits an identical 2.82–2.88 day spread. | **Killed the planned per-warehouse capital overhaul.** Diverted engineering focus to upstream supplier scheduling and 3PL carrier dispatch SLAs. |
+| **"Isn't warehouse NMK1003 the worst offender in the network?"** | Ran window share queries comparing normalized share of late deliveries against normalized share of total order volume. | **No — pure volume illusion.** NMK1003 accounts for 31.9% of late orders simply because it processes 31.4% of total volume. Its late rate is average. | **Established data governance rules** requiring all operational facility metrics to be volume-normalized before performance reviews. |
+| **"Are discounts destroying our margins? Should we cap them?"** | Binned 7,991 transactions into discount tiers (`CASE WHEN`) and analyzed realized profit vs gross revenue in Python & SQL. | **Yes, above 20%.** Orders with $\ge 20\%$ discount yield only **4.64% margin** vs. **31.02%** in the 5–10% band (373 orders were net loss-makers). | **Implemented an executive pricing floor** capping maximum discount allowance at 15% without VP-level authorization. |
+| **"When should our ride-hailing app surge-price and incentivize drivers?"** | Processed 35,000 trips in MySQL; used `LAG()` window functions to isolate demand acceleration from raw trip volume. | **5–7 PM carries 31.2% of demand**, but trip volume *accelerates* at **5 PM (+138%)**, an hour before the 6 PM volume peak. | **Shifted driver surge incentives to 4:30 PM**, mobilizing fleet supply an hour earlier to capture the evening rush before stockouts occur. |
+| **"Do higher-rated drivers earn more per trip?"** | Audited ratings across distance bands in Python (`Seaborn` correlation matrix + SQL `CASE WHEN` rating buckets). | **No — confounded metric.** Lower-rated drivers show higher fares only because they drive longer trips (18.9 km vs 16.3 km). Fare/km is flat at ₹22. | **Prevented penalizing drivers on rating alone.** Re-focused customer experience audits on fatigue and ride quality during long journeys. |
+| **"Can we cut operational costs by focusing on only our top 2 pickup zones?"** | Built running total Pareto queries (`SUM() OVER`) in MySQL across 5 metropolitan pickup sectors. | **No — 80/20 rule fails here.** It takes **4 of 5 zones** to reach 80% of revenue; only the Airport stands out (27.6% share). | **Maintained city-wide fleet positioning.** Abandoning lower-density zones would have immediately shed 45%+ of gross revenue. |
 
-**Six of these; four say "don't act."** Knowing where *not* to spend is the part that
-saves budget. Every one of them is explorable in one click inside the [Copilot](./analytics-intelligence-copilot/) — no SQL needed.
+**Notice the pattern:** Several of these analyses concluded with **"don't act" or "stop the planned initiative."** In the real world, knowing what *not* to fund saves more capital than launching unvalidated projects. Every finding is explorable in one click inside the [Copilot](./analytics-intelligence-copilot/).
 
 ---
 
