@@ -137,7 +137,7 @@ Predictive modeling implemented via Scikit-learn to forecast trip fare amounts a
 
 ### Chart-by-chart walkthrough
 
-**Trips by Hour of Day** — the money chart: demand is near zero at 3 AM (~350 trips) and explodes to 4,053 trips at 6 PM. The 5–7 PM window carries 31.2% of all demand. Critically, `LAG()` growth analysis shows demand *accelerates* at 5 PM (+138%) an hour before the 6 PM volume peak — so driver incentives must fire at ~4:30 PM, not at the peak itself.
+**Trips by Hour of Day** — the money chart: demand is near zero at 3 AM (~350 trips) and explodes to 4,053 trips at 6 PM. The 5–7 PM window carries 31.2% of all demand. Critically, `LAG()` growth analysis shows fare revenue *accelerates* +138% at 5 PM (trip volume +75.5%) an hour before the 6 PM volume peak — so driver incentives must fire at ~4:30 PM, not at the peak itself.
 
 ![Hourly Demand](image/uber_hourly_demand.png)
 

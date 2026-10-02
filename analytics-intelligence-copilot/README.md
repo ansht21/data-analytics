@@ -36,7 +36,7 @@ expandable **"🔍 Inspect logic & query"** panel showing the exact pandas code 
 | 🔍 **Glass-box transparency** | Every card shows its pandas snippet + runtime in ms |
 | 📄 **Executive brief** | One button → KPIs, findings, risks, decisions + Markdown download |
 | 💬 **Live AI chat (optional)** | LangGraph ReAct agent; degrades gracefully offline |
-| 🧪 **17 regression tests** | Every chip figure asserted vs committed SQL/outputs (`pytest tests/test_analytics.py -q`) |
+| 🧪 **18 regression tests** | Every chip figure asserted vs committed SQL/outputs (`pytest tests/test_analytics.py -q`) |
 | 🟡 **Offline-first** | No API key needed; sidebar banner always shows the active mode |
 
 ---
@@ -46,7 +46,7 @@ expandable **"🔍 Inspect logic & query"** panel showing the exact pandas code 
 | Check | Result |
 |-------|--------|
 | Fresh `.venv` on **Python 3.11.15** + `pip install pandas==2.2.3 python-dotenv pytest streamlit plotly openpyxl` | Clean install, no errors |
-| `pytest tests/test_analytics.py -q` | **17 passed in ~4s** |
+| `pytest tests/test_analytics.py -q` | **18 passed in ~4s** |
 | `streamlit run app.py --server.port 8501` (headless) | Server up, no `Error/Traceback/ModuleNotFound` in logs |
 | `GET http://localhost:8501` | **HTTP 200** |
 | Dataset loads | supply **7,991** · uber **35,000** · churn **7,043** |
@@ -82,7 +82,7 @@ streamlit run app.py                # opens http://localhost:8501
 
 > **Verified 2026-09-26 on Python 3.11.15** — use Python 3.11 (`requirements.txt`
 > pins `pandas<2.3`; pandas 3.x is not supported). After install:
-> `pytest tests/test_analytics.py -q` → **17 passed**, `streamlit run app.py` →
+> `pytest tests/test_analytics.py -q` → **18 passed**, `streamlit run app.py` →
 > **HTTP 200 on http://localhost:8501**, all 3 datasets load
 > (supply 7,991 · uber 35,000 · churn 7,043).
 >
@@ -115,13 +115,13 @@ analytics-intelligence-copilot/
 | 20%+ discounts → **4.64%** realised margin vs **31.02%** (5–10%) | `supply-chain…/sql_queries/02_sales_analysis.sql` Q8 |
 | WARE-NMK1003 = **31.9%** of late orders; **0.08%** between-warehouse variance | `outputs/warehouse_performance.csv` + README |
 | **36** A SKUs ≈ 80% of revenue | `outputs/abc_classification.csv` |
-| 5 PM **+114%** acceleration; 6 PM peak; **31.2%** in 5–7 PM | Uber README / revenue SQL |
+| 5 PM **+138% fare-revenue** acceleration (+75.5% trip growth); 6 PM peak; **31.2%** in 5–7 PM | Uber README / revenue SQL |
 | Airport **39.6%** volume / **54.8%** revenue | Uber README |
 | Churn cohort **2,128 / 54.6%** | `subscription-retention…/outputs/churn_segment_revenue.csv` |
 | Electronic check **45.3%** | `subscription-retention…/sql_queries/02_churn_analysis.sql` |
 | Churn CSV **7,043 rows** (7,032 after cleaning) | `subscription-retention…/sql_queries/01_data_cleaning.sql` |
 
-Run `PYTHONPATH=. pytest tests/ -q` → **17 passed**.
+Run `PYTHONPATH=. pytest tests/ -q` → **18 passed**.
 
 ## ⚠️ Limitations (honest)
 
