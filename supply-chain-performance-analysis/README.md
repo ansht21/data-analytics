@@ -151,6 +151,68 @@ python src/analytics.py # -> outputs/kpi_summary.json, abc_classification.csv, w
 python src/build_excel_dashboard.py # -> excel_analysis/Supplychain_Dashboard.xlsx
 ```
 
+### Interactive dashboard (clickable filters — recommended)
+
+```bash
+streamlit run app.py
+```
+
+Opens a live web app where **every sidebar filter (Category, Delivery Status, Warehouse, Year) recomputes all 5 KPI cards and all 6 charts instantly** — e.g. deselect "Online" and watch Total Net Revenue drop from $73.04M to $51.37M. Verified end-to-end with automated browser tests.
+
+![Interactive Supply Chain App](image/interactive_app_preview.png)
+
+---
+
+## Visual Deep-Dive & KPI Handbook
+
+*Every figure below is generated from `data/Cleaned_Supplychain_Data.csv` (7,991 orders). The executive dashboard at the top of this README is rendered by `src/render_modern_supplychain_screenshot.py` in the Ocean Navy/Teal theme; the charts below are the individual analytical views.*
+
+### KPI Handbook — what each headline number means
+
+| KPI | Value | Definition |
+|---|---|---|
+| Total Net Revenue | **$73.04M** | `Order_Quantity x Unit_Price x (1 - Discount_Applied)` summed over all orders |
+| Total Net Profit | **$21.22M** | Net revenue minus total cost (`Unit_Cost x quantity`) |
+| Avg Delivery Days | **5.5 days** | Mean `DeliveryDate - OrderDate`; the on-time target is delivery within 5 days |
+| Total Orders | **8.0K (7,991)** | Cleaned order rows after deduplication and date validation |
+| On-Time Rate | **50.5%** | Share of orders delivered within the 5-day target (order-based, matches the donut) |
+
+### Chart-by-chart walkthrough
+
+**Monthly Net Revenue Trend** — revenue is seasonal but flat in level: most months land between $2.0M and $2.8M, with the first recorded month (2018-05) ramping from near zero as the dataset begins. No structural growth trend is visible across 2018–2020, which is why the analysis focuses on mix and fulfilment rather than growth storytelling.
+
+![Monthly Net Revenue Trend](image/supply_monthly_revenue_trend.png)
+
+**Revenue by Channel vs Profit by Channel** — read these two together. In-Store leads both revenue and profit ($8.8M profit), followed by Online ($6.1M), Distributor ($3.9M) and Wholesale ($2.5M). Channel profits sum to ≈$21.3M, reconciling with the $21.22M headline KPI — a useful cross-check that the pipeline has no leakage between aggregation layers.
+
+![Revenue by Sales Channel](image/supply_revenue_by_channel.png)
+
+**Revenue & Profit by Warehouse** — NMK1003 dominates both views ($23.1M revenue, $6.8M profit, ~32% of the business). The remaining five warehouses split the rest fairly evenly ($6.1M–$13.0M revenue each). This concentration is the "volume illusion" behind the warehouse-overhaul trap: NMK1003 looks like the problem only because it carries the most volume, while ANOVA variance decomposition proves just 0.08% of delivery variance sits between warehouses.
+
+**Avg Delivery Days Timeline** — the network mean sits on the 5.5-day dashed line for three straight years with no site-level or seasonal improvement. Flat lateness at every warehouse is the visual signature of a systemic process problem, not a facility problem — the single most important chart for the "don't do it" recommendation.
+
+**Delivery Status Distribution** — the donut is order-based so it reconciles exactly with the 50.5% On-Time Rate KPI (Late 49.5% vs On-Time 50.5%). Roughly one in two orders misses the 5-day target.
+
+**Correlation Heatmap** — the variable-level correlation map used during EDA to confirm which drivers (discount depth, quantity, warehouse, channel) actually move with delivery time and margin before any modelling.
+
+![Supply Chain Correlation Heatmap](image/Supplychain_Heatmap.png)
+
+**ABC Classification** — products ranked by revenue with the cumulative-share curve: a small A-class (~36 SKUs) drives roughly 80% of revenue. Retention and availability effort belongs on the A-class first.
+
+![ABC Classification](image/supply_abc_classification.png)
+
+**Realised Margin by Discount Band** — margin compresses as discount depth rises (the 4.64% vs 31.02% margin-band contrast in the analysis). Discounts buy volume but destroy margin past the 10–15% band — the pricing guardrail recommendation comes from this chart.
+
+![Margin by Discount Band](image/supply_discount_margin.png)
+
+**On-Time Rate by Warehouse** — every warehouse clusters in the same band, confirming the ANOVA result visually: no site is an outlier, so no single-site fix can move the network metric.
+
+![On-Time Rate by Warehouse](image/supply_warehouse_ontime.png)
+
+**Avg Delivery Days by Warehouse** — the same story in days rather than rates: near-identical means across all six sites.
+
+![Avg Delivery Days by Warehouse](image/supply_avg_delivery_by_warehouse.png)
+
 ---
 
 ## Core Analytical Insights

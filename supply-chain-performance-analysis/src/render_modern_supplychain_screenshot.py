@@ -1,11 +1,11 @@
 """
 Generate an executive screenshot of Supplychain_Dashboard_screenshot.png
-using the PhonePe / Modern Purple UI palette matching the Churn dashboard:
-- Top Banner: Deep Purple (#4D2C91)
-- Left Filters Sidebar: Soft Lavender (#EDE9FE)
-- KPI Cards: Clean White (#FFFFFF) with Purple left accent bar (#4D2C91)
-- Charts: Card-style (#FFFFFF) with subtle border (#E2E8F0) and purple/cyan palette
-- Compact axis labels in Millions/Days
+using the Ocean Executive theme (Midnight Navy + Teal):
+- Top Banner: Deep Navy (#0B2A4A) with sky accent text
+- Left Filters Sidebar: Soft Sky (#E0F2FE), filter chips derived from live data
+- KPI Cards: Clean White (#FFFFFF) with navy/teal left accent bars
+- Charts: Card-style (#FFFFFF) with subtle borders (#E2E8F0), navy/teal palette
+- Delivery donut is order-based so it matches the On-Time Rate KPI exactly
 """
 from __future__ import annotations
 import math
@@ -18,19 +18,19 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "Cleaned_Supplychain_Data.csv"
 OUT_PATH = ROOT / "image" / "Supplychain_Dashboard_screenshot.png"
 
-# Executive Purple/Indigo Theme (PhonePe Style)
-PURPLE_MAIN = "#4D2C91"
-PURPLE_ACCENT = "#7C3AED"
-PURPLE_LIGHT = "#EDE9FE"
-CANVAS_BG = "#F8F9FC"
+# Ocean Executive Theme (Midnight Navy + Teal)
+NAVY_MAIN = "#0B2A4A"
+TEAL_ACCENT = "#0E9F8A"
+SKY_LIGHT = "#E0F2FE"
+CANVAS_BG = "#F7FAFC"
 CARD_BG = "#FFFFFF"
 BORDER_COLOR = "#E2E8F0"
 TEXT_DARK = "#0F172A"
 TEXT_MUTED = "#64748B"
 CYAN_ACCENT = "#06B6D4"
-CHIP_BG = "#5B21B6"
+CHIP_BG = "#0B3D66"
 
-def _kpi(ax, x, y, w, h, label, value, color=PURPLE_MAIN):
+def _kpi(ax, x, y, w, h, label, value, color=NAVY_MAIN):
     ax.add_patch(FancyBboxPatch((x, y - h), w, h,
                                 boxstyle="round,pad=0.003,rounding_size=0.008",
                                 linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=CARD_BG,
@@ -45,7 +45,7 @@ def _kpi(ax, x, y, w, h, label, value, color=PURPLE_MAIN):
 def _chip(ax, x, y, w, h, text):
     ax.add_patch(FancyBboxPatch((x, y), w, h,
                                 boxstyle="round,pad=0.001,rounding_size=0.008",
-                                linewidth=0.6, edgecolor="#DDD6FE", facecolor=CHIP_BG,
+                                linewidth=0.6, edgecolor="#BAE6FD", facecolor=CHIP_BG,
                                 transform=ax.transAxes))
     ax.text(x + w / 2, y + h / 2, text, color="#FFFFFF", fontsize=7.2, weight="bold",
             transform=ax.transAxes, ha="center", va="center")
@@ -66,9 +66,9 @@ def _filter_section(ax, x_top, y_top, w, items, label):
                                 facecolor=CARD_BG, transform=ax.transAxes))
     ax.add_patch(FancyBboxPatch((x_top, y_top - header_h), w, header_h,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
-                                linewidth=0, facecolor=PURPLE_MAIN, transform=ax.transAxes))
+                                linewidth=0, facecolor=NAVY_MAIN, transform=ax.transAxes))
     ax.add_patch(Rectangle((x_top, y_top - header_h), w, header_h * 0.55,
-                           facecolor=PURPLE_MAIN, transform=ax.transAxes))
+                           facecolor=NAVY_MAIN, transform=ax.transAxes))
     ax.text(x_top + 0.008, y_top - header_h / 2, label, color="#FFFFFF", fontsize=9.2, weight="bold",
             transform=ax.transAxes, ha="left", va="center")
     chip_w = (w - 3 * chip_pad_x) / 2
@@ -91,12 +91,12 @@ def main() -> None:
     ax.axis("off")
 
     # 1. Top Executive Banner
-    ax.add_patch(Rectangle((0, 0.94), 1, 0.06, facecolor=PURPLE_MAIN, transform=ax.transAxes))
+    ax.add_patch(Rectangle((0, 0.94), 1, 0.06, facecolor=NAVY_MAIN, transform=ax.transAxes))
     ax.text(0.02, 0.97, "Executive Supply Chain Performance & Inventory Cockpit",
             color="#FFFFFF", fontsize=18, weight="bold",
             ha="left", va="center", transform=ax.transAxes)
     ax.text(0.98, 0.97, "Fulfillment & Network Diagnostics",
-            color="#DDD6FE", fontsize=11, weight="bold",
+            color="#BAE6FD", fontsize=11, weight="bold",
             ha="right", va="center", transform=ax.transAxes)
 
     # 2. Filters Sidebar Panel
@@ -106,17 +106,22 @@ def main() -> None:
     panel_bottom_y = 0.04
     ax.add_patch(FancyBboxPatch((panel_x, panel_bottom_y), panel_w, panel_top_y - panel_bottom_y,
                                 boxstyle="round,pad=0.002,rounding_size=0.006",
-                                linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=PURPLE_LIGHT, transform=ax.transAxes))
+                                linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=SKY_LIGHT, transform=ax.transAxes))
     header_h = 0.034
     ax.text(panel_x + panel_w / 2, panel_top_y - header_h / 2, "FILTER PANEL",
-            color=PURPLE_MAIN, fontsize=12, weight="bold",
+            color=NAVY_MAIN, fontsize=12, weight="bold",
             ha="center", va="center", transform=ax.transAxes)
 
+    # Filter chips are derived from live data so the panel always
+    # matches the charts (warehouse codes, years, channels).
+    wh_codes = sorted(df["WarehouseCode"].str.replace("WARE-", "", regex=False).unique())
+    order_years = sorted(pd.to_datetime(df["OrderDate"]).dt.year.astype(str).unique())
+    channels = sorted(df["Sales_Channel"].unique())
     sections = [
-        ("Category", ["Distributor", "In-Store", "Online", "Wholesale"]),
+        ("Category", channels),
         ("Delivery Status", ["Late", "On Time"]),
-        ("Warehouse Code", ["WARE-MKL", "WARE-NBV", "WARE-NMK", "WARE-PUJ", "WARE-UHY", "WARE-XYS"]),
-        ("Order Year", ["2018", "2019", "2020"]),
+        ("Warehouse Code", wh_codes),
+        ("Order Year", order_years),
     ]
     y_cursor = panel_top_y - header_h - 0.010
     inner_x = panel_x + 0.005
@@ -133,10 +138,10 @@ def main() -> None:
     ontime_pct = df['on_time'].mean() * 100
 
     kpis = [
-        ("Total Net Revenue", f"${tot_rev:.2f}M", PURPLE_MAIN),
+        ("Total Net Revenue", f"${tot_rev:.2f}M", NAVY_MAIN),
         ("Total Net Profit", f"${tot_prof:.2f}M", "#059669"),
-        ("Avg Delivery Days", f"{avg_del:.1f} Days", PURPLE_ACCENT),
-        ("Total Orders", f"{tot_orders/1000:.1f}K", "#7C3AED"),
+        ("Avg Delivery Days", f"{avg_del:.1f} Days", TEAL_ACCENT),
+        ("Total Orders", f"{tot_orders/1000:.1f}K", "#0284C7"),
         ("On-Time Rate", f"{ontime_pct:.1f}%", "#2563EB"),
     ]
     kpi_x0 = panel_x + panel_w + 0.018
@@ -183,28 +188,32 @@ def main() -> None:
         cax.set_facecolor(CARD_BG)
         for spine in cax.spines.values():
             spine.set_visible(False)
-        cax.set_title(title, fontsize=10, weight="bold", color=PURPLE_MAIN, pad=8)
+        cax.set_title(title, fontsize=10, weight="bold", color=NAVY_MAIN, pad=8)
 
         if i == 0: # Monthly Trend
             monthly = df.groupby("order_month")["revenue"].sum().div(1e6)
-            cax.plot(range(len(monthly)), monthly.values, color=PURPLE_MAIN, marker="o", markersize=3, linewidth=2.0)
-            cax.fill_between(range(len(monthly)), monthly.values, color=PURPLE_LIGHT, alpha=0.7)
+            cax.plot(range(len(monthly)), monthly.values, color=NAVY_MAIN, marker="o", markersize=3, linewidth=2.0)
+            cax.fill_between(range(len(monthly)), monthly.values, color=SKY_LIGHT, alpha=0.7)
             cax.set_xticks(range(0, len(monthly), 5))
             cax.set_xticklabels(monthly.index[::5], rotation=30, fontsize=7, color=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=7.5, colors=TEXT_MUTED)
         elif i == 1: # Profit by Channel
             chan = df.groupby("Sales_Channel")["profit"].sum().div(1e6).sort_values()
-            bars = cax.barh(chan.index, chan.values, color=PURPLE_ACCENT, height=0.55)
+            bars = cax.barh(chan.index, chan.values, color=TEAL_ACCENT, height=0.55)
             for b in bars:
                 w = b.get_width()
                 cax.text(w + 0.2, b.get_y() + b.get_height()/2, f"${w:.1f}M", va="center", fontsize=8, weight="bold", color=TEXT_DARK)
             cax.tick_params(axis="both", labelsize=7.5, colors=TEXT_MUTED)
             cax.set_xlim(0, chan.max() * 1.25)
-        elif i == 2: # Delivery Status donut
-            stat = df.groupby("on_time")["revenue"].sum()
-            colors = [PURPLE_MAIN, "#CBD5E1"]
+        elif i == 2: # Delivery Status donut (order-based: matches On-Time Rate KPI)
+            flags = df["on_time"].astype(bool)
+            late_n, on_n = int((~flags).sum()), int(flags.sum())
+            total_n = late_n + on_n
+            colors = [NAVY_MAIN, "#CBD5E1"]
             wedges, _, autotexts = cax.pie(
-                stat.values, labels=["Late (49.8%)", "On-Time (50.2%)"], colors=colors,
+                [late_n, on_n],
+                labels=[f"Late ({late_n/total_n:.1%})", f"On-Time ({on_n/total_n:.1%})"],
+                colors=colors,
                 autopct="%1.0f%%", startangle=90, pctdistance=0.75,
                 wedgeprops=dict(width=0.42, edgecolor=CARD_BG),
                 textprops=dict(fontsize=8, color=TEXT_MUTED),
@@ -213,9 +222,11 @@ def main() -> None:
                 t.set_color("#FFFFFF")
                 t.set_fontsize(8)
                 t.set_weight("bold")
+            cax.text(0, 0, f"{on_n/total_n:.1%}", ha="center", va="center",
+                     fontsize=12, weight="bold", color=NAVY_MAIN)
         elif i == 3: # Revenue by Warehouse
             wh_rev = df.groupby("WarehouseCode")["revenue"].sum().div(1e6).sort_values(ascending=False)
-            bars = cax.bar(wh_rev.index.str.replace("WARE-", ""), wh_rev.values, color=PURPLE_MAIN, width=0.55)
+            bars = cax.bar(wh_rev.index.str.replace("WARE-", ""), wh_rev.values, color=NAVY_MAIN, width=0.55)
             for b in bars:
                 h = b.get_height()
                 cax.text(b.get_x() + b.get_width()/2, h + 0.4, f"${h:.1f}M", ha="center", fontsize=7.5, weight="bold", color=TEXT_DARK)
@@ -229,10 +240,10 @@ def main() -> None:
             cax.set_xticks(range(0, len(del_m), 5))
             cax.set_xticklabels(del_m.index[::5], rotation=30, fontsize=7, color=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=7.5, colors=TEXT_MUTED)
-            cax.axhline(5.5, color=PURPLE_MAIN, linestyle="--", linewidth=1.0, alpha=0.7)
+            cax.axhline(5.5, color=NAVY_MAIN, linestyle="--", linewidth=1.0, alpha=0.7)
         elif i == 5: # Profit by Warehouse
             wh_prof = df.groupby("WarehouseCode")["profit"].sum().div(1e6).sort_values(ascending=False)
-            bars = cax.bar(wh_prof.index.str.replace("WARE-", ""), wh_prof.values, color=PURPLE_ACCENT, width=0.55)
+            bars = cax.bar(wh_prof.index.str.replace("WARE-", ""), wh_prof.values, color=TEAL_ACCENT, width=0.55)
             for b in bars:
                 h = b.get_height()
                 cax.text(b.get_x() + b.get_width()/2, h + 0.15, f"${h:.1f}M", ha="center", fontsize=7.5, weight="bold", color=TEXT_DARK)
@@ -242,7 +253,7 @@ def main() -> None:
     # Footer
     ax.add_patch(Rectangle((0, 0), 1, 0.025, facecolor=CARD_BG, transform=ax.transAxes))
     ax.text(0.5, 0.013, "Created by Ansh Thakur  |  Data Analyst Portfolio Dashboard",
-            color=PURPLE_MAIN, fontsize=9.5, weight="bold", style="italic",
+            color=NAVY_MAIN, fontsize=9.5, weight="bold", style="italic",
             ha="center", va="center", transform=ax.transAxes)
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)

@@ -120,6 +120,47 @@ Predictive modeling implemented via Scikit-learn to forecast trip fare amounts a
 
 ---
 
+## Visual Deep-Dive & KPI Handbook
+
+*Every figure below is generated from `data/Uber_Cleaned_data.csv` (35,000 trips). Figures are in ₹ (INR) — the dataset uses Indian payment methods including UPI.*
+
+### KPI Handbook — what each headline number means
+
+| KPI | Value | Definition |
+|---|---|---|
+| Total Trips | **35,000** | Cleaned trip rows after deduplication |
+| Total Revenue | **₹13.54M (₹1,35,44,703)** | Sum of trip fares |
+| Avg Fare | **₹387** | Mean fare per trip |
+| Avg Distance | **17.45 km** | Mean trip distance |
+| Avg Duration | **45.5 min** | Mean trip duration |
+| Avg Rating | **4.32** | Mean driver rating |
+
+### Chart-by-chart walkthrough
+
+**Trips by Hour of Day** — the money chart: demand is near zero at 3 AM (~350 trips) and explodes to 4,053 trips at 6 PM. The 5–7 PM window carries 31.2% of all demand. Critically, `LAG()` growth analysis shows demand *accelerates* at 5 PM (+138%) an hour before the 6 PM volume peak — so driver incentives must fire at ~4:30 PM, not at the peak itself.
+
+![Hourly Demand](image/uber_hourly_demand.png)
+
+**Vehicle Revenue** — total vs per-tier revenue split: the premium tier concentrates revenue per trip while economy tiers concentrate volume. Fleet-growth capital belongs on the tier with the best revenue-per-trip, not the most trips.
+
+![Vehicle Revenue](image/uber_vehicle_revenue.png)
+
+**Airport Share** — airport trips are 39.6% of volume but 54.8% of revenue: the airport corridor is the highest-yield segment and deserves dedicated positioning.
+
+![Airport Share](image/uber_airport_share.png)
+
+**Pickup Zone Pareto** — 5 pickup zones ranked: a small number of zones drive the majority of trips and revenue. Positioning supply on the top zones covers most demand with least deadheading.
+
+![Zone Pareto](image/uber_zone_pareto.png)
+
+**Rating vs Fare** — the correlation matrix confirms ratings fall slightly with distance (-0.13) and barely move with fare (-0.09): the rating gap is about trip length (long-trip fatigue), not driver quality — so rating-based driver penalties would punish the wrong behavior.
+
+![Rating vs Fare](image/uber_rating_vs_fare.png)
+
+**Correlation Heatmap** — the EDA backbone: fare tracks distance and duration; hour drives demand volume; ratings are largely orthogonal to money variables.
+
+---
+
 ## Core Analytical Insights
 
 ![Correlation Heatmap](image/Ubertrip_heatmap.png)

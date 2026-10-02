@@ -101,6 +101,42 @@ structural, not sampling noise:
 | Monthly revenue at risk (churned) | $139.1K |
 | Avg tenure | 32.4 months |
 
+### KPI Handbook — what each headline number means
+
+| KPI | Value | Definition |
+|---|---|---|
+| Total Customers | **7,032** | Rows after dropping missing `TotalCharges` (7,043 raw) |
+| Churn Rate | **26.6%** | 1,869 churned / 7,032 customers |
+| Avg Tenure | **32.4 months** | Mean months with the provider across all customers |
+| Revenue at Risk | **$139.1K** | Sum of `MonthlyCharges` over churned customers (one month of their spend exposed) |
+| Retention Rate | **73.4%** | `1 - churn rate` |
+
+### Chart-by-chart walkthrough
+
+**Churn Rate by Contract** — the single most decisive chart: month-to-month contracts churn at 42.7% against 11.3% (one-year) and 2.8% (two-year) — a ~15x ratio. Contract structure, not demographics, is the primary churn lever, which is why the retention budget recommendation targets 90-day contract conversion.
+
+![Churn Rate by Contract](image/churn_by_contract.png)
+
+**Churn Rate by Tenure Band** — churn decays monotonically with tenure: 53.3% in the 0–6 month band falling to 9.5% at 49–72 months. The first year is the danger window; onboarding and early check-ins buy the most risk reduction per rupee.
+
+**Revenue at Risk by Contract + Top Segments** — month-to-month contracts hold $121K of the $139K total exposure (~87%), and the M2M + Fiber segment alone is ~$100K (~72%). Retention spend is therefore rank-ordered by saved revenue, not by headcount — this ranked list (`outputs/churn_segment_revenue.csv`) is the deliverable the retention team actually acts on.
+
+**Customer Mix by Internet Service** — Fiber 44%, DSL 34%, No internet 22%. Fiber is both the largest base and the highest-churn service, compounding the exposure above.
+
+![Churn by Service & Payment](image/churn_by_service_payment.png)
+
+**Churn by Tenure (months)** — the continuous version of the band chart: churn starts above 60% in month 1, decays steeply through month 12, then flattens with noise. The elbow around month 12 marks where retention interventions lose leverage.
+
+![Churn by Tenure](image/churn_by_tenure.png)
+
+**Business View** — the stakeholder summary visual combining the headline segments for non-technical review.
+
+![Churn Business View](image/churn_business_view.png)
+
+**Correlation Heatmap (numeric drivers)** — tenure correlates **-0.35** with churn (longer stay, less churn) while monthly charges correlate **+0.19** (higher bills, more churn); tenure and total charges correlate **0.83** with each other by construction. The heatmap is why the model leans on contract/tenure structure rather than raw charges.
+
+![Churn Correlation Heatmap](image/churn_correlation_heatmap.png)
+
 ---
 
 ## Business Questions Answered
@@ -123,3 +159,13 @@ jupyter notebook Churn_EDA_Analysis.ipynb
 ```
 
 All charts are saved to `image/` and analysis tables to `outputs/` by the notebook itself.
+
+### Interactive dashboard (clickable filters — recommended)
+
+```bash
+streamlit run app.py
+```
+
+Opens a live web app where **every sidebar filter (Contract, Internet, Payment, Tenure, Churn status) recomputes all 5 KPI cards and all 6 charts instantly** — e.g. deselect "Two year" and watch Churn Rate jump from 26.6% to 34.1% as the lowest-risk segment leaves the view. Verified end-to-end with automated browser tests.
+
+![Interactive Churn App](image/interactive_app_preview.png)

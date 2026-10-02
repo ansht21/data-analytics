@@ -1,10 +1,10 @@
 """
-Redesign render_dashboard_screenshot.py to match the Modern PhonePe / Executive Purple Theme:
-- Top banner: Deep purple (#4D2C91)
-- Left filters panel: Soft lavender (#EDE9FE) with rounded card chips
-- KPI Cards: Clean white (#FFFFFF) with modern purple left accent bar (#4D2C91)
+Redesign render_dashboard_screenshot.py with the Crimson Executive Theme:
+- Top banner: Deep crimson (#7F1D2D)
+- Left filters panel: Soft rose (#FFE4E6) with rounded card chips
+- KPI Cards: Clean white (#FFFFFF) with crimson left accent bar (#7F1D2D)
 - Clean card-based charts with subtle borders (#E2E8F0)
-- Unified executive color palette: Indigo/Purple (#4D2C91, #6366F1), Violet (#8B5CF6), Slate (#1E293B, #64748B)
+- Unified executive color palette: Crimson (#7F1D2D, #9F1239), Rose (#E11D48), Amber (#B45309), Slate (#1E293B, #64748B)
 """
 from __future__ import annotations
 import math
@@ -17,19 +17,19 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "Telco_Customer_Churn.csv"
 OUT_PATH = ROOT / "image" / "Churn_Dashboard_screenshot.png"
 
-# Executive Purple/Indigo Theme (PhonePe Style)
-PURPLE_MAIN = "#4D2C91"
-PURPLE_ACCENT = "#7C3AED"
-PURPLE_LIGHT = "#EDE9FE"
-CANVAS_BG = "#F8F9FC"
+# Crimson Executive Theme
+CRIMSON_MAIN = "#7F1D2D"
+ROSE_ACCENT = "#E11D48"
+ROSE_LIGHT = "#FFE4E6"
+CANVAS_BG = "#FDF8F8"
 CARD_BG = "#FFFFFF"
 BORDER_COLOR = "#E2E8F0"
 TEXT_DARK = "#0F172A"
 TEXT_MUTED = "#64748B"
 CYAN_ACCENT = "#06B6D4"
-CHIP_BG = "#5B21B6"
+CHIP_BG = "#9F1239"
 
-def _kpi(ax, x, y, w, h, label, value, color=PURPLE_MAIN):
+def _kpi(ax, x, y, w, h, label, value, color=CRIMSON_MAIN):
     """Modern executive KPI card with subtle border and left accent strip."""
     ax.add_patch(FancyBboxPatch((x, y - h), w, h,
                                 boxstyle="round,pad=0.003,rounding_size=0.008",
@@ -47,7 +47,7 @@ def _kpi(ax, x, y, w, h, label, value, color=PURPLE_MAIN):
 def _chip(ax, x, y, w, h, text):
     ax.add_patch(FancyBboxPatch((x, y), w, h,
                                 boxstyle="round,pad=0.001,rounding_size=0.008",
-                                linewidth=0.6, edgecolor="#DDD6FE", facecolor=CHIP_BG,
+                                linewidth=0.6, edgecolor="#FECDD3", facecolor=CHIP_BG,
                                 transform=ax.transAxes))
     ax.text(x + w / 2, y + h / 2, text, color="#FFFFFF", fontsize=7.5, weight="bold",
             transform=ax.transAxes, ha="center", va="center")
@@ -69,9 +69,9 @@ def _filter_section(ax, x_top, y_top, w, items, label):
                                 facecolor=CARD_BG, transform=ax.transAxes))
     ax.add_patch(FancyBboxPatch((x_top, y_top - header_h), w, header_h,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
-                                linewidth=0, facecolor=PURPLE_MAIN, transform=ax.transAxes))
+                                linewidth=0, facecolor=CRIMSON_MAIN, transform=ax.transAxes))
     ax.add_patch(Rectangle((x_top, y_top - header_h), w, header_h * 0.55,
-                           facecolor=PURPLE_MAIN, transform=ax.transAxes))
+                           facecolor=CRIMSON_MAIN, transform=ax.transAxes))
     ax.text(x_top + 0.008, y_top - header_h / 2, label, color="#FFFFFF", fontsize=9.5, weight="bold",
             transform=ax.transAxes, ha="left", va="center")
     chip_w = (w - 3 * chip_pad_x) / 2
@@ -101,12 +101,12 @@ def main() -> None:
     ax.axis("off")
 
     # 1. Top Executive Banner (Purple theme)
-    ax.add_patch(Rectangle((0, 0.94), 1, 0.06, facecolor=PURPLE_MAIN, transform=ax.transAxes))
+    ax.add_patch(Rectangle((0, 0.94), 1, 0.06, facecolor=CRIMSON_MAIN, transform=ax.transAxes))
     ax.text(0.02, 0.97, "Subscription Retention & Churn Analytics Dashboard",
             color="#FFFFFF", fontsize=18, weight="bold",
             ha="left", va="center", transform=ax.transAxes)
     ax.text(0.98, 0.97, "Executive Decision Support System",
-            color="#DDD6FE", fontsize=11, weight="bold",
+            color="#FECDD3", fontsize=11, weight="bold",
             ha="right", va="center", transform=ax.transAxes)
 
     # 2. Filters Sidebar Panel (Soft Lavender container)
@@ -116,10 +116,10 @@ def main() -> None:
     panel_bottom_y = 0.04
     ax.add_patch(FancyBboxPatch((panel_x, panel_bottom_y), panel_w, panel_top_y - panel_bottom_y,
                                 boxstyle="round,pad=0.002,rounding_size=0.006",
-                                linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=PURPLE_LIGHT, transform=ax.transAxes))
+                                linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=ROSE_LIGHT, transform=ax.transAxes))
     header_h = 0.034
     ax.text(panel_x + panel_w / 2, panel_top_y - header_h / 2, "FILTER PANEL",
-            color=PURPLE_MAIN, fontsize=12, weight="bold",
+            color=CRIMSON_MAIN, fontsize=12, weight="bold",
             ha="center", va="center", transform=ax.transAxes)
 
     sections = [
@@ -138,10 +138,10 @@ def main() -> None:
 
     # 3. KPI Cards (Consistent modern purple accent strips)
     kpis = [
-        ("Total Customers", f"{len(df):,}", PURPLE_MAIN),
+        ("Total Customers", f"{len(df):,}", CRIMSON_MAIN),
         ("Churn Rate", f"{df['ChurnFlag'].mean():.1%}", "#E11D48"),
-        ("Avg Tenure (mo)", f"{df['tenure'].mean():.1f}", PURPLE_ACCENT),
-        ("Revenue at Risk", f"${df['RevenueAtRisk'].sum()/1000:,.0f}K", "#7C3AED"),
+        ("Avg Tenure (mo)", f"{df['tenure'].mean():.1f}", ROSE_ACCENT),
+        ("Revenue at Risk", f"${df['RevenueAtRisk'].sum()/1000:,.0f}K", "#B45309"),
         ("Retention Rate", f"{1-df['ChurnFlag'].mean():.1%}", "#059669"),
     ]
     kpi_x0 = panel_x + panel_w + 0.018
@@ -187,12 +187,12 @@ def main() -> None:
         cax.set_facecolor(CARD_BG)
         for spine in cax.spines.values():
             spine.set_visible(False)
-        cax.set_title(title, fontsize=10.5, weight="bold", color=PURPLE_MAIN, pad=8)
+        cax.set_title(title, fontsize=10.5, weight="bold", color=CRIMSON_MAIN, pad=8)
 
         if key == "contract":
             data = df.groupby("Contract", observed=True)["ChurnFlag"].mean().mul(100).reindex(
                 ["Month-to-month", "One year", "Two year"])
-            cax.bar(data.index, data.values, color=PURPLE_MAIN, width=0.52)
+            cax.bar(data.index, data.values, color=CRIMSON_MAIN, width=0.52)
             cax.tick_params(axis="x", labelsize=8.5, colors=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=8, colors=TEXT_MUTED)
             for j, v in enumerate(data.values):
@@ -200,8 +200,8 @@ def main() -> None:
             cax.set_ylim(0, max(data.values) * 1.20)
         elif key == "tenure":
             data = df.groupby("tenure_band", observed=True)["ChurnFlag"].mean().mul(100)
-            cax.plot(data.index.astype(str), data.values, color=PURPLE_ACCENT, marker="o", linewidth=2.4, markersize=5)
-            cax.fill_between(range(len(data)), data.values, color=PURPLE_LIGHT, alpha=0.6)
+            cax.plot(data.index.astype(str), data.values, color=ROSE_ACCENT, marker="o", linewidth=2.4, markersize=5)
+            cax.fill_between(range(len(data)), data.values, color=ROSE_LIGHT, alpha=0.6)
             cax.tick_params(axis="x", labelsize=8, colors=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=8, colors=TEXT_MUTED)
             for j, v in enumerate(data.values):
@@ -209,7 +209,7 @@ def main() -> None:
             cax.set_ylim(0, max(data.values) * 1.18)
         elif key == "service":
             data = df.groupby("InternetService", observed=True)["customerID"].count()
-            colors = [PURPLE_MAIN, PURPLE_ACCENT, "#CBD5E1"]
+            colors = [CRIMSON_MAIN, ROSE_ACCENT, "#CBD5E1"]
             wedges, _, autotexts = cax.pie(
                 data.values, labels=data.index, colors=colors,
                 autopct="%1.0f%%", startangle=90, pctdistance=0.76,
@@ -225,7 +225,7 @@ def main() -> None:
         elif key == "rev_by_contract":
             data = (df.assign(rar=df["MonthlyCharges"] * df["ChurnFlag"])
                       .groupby("Contract", observed=True)["rar"].sum().div(1000).round(1))
-            cax.bar(data.index, data.values, color=PURPLE_MAIN, width=0.52)
+            cax.bar(data.index, data.values, color=CRIMSON_MAIN, width=0.52)
             cax.tick_params(axis="x", labelsize=8.5, colors=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=8, colors=TEXT_MUTED)
             for j, v in enumerate(data.values):
@@ -239,7 +239,7 @@ def main() -> None:
             grp["label"] = grp["Contract"].str.replace("Month-to-month", "M2M") + " | " + grp["InternetService"].replace({"Fiber optic": "Fiber", "No": "None"})
             cax.set_position([cax.get_position().x0 + 0.020, cax.get_position().y0,
                               cax.get_position().width - 0.020, cax.get_position().height])
-            cax.barh(grp["label"][::-1], grp["rar"][::-1], color=PURPLE_ACCENT)
+            cax.barh(grp["label"][::-1], grp["rar"][::-1], color=ROSE_ACCENT)
             cax.tick_params(axis="x", labelsize=8, colors=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=8, colors=TEXT_MUTED)
             for j, (lbl, v) in enumerate(zip(grp["label"][::-1], grp["rar"][::-1])):
@@ -249,8 +249,8 @@ def main() -> None:
         elif key == "tenure_trend":
             t = df.groupby("tenure")["ChurnFlag"].mean().mul(100)
             t = t.iloc[::3]
-            cax.plot(t.index, t.values, color=PURPLE_MAIN, linewidth=2.2)
-            cax.fill_between(t.index, t.values, color=PURPLE_LIGHT, alpha=0.7)
+            cax.plot(t.index, t.values, color=CRIMSON_MAIN, linewidth=2.2)
+            cax.fill_between(t.index, t.values, color=ROSE_LIGHT, alpha=0.7)
             cax.tick_params(axis="x", labelsize=7, colors=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=8, colors=TEXT_MUTED)
 
@@ -262,7 +262,7 @@ def main() -> None:
                                 linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=CARD_BG,
                                 transform=ax.transAxes))
     ax.add_patch(Rectangle((kpi_x0, findings_top - 0.030), grid_x1 - kpi_x0, 0.030,
-                           facecolor=PURPLE_MAIN, transform=ax.transAxes))
+                           facecolor=CRIMSON_MAIN, transform=ax.transAxes))
     ax.text(kpi_x0 + 0.015, findings_top - 0.015,
             "EXECUTIVE INSIGHTS & RETENTION ACTIONS",
             color="#FFFFFF", fontsize=11, weight="bold",
@@ -289,7 +289,7 @@ def main() -> None:
     # 6. Modern Footer
     ax.add_patch(Rectangle((0, 0), 1, 0.025, facecolor=CARD_BG, transform=ax.transAxes))
     ax.text(0.5, 0.013, "Created by Ansh Thakur  |  Data Analyst Portfolio Dashboard",
-            color=PURPLE_MAIN, fontsize=9.5, weight="bold", style="italic",
+            color=CRIMSON_MAIN, fontsize=9.5, weight="bold", style="italic",
             ha="center", va="center", transform=ax.transAxes)
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
