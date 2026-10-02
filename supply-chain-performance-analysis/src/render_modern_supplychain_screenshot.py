@@ -31,16 +31,16 @@ CYAN_ACCENT = "#06B6D4"
 CHIP_BG = "#0B3D66"
 
 LAYOUT_TITLE_H = 0.034
-CHIP_H = 0.024
+CHIP_H = 0.028
 CHIP_PAD_X = 0.004
 CHIP_PAD_Y = 0.005
 CHIP_GAP_X = 0.004
 CHIP_GAP_Y = 0.003
 SECTION_HEADER_H = 0.024
 SECTION_TAIL = 0.004
-FOOTER_GAP = 0.014
-FOOTER_MIN_H = 0.115
-MAX_SECTION_GAP = 0.070
+RANK_HEAD_H = 0.022
+RANK_ROW_H = 0.024
+STATUS_H = 0.048
 
 
 def _kpi(ax, x, y, w, h, label, value, color=NAVY_MAIN):
@@ -69,7 +69,7 @@ def _fit_font(text, chip_w, base, fig_w_in=17.0, dpi_pts=72.0):
     return base if est_pt <= usable_pt else max(5.0, base * usable_pt / est_pt)
 
 
-def _chip(ax, x, y, w, h, text, edge="#BAE6FD", bg=None, base=7.4):
+def _chip(ax, x, y, w, h, text, edge="#BAE6FD", bg=None, base=7.8):
     ax.add_patch(FancyBboxPatch((x, y), w, h,
                                 boxstyle="round,pad=0.001,rounding_size=0.008",
                                 linewidth=0.6, edgecolor=edge, facecolor=bg or CHIP_BG,
@@ -109,51 +109,70 @@ def _filter_section(ax, x_top, y_top, w, items, label, cols, accent,
     return box_h
 
 
-def _panel_footer(ax, x, y_bottom, w, h, title, rows, accent):
-    """Bottom-anchored data-scope card. It absorbs whatever vertical slack the
-    filter stack leaves, so the sidebar always ends level with the dashboard."""
-    ax.add_patch(FancyBboxPatch((x, y_bottom), w, h,
+def _rank_card_h(n):
+    return RANK_HEAD_H + 0.006 + n * RANK_ROW_H + 0.006
+
+
+def _rank_card(ax, x, y_top, w, title, items, accent):
+    """Ranked mini leaderboard (label + value + proportional bar) that keeps
+    the sidebar full with real data instead of stretched empty space."""
+    n = len(items)
+    box_h = _rank_card_h(n)
+    ax.add_patch(FancyBboxPatch((x, y_top - box_h), w, box_h,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
                                 linewidth=0.8, edgecolor=BORDER_COLOR,
                                 facecolor=CARD_BG, transform=ax.transAxes))
-    head_h = 0.022
-    ax.add_patch(FancyBboxPatch((x, y_bottom + h - head_h), w, head_h,
+    ax.add_patch(FancyBboxPatch((x, y_top - RANK_HEAD_H), w, RANK_HEAD_H,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
                                 linewidth=0, facecolor=accent, transform=ax.transAxes))
-    ax.add_patch(Rectangle((x, y_bottom + h - head_h), w, head_h * 0.55,
+    ax.add_patch(Rectangle((x, y_top - RANK_HEAD_H), w, RANK_HEAD_H * 0.55,
                            facecolor=accent, transform=ax.transAxes))
-    ax.text(x + 0.008, y_bottom + h - head_h / 2, title, color="#FFFFFF", fontsize=8.2,
+    ax.text(x + 0.008, y_top - RANK_HEAD_H / 2, title, color="#FFFFFF", fontsize=8.2,
             weight="bold", transform=ax.transAxes, ha="left", va="center")
-    top = y_bottom + h - head_h - 0.006
-    step = (h - head_h - 0.012) / max(len(rows), 1)
-    for i, (k, v) in enumerate(rows):
-        y = top - step * (i + 0.5)
-        ax.text(x + 0.008, y, k, color=TEXT_MUTED, fontsize=7.4,
-                transform=ax.transAxes, va="center", ha="left")
-        ax.text(x + w - 0.008, y, v, color=TEXT_DARK, fontsize=7.4, weight="bold",
-                transform=ax.transAxes, va="center", ha="right")
+    for i, (label, value, frac) in enumerate(items):
+        yc = y_top - RANK_HEAD_H - 0.006 - RANK_ROW_H * (i + 0.5)
+        ax.text(x + 0.008, yc + 0.0045, label, color=TEXT_MUTED, fontsize=7.2,
+                weight="bold", transform=ax.transAxes, ha="left", va="center")
+        ax.text(x + w - 0.008, yc + 0.0045, value, color=TEXT_DARK, fontsize=7.4,
+                weight="bold", transform=ax.transAxes, ha="right", va="center")
+        ax.add_patch(Rectangle((x + 0.008, yc - 0.0075), (w - 0.016) * max(frac, 0.03),
+                               0.005, facecolor=accent, alpha=0.85, transform=ax.transAxes))
+    return box_h
+
+
+def _status_footer(ax, x, y_bottom, w, title, sub, accent):
+    """Compact bottom-anchored status strip pinned exactly at the panel edge."""
+    ax.add_patch(FancyBboxPatch((x, y_bottom), w, STATUS_H,
+                                boxstyle="round,pad=0.001,rounding_size=0.006",
+                                linewidth=0.8, edgecolor=BORDER_COLOR,
+                                facecolor=accent, transform=ax.transAxes))
+    ax.text(x + w / 2, y_bottom + STATUS_H * 0.64, title, color="#FFFFFF", fontsize=8.0,
+            weight="bold", transform=ax.transAxes, ha="center", va="center")
+    ax.text(x + w / 2, y_bottom + STATUS_H * 0.28, sub, color="#BAE6FD", fontsize=7.0,
+            transform=ax.transAxes, ha="center", va="center")
 
 
 def _layout_filter_panel(ax, x, panel_top_y, panel_bottom_y, w, sections,
-                         accent, footer_title, footer_rows,
+                         accent, rank_title, rank_items, status_title, status_sub,
                          chip_edge="#BAE6FD", chip_bg=None):
-    """Fill the sidebar exactly: sections get an even gap, and the leftover
-    space goes to the bottom-anchored scope card. Nothing floats or overflows."""
+    """Fill the sidebar exactly: filter sections + a ranked leaderboard + a
+    compact status strip, all separated by one even gap. Nothing floats."""
     content_top = panel_top_y - LAYOUT_TITLE_H - 0.008
     heights = [_section_box_h(math.ceil(len(items) / cols)) for _, items, cols in sections]
+    rank_h = _rank_card_h(len(rank_items))
     avail = content_top - panel_bottom_y
-    n_gaps = max(len(sections) - 1, 1)
-    gap = (avail - sum(heights) - FOOTER_GAP - FOOTER_MIN_H) / n_gaps
-    gap = max(0.007, min(gap, MAX_SECTION_GAP))
-    footer_h = max(FOOTER_MIN_H, avail - sum(heights) - gap * n_gaps - FOOTER_GAP)
+    n_gaps = len(sections) + 1
+    gap = max(0.008, (avail - sum(heights) - rank_h - STATUS_H) / n_gaps)
 
     y = content_top
-    for i, ((label, items, cols), box_h) in enumerate(zip(sections, heights)):
+    for (label, items, cols), box_h in zip(sections, heights):
         _filter_section(ax, x, y, w, items, label, cols, accent,
                         chip_edge=chip_edge, chip_bg=chip_bg)
-        y -= box_h + (gap if i < len(sections) - 1 else 0.0)
-    _panel_footer(ax, x, panel_bottom_y, w, footer_h, footer_title, footer_rows, accent)
-    return gap, footer_h
+        y -= box_h + gap
+    _rank_card(ax, x, y, w, rank_title, rank_items, accent)
+    y -= rank_h + gap
+    _status_footer(ax, x, panel_bottom_y, w, status_title, status_sub, accent)
+    return gap
 
 def main() -> None:
     df = pd.read_csv(DATA_PATH)
@@ -200,15 +219,12 @@ def main() -> None:
     ]
     inner_x = panel_x + 0.005
     inner_w = panel_w - 0.010
-    footer_rows = [
-        ("Orders in view", f"{len(df):,}"),
-        ("Channels", f"{df['Sales_Channel'].nunique()}"),
-        ("Warehouses", f"{df['WarehouseCode'].nunique()}"),
-        ("Years", f"{order_years[0]}\u2013{order_years[-1]}"),
-        ("Filter status", "All active"),
-    ]
+    wh_rev_top = df.groupby("WarehouseCode")["revenue"].sum().div(1e6).sort_values(ascending=False)
+    rank_items = [(c.replace("WARE-", ""), f"${v:.1f}M", v / wh_rev_top.max())
+                  for c, v in wh_rev_top.head(3).items()]
     _layout_filter_panel(ax, inner_x, panel_top_y, panel_bottom_y, inner_w, sections,
-                         NAVY_MAIN, "DATA SCOPE", footer_rows,
+                         NAVY_MAIN, "TOP WAREHOUSES", rank_items,
+                         "ALL FILTERS ACTIVE", f"{len(df):,} orders in view",
                          chip_edge="#BAE6FD", chip_bg=CHIP_BG)
 
     # 3. KPI Cards
