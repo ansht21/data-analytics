@@ -69,6 +69,14 @@ def _fit_font(text, chip_w, base, fig_w_in=17.0, dpi_pts=72.0):
     return base if est_pt <= usable_pt else max(5.0, base * usable_pt / est_pt)
 
 
+def _boxed_note(cax, x, y, s, color, fontsize=7.5):
+    """Measurement callout: white box with colored edge so line-chart values
+    read as clearly as the bar labels."""
+    cax.text(x, y, s, ha="center", va="bottom", fontsize=fontsize, weight="bold",
+             color=color, bbox=dict(boxstyle="round,pad=0.25", facecolor="#FFFFFF",
+                                    edgecolor=color, linewidth=0.8))
+
+
 def _chip(ax, x, y, w, h, text, edge="#BAE6FD", bg=None, base=7.8):
     ax.add_patch(FancyBboxPatch((x, y), w, h,
                                 boxstyle="round,pad=0.001,rounding_size=0.008",
@@ -290,11 +298,22 @@ def main() -> None:
 
         if i == 0: # Monthly Trend
             monthly = df.groupby("order_month")["revenue"].sum().div(1e6)
-            cax.plot(range(len(monthly)), monthly.values, color=NAVY_MAIN, marker="o", markersize=3, linewidth=2.0)
-            cax.fill_between(range(len(monthly)), monthly.values, color=SKY_LIGHT, alpha=0.7)
+            xs = list(range(len(monthly)))
+            ys = monthly.values
+            cax.plot(xs, ys, color=NAVY_MAIN, marker="o", markersize=3, linewidth=2.0)
+            cax.fill_between(xs, ys, color=SKY_LIGHT, alpha=0.7)
+            cax.set_ylim(0, ys.max() * 1.32)
             cax.set_xticks(range(0, len(monthly), 5))
             cax.set_xticklabels(monthly.index[::5], rotation=30, fontsize=7, color=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=7.5, colors=TEXT_MUTED)
+            # measurement callouts: peak, trough, latest revenue month
+            seen = set()
+            for xi in (int(ys.argmax()), int(ys.argmin()), len(ys) - 1):
+                if xi in seen:
+                    continue
+                seen.add(xi)
+                _boxed_note(cax, xs[xi], ys[xi] + ys.max() * 0.04,
+                            f"${ys[xi]:.1f}M", NAVY_MAIN)
         elif i == 1: # Profit by Channel
             chan = df.groupby("Sales_Channel")["profit"].sum().div(1e6).sort_values()
             bars = cax.barh(chan.index, chan.values, color=TEAL_ACCENT, height=0.55)
@@ -332,13 +351,21 @@ def main() -> None:
             cax.set_ylim(0, wh_rev.max() * 1.18)
         elif i == 4: # Delivery days flat line
             del_m = df.groupby("order_month")["delivery_days"].mean()
-            cax.plot(range(len(del_m)), del_m.values, color=CYAN_ACCENT, linewidth=2.0)
-            cax.fill_between(range(len(del_m)), del_m.values, color="#E0F2FE", alpha=0.7)
+            xs4 = list(range(len(del_m)))
+            ys4 = del_m.values
+            cax.plot(xs4, ys4, color=CYAN_ACCENT, marker="o", markersize=3, linewidth=2.0)
+            cax.fill_between(xs4, ys4, color="#E0F2FE", alpha=0.7)
             cax.set_ylim(0, 8)
             cax.set_xticks(range(0, len(del_m), 5))
             cax.set_xticklabels(del_m.index[::5], rotation=30, fontsize=7, color=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=7.5, colors=TEXT_MUTED)
             cax.axhline(5.5, color=NAVY_MAIN, linestyle="--", linewidth=1.0, alpha=0.7)
+            # measurement callouts: slowest month + latest month
+            imax4 = int(ys4.argmax())
+            _boxed_note(cax, xs4[imax4], ys4.max() + 0.30,
+                        f"{ys4.max():.1f}d", CYAN_ACCENT)
+            if imax4 != len(ys4) - 1:
+                _boxed_note(cax, xs4[-1], ys4[-1] + 0.30, f"{ys4[-1]:.1f}d", CYAN_ACCENT)
         elif i == 5: # Profit by Warehouse
             wh_prof = df.groupby("WarehouseCode")["profit"].sum().div(1e6).sort_values(ascending=False)
             bars = cax.bar(wh_prof.index.str.replace("WARE-", ""), wh_prof.values, color=TEAL_ACCENT, width=0.55)

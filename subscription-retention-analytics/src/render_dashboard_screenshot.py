@@ -68,6 +68,14 @@ def _fit_font(text, chip_w, base, fig_w_in=17.0, dpi_pts=72.0):
     return base if est_pt <= usable_pt else max(5.0, base * usable_pt / est_pt)
 
 
+def _boxed_note(cax, x, y, s, color, fontsize=7.5):
+    """Measurement callout: white box with colored edge so line-chart values
+    read as clearly as the bar labels."""
+    cax.text(x, y, s, ha="center", va="bottom", fontsize=fontsize, weight="bold",
+             color=color, bbox=dict(boxstyle="round,pad=0.25", facecolor="#FFFFFF",
+                                    edgecolor=color, linewidth=0.8))
+
+
 def _chip(ax, x, y, w, h, text, edge="#FECDD3", bg=None, base=7.6):
     ax.add_patch(FancyBboxPatch((x, y), w, h,
                                 boxstyle="round,pad=0.001,rounding_size=0.008",
@@ -262,7 +270,7 @@ def main() -> None:
     ]
     grid_x0 = kpi_x0
     grid_x1 = 1 - 0.012
-    grid_y0 = 0.36
+    grid_y0 = 0.309
     grid_y1 = 0.81
     row_gap = 0.030
     cell_w = (grid_x1 - grid_x0) / 3
@@ -346,24 +354,35 @@ def main() -> None:
         elif key == "tenure_trend":
             t = df.groupby("tenure")["ChurnFlag"].mean().mul(100)
             t = t.iloc[::3]
-            cax.plot(t.index, t.values, color=CRIMSON_MAIN, linewidth=2.2)
-            cax.fill_between(t.index, t.values, color=ROSE_LIGHT, alpha=0.7)
+            xs = t.index.values
+            ys = t.values
+            cax.plot(xs, ys, color=CRIMSON_MAIN, marker="o", markersize=3, linewidth=2.2)
+            cax.fill_between(xs, ys, color=ROSE_LIGHT, alpha=0.7)
+            cax.set_ylim(0, ys.max() * 1.28)
             cax.tick_params(axis="x", labelsize=7, colors=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=8, colors=TEXT_MUTED)
+            # measurement callouts: first month, lowest month, latest month
+            seen = set()
+            for xi, yv in ((xs[0], ys[0]), (xs[int(ys.argmin())], ys.min()), (xs[-1], ys[-1])):
+                if xi in seen:
+                    continue
+                seen.add(xi)
+                _boxed_note(cax, xi, yv + ys.max() * 0.04, f"{yv:.1f}%", CRIMSON_MAIN)
 
-    # 5. Key Findings panel (Modern white card with crimson header strip)
-    findings_top = 0.335
+    # 5. Key Findings panel (compact: smaller type + tighter leading so the
+    # charts above get the space; bottom edge stays level with the sidebar)
+    findings_top = 0.284
     # bottom edge matches the filter sidebar bottom (panel_bottom_y) for a level look
     findings_h = findings_top - panel_bottom_y
     ax.add_patch(FancyBboxPatch((kpi_x0, findings_top - findings_h), grid_x1 - kpi_x0, findings_h,
                                 boxstyle="round,pad=0.002,rounding_size=0.006",
                                 linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=CARD_BG,
                                 transform=ax.transAxes))
-    ax.add_patch(Rectangle((kpi_x0, findings_top - 0.030), grid_x1 - kpi_x0, 0.030,
+    ax.add_patch(Rectangle((kpi_x0, findings_top - 0.026), grid_x1 - kpi_x0, 0.026,
                            facecolor=CRIMSON_MAIN, transform=ax.transAxes))
-    ax.text(kpi_x0 + 0.015, findings_top - 0.015,
+    ax.text(kpi_x0 + 0.015, findings_top - 0.013,
             "EXECUTIVE INSIGHTS & RETENTION ACTIONS",
-            color="#FFFFFF", fontsize=11, weight="bold",
+            color="#FFFFFF", fontsize=10, weight="bold",
             ha="left", va="center", transform=ax.transAxes)
 
     by_contract = df.groupby("Contract", observed=True)["ChurnFlag"].mean().mul(100)
@@ -380,8 +399,8 @@ def main() -> None:
         "Revenue Exposure: 72% of total dollars at risk is concentrated in Month-to-Month + Fiber Optic subscribers.",
     ]
     for i, txt in enumerate(findings):
-        y = findings_top - 0.065 - i * 0.044
-        ax.text(kpi_x0 + 0.015, y, f"â€¢  {txt}", color=TEXT_DARK, fontsize=10,
+        y = findings_top - 0.056 - i * 0.034
+        ax.text(kpi_x0 + 0.015, y, f"•  {txt}", color=TEXT_DARK, fontsize=9,
                 weight="bold", ha="left", va="center", transform=ax.transAxes)
 
     # 6. Modern Footer
