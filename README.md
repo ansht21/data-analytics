@@ -5,7 +5,7 @@
 
 [![Live Copilot](https://img.shields.io/badge/🤖_Try_the_Copilot-Streamlit_App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](./analytics-intelligence-copilot/)
 [![Tests](https://img.shields.io/badge/Tests-18_Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](./analytics-intelligence-copilot/tests/)
-[![Records](https://img.shields.io/badge/Records-50,034_V verified-00C7B7?style=for-the-badge&logo=database&logoColor=white)](#portfolio-at-a-glance)
+[![Records](https://img.shields.io/badge/Records-50,034%20verified-00C7B7?style=for-the-badge&logo=database&logoColor=white)](#portfolio-at-a-glance)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
