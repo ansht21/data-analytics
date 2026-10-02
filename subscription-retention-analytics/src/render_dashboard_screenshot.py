@@ -1,4 +1,4 @@
-"""
+﻿"""
 Redesign render_dashboard_screenshot.py with the Crimson Executive Theme:
 - Top banner: Deep crimson (#7F1D2D)
 - Left filters panel: Soft rose (#FFE4E6) with rounded card chips
@@ -29,59 +29,130 @@ TEXT_MUTED = "#64748B"
 CYAN_ACCENT = "#06B6D4"
 CHIP_BG = "#9F1239"
 
+LAYOUT_TITLE_H = 0.034
+CHIP_H = 0.024
+CHIP_PAD_X = 0.004
+CHIP_PAD_Y = 0.005
+CHIP_GAP_X = 0.004
+CHIP_GAP_Y = 0.003
+SECTION_HEADER_H = 0.024
+SECTION_TAIL = 0.004
+FOOTER_GAP = 0.014
+FOOTER_MIN_H = 0.115
+MAX_SECTION_GAP = 0.070
+
+
 def _kpi(ax, x, y, w, h, label, value, color=CRIMSON_MAIN):
-    """Modern executive KPI card with subtle border and left accent strip."""
+    """KPI card with a fixed vertical rhythm shared by every card:
+    label baseline, hairline divider, value baseline -- identical offsets so
+    all five cards read as one aligned row."""
     ax.add_patch(FancyBboxPatch((x, y - h), w, h,
                                 boxstyle="round,pad=0.003,rounding_size=0.008",
                                 linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=CARD_BG,
                                 transform=ax.transAxes))
-    # Purple left accent bar
     ax.add_patch(Rectangle((x, y - h + 0.004), 0.0035, h - 0.008,
                            facecolor=color, transform=ax.transAxes))
-    ax.text(x + 0.010, y - h * 0.28, label.upper(), color=TEXT_MUTED, fontsize=8.5, weight="bold",
+    ax.text(x + 0.012, y - 0.026, label.upper(), color=TEXT_MUTED, fontsize=8.5, weight="bold",
             transform=ax.transAxes, va="center", ha="left")
-    ax.text(x + 0.010, y - h * 0.70, value, color=TEXT_DARK, fontsize=19, weight="bold",
+    ax.plot([x + 0.012, x + w - 0.012], [y - 0.042, y - 0.042],
+            color=BORDER_COLOR, linewidth=0.9, transform=ax.transAxes,
+            solid_capstyle="butt")
+    ax.text(x + 0.012, y - 0.069, value, color=TEXT_DARK, fontsize=19, weight="bold",
             transform=ax.transAxes, va="center", ha="left")
 
 
-def _chip(ax, x, y, w, h, text):
+def _fit_font(text, chip_w, base, fig_w_in=17.0, dpi_pts=72.0):
+    """Shrink chip text so it can never spill outside its chip."""
+    usable_pt = chip_w * fig_w_in * dpi_pts * 0.86
+    est_pt = len(str(text)) * base * 0.62
+    return base if est_pt <= usable_pt else max(5.0, base * usable_pt / est_pt)
+
+
+def _chip(ax, x, y, w, h, text, edge="#FECDD3", bg=None, base=7.6):
     ax.add_patch(FancyBboxPatch((x, y), w, h,
                                 boxstyle="round,pad=0.001,rounding_size=0.008",
-                                linewidth=0.6, edgecolor="#FECDD3", facecolor=CHIP_BG,
+                                linewidth=0.6, edgecolor=edge, facecolor=bg or CHIP_BG,
                                 transform=ax.transAxes))
-    ax.text(x + w / 2, y + h / 2, text, color="#FFFFFF", fontsize=7.5, weight="bold",
+    ax.text(x + w / 2, y + h / 2, text, color="#FFFFFF",
+            fontsize=_fit_font(text, w, base), weight="bold",
             transform=ax.transAxes, ha="center", va="center")
 
 
-def _filter_section(ax, x_top, y_top, w, items, label):
-    chip_h = 0.018
-    chip_gap_y = 0.003
-    chip_pad_x = 0.004
-    chip_pad_y = 0.005
-    rows = math.ceil(len(items) / 2)
-    body_h = chip_pad_y * 2 + rows * chip_h + (rows - 1) * chip_gap_y
-    header_h = 0.024
-    box_h = header_h + body_h + 0.004
+def _section_box_h(rows):
+    body_h = CHIP_PAD_Y * 2 + rows * CHIP_H + (rows - 1) * CHIP_GAP_Y
+    return SECTION_HEADER_H + body_h + SECTION_TAIL
+
+
+def _filter_section(ax, x_top, y_top, w, items, label, cols, accent,
+                    chip_edge="#FECDD3", chip_bg=None):
+    rows = math.ceil(len(items) / cols)
+    box_h = _section_box_h(rows)
     box_y = y_top - box_h
     ax.add_patch(FancyBboxPatch((x_top, box_y), w, box_h,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
                                 linewidth=0.8, edgecolor=BORDER_COLOR,
                                 facecolor=CARD_BG, transform=ax.transAxes))
-    ax.add_patch(FancyBboxPatch((x_top, y_top - header_h), w, header_h,
+    ax.add_patch(FancyBboxPatch((x_top, y_top - SECTION_HEADER_H), w, SECTION_HEADER_H,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
-                                linewidth=0, facecolor=CRIMSON_MAIN, transform=ax.transAxes))
-    ax.add_patch(Rectangle((x_top, y_top - header_h), w, header_h * 0.55,
-                           facecolor=CRIMSON_MAIN, transform=ax.transAxes))
-    ax.text(x_top + 0.008, y_top - header_h / 2, label, color="#FFFFFF", fontsize=9.5, weight="bold",
-            transform=ax.transAxes, ha="left", va="center")
-    chip_w = (w - 3 * chip_pad_x) / 2
+                                linewidth=0, facecolor=accent, transform=ax.transAxes))
+    ax.add_patch(Rectangle((x_top, y_top - SECTION_HEADER_H), w, SECTION_HEADER_H * 0.55,
+                           facecolor=accent, transform=ax.transAxes))
+    ax.text(x_top + 0.008, y_top - SECTION_HEADER_H / 2, label, color="#FFFFFF",
+            fontsize=9.5, weight="bold", transform=ax.transAxes, ha="left", va="center")
+    chip_w = (w - (cols + 1) * CHIP_PAD_X) / cols
     for i, item in enumerate(items):
-        row = i // 2
-        col = i % 2
-        cx = x_top + chip_pad_x + col * (chip_w + chip_pad_x)
-        cy = y_top - header_h - chip_pad_y - chip_h - row * (chip_h + chip_gap_y)
-        _chip(ax, cx, cy, chip_w, chip_h, item)
-    return box_h + 0.016
+        row, col = divmod(i, cols)
+        cx = x_top + CHIP_PAD_X + col * (chip_w + CHIP_PAD_X)
+        cy = y_top - SECTION_HEADER_H - CHIP_PAD_Y - CHIP_H - row * (CHIP_H + CHIP_GAP_Y)
+        _chip(ax, cx, cy, chip_w, CHIP_H, str(item), edge=chip_edge, bg=chip_bg)
+    return box_h
+
+
+def _panel_footer(ax, x, y_bottom, w, h, title, rows, accent):
+    """Bottom-anchored data-scope card. It absorbs whatever vertical slack the
+    filter stack leaves, so the sidebar always ends level with the dashboard."""
+    ax.add_patch(FancyBboxPatch((x, y_bottom), w, h,
+                                boxstyle="round,pad=0.001,rounding_size=0.006",
+                                linewidth=0.8, edgecolor=BORDER_COLOR,
+                                facecolor=CARD_BG, transform=ax.transAxes))
+    head_h = 0.022
+    ax.add_patch(FancyBboxPatch((x, y_bottom + h - head_h), w, head_h,
+                                boxstyle="round,pad=0.001,rounding_size=0.006",
+                                linewidth=0, facecolor=accent, transform=ax.transAxes))
+    ax.add_patch(Rectangle((x, y_bottom + h - head_h), w, head_h * 0.55,
+                           facecolor=accent, transform=ax.transAxes))
+    ax.text(x + 0.008, y_bottom + h - head_h / 2, title, color="#FFFFFF", fontsize=8.2,
+            weight="bold", transform=ax.transAxes, ha="left", va="center")
+    top = y_bottom + h - head_h - 0.006
+    step = (h - head_h - 0.012) / max(len(rows), 1)
+    for i, (k, v) in enumerate(rows):
+        y = top - step * (i + 0.5)
+        ax.text(x + 0.008, y, k, color=TEXT_MUTED, fontsize=7.4,
+                transform=ax.transAxes, va="center", ha="left")
+        ax.text(x + w - 0.008, y, v, color=TEXT_DARK, fontsize=7.4, weight="bold",
+                transform=ax.transAxes, va="center", ha="right")
+
+
+def _layout_filter_panel(ax, x, panel_top_y, panel_bottom_y, w, sections,
+                         accent, footer_title, footer_rows,
+                         chip_edge="#FECDD3", chip_bg=None):
+    """Fill the sidebar exactly: sections get an even gap, and the leftover
+    space goes to the bottom-anchored scope card. Nothing floats or overflows."""
+    content_top = panel_top_y - LAYOUT_TITLE_H - 0.008
+    heights = [_section_box_h(math.ceil(len(items) / cols)) for _, items, cols in sections]
+    avail = content_top - panel_bottom_y
+    n_gaps = max(len(sections) - 1, 1)
+    gap = (avail - sum(heights) - FOOTER_GAP - FOOTER_MIN_H) / n_gaps
+    gap = max(0.007, min(gap, MAX_SECTION_GAP))
+    footer_h = max(FOOTER_MIN_H, avail - sum(heights) - gap * n_gaps - FOOTER_GAP)
+
+    y = content_top
+    for i, ((label, items, cols), box_h) in enumerate(zip(sections, heights)):
+        _filter_section(ax, x, y, w, items, label, cols, accent,
+                        chip_edge=chip_edge, chip_bg=chip_bg)
+        y -= box_h + (gap if i < len(sections) - 1 else 0.0)
+    _panel_footer(ax, x, panel_bottom_y, w, footer_h, footer_title, footer_rows, accent)
+    return gap, footer_h
 
 
 def main() -> None:
@@ -100,7 +171,7 @@ def main() -> None:
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    # 1. Top Executive Banner (Purple theme)
+    # 1. Top Executive Banner (Crimson theme)
     ax.add_patch(Rectangle((0, 0.94), 1, 0.06, facecolor=CRIMSON_MAIN, transform=ax.transAxes))
     ax.text(0.02, 0.97, "Subscription Retention & Churn Analytics Dashboard",
             color="#FFFFFF", fontsize=18, weight="bold",
@@ -109,7 +180,7 @@ def main() -> None:
             color="#FECDD3", fontsize=11, weight="bold",
             ha="right", va="center", transform=ax.transAxes)
 
-    # 2. Filters Sidebar Panel (Soft Lavender container)
+    # 2. Filters Sidebar Panel (Soft rose container)
     panel_w = 0.135
     panel_x = 0.010
     panel_top_y = 0.92
@@ -123,20 +194,26 @@ def main() -> None:
             ha="center", va="center", transform=ax.transAxes)
 
     sections = [
-        ("Contract", ["Month-to-month", "One year", "Two year"]),
-        ("Internet", ["DSL", "Fiber optic", "No"]),
-        ("Payment", ["Bank transfer", "Credit card", "Electronic check", "Mailed check"]),
-        ("Tenure", ["0-6m", "7-12m", "13-24m", "25-48m", "49-72m"]),
-        ("Churn", ["Churned", "Retained"]),
+        ("Contract", ["Month-to-month", "One year", "Two year"], 1),
+        ("Internet", ["DSL", "Fiber optic", "No"], 1),
+        ("Payment", ["Bank transfer", "Credit card", "Electronic check", "Mailed check"], 1),
+        ("Tenure", ["0-6m", "7-12m", "13-24m", "25-48m", "49-72m"], 2),
+        ("Churn", ["Churned", "Retained"], 2),
     ]
-    y_cursor = panel_top_y - header_h - 0.010
     inner_x = panel_x + 0.005
     inner_w = panel_w - 0.010
-    for label, items in sections:
-        used = _filter_section(ax, inner_x, y_cursor, inner_w, items, label)
-        y_cursor -= used + 0.002
+    footer_rows = [
+        ("Customers in view", f"{len(df):,}"),
+        ("Contracts", f"{df['Contract'].nunique()}"),
+        ("Tenure bands", "5"),
+        ("Churned", f"{df['ChurnFlag'].sum():,}"),
+        ("Filter status", "All active"),
+    ]
+    _layout_filter_panel(ax, inner_x, panel_top_y, panel_bottom_y, inner_w, sections,
+                         CRIMSON_MAIN, "DATA SCOPE", footer_rows,
+                         chip_edge="#FECDD3", chip_bg=CHIP_BG)
 
-    # 3. KPI Cards (Consistent modern purple accent strips)
+    # 3. KPI Cards (Consistent crimson accent strips)
     kpis = [
         ("Total Customers", f"{len(df):,}", CRIMSON_MAIN),
         ("Churn Rate", f"{df['ChurnFlag'].mean():.1%}", "#E11D48"),
@@ -254,9 +331,10 @@ def main() -> None:
             cax.tick_params(axis="x", labelsize=7, colors=TEXT_MUTED)
             cax.tick_params(axis="y", labelsize=8, colors=TEXT_MUTED)
 
-    # 5. Key Findings panel (Modern white card with purple header strip)
+    # 5. Key Findings panel (Modern white card with crimson header strip)
     findings_top = 0.335
-    findings_h = 0.285
+    # bottom edge matches the filter sidebar bottom (panel_bottom_y) for a level look
+    findings_h = findings_top - panel_bottom_y
     ax.add_patch(FancyBboxPatch((kpi_x0, findings_top - findings_h), grid_x1 - kpi_x0, findings_h,
                                 boxstyle="round,pad=0.002,rounding_size=0.006",
                                 linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=CARD_BG,
@@ -283,7 +361,7 @@ def main() -> None:
     ]
     for i, txt in enumerate(findings):
         y = findings_top - 0.065 - i * 0.044
-        ax.text(kpi_x0 + 0.015, y, f"•  {txt}", color=TEXT_DARK, fontsize=10,
+        ax.text(kpi_x0 + 0.015, y, f"â€¢  {txt}", color=TEXT_DARK, fontsize=10,
                 weight="bold", ha="left", va="center", transform=ax.transAxes)
 
     # 6. Modern Footer

@@ -30,55 +30,130 @@ TEXT_MUTED = "#64748B"
 CYAN_ACCENT = "#06B6D4"
 CHIP_BG = "#0B3D66"
 
+LAYOUT_TITLE_H = 0.034
+CHIP_H = 0.024
+CHIP_PAD_X = 0.004
+CHIP_PAD_Y = 0.005
+CHIP_GAP_X = 0.004
+CHIP_GAP_Y = 0.003
+SECTION_HEADER_H = 0.024
+SECTION_TAIL = 0.004
+FOOTER_GAP = 0.014
+FOOTER_MIN_H = 0.115
+MAX_SECTION_GAP = 0.070
+
+
 def _kpi(ax, x, y, w, h, label, value, color=NAVY_MAIN):
+    """KPI card with a fixed vertical rhythm shared by every card:
+    label baseline, hairline divider, value baseline -- identical offsets so
+    all five cards read as one aligned row."""
     ax.add_patch(FancyBboxPatch((x, y - h), w, h,
                                 boxstyle="round,pad=0.003,rounding_size=0.008",
                                 linewidth=1.0, edgecolor=BORDER_COLOR, facecolor=CARD_BG,
                                 transform=ax.transAxes))
     ax.add_patch(Rectangle((x, y - h + 0.004), 0.0035, h - 0.008,
                            facecolor=color, transform=ax.transAxes))
-    ax.text(x + 0.010, y - h * 0.28, label.upper(), color=TEXT_MUTED, fontsize=8.5, weight="bold",
+    ax.text(x + 0.012, y - 0.026, label.upper(), color=TEXT_MUTED, fontsize=8.5, weight="bold",
             transform=ax.transAxes, va="center", ha="left")
-    ax.text(x + 0.010, y - h * 0.70, value, color=TEXT_DARK, fontsize=19, weight="bold",
+    ax.plot([x + 0.012, x + w - 0.012], [y - 0.042, y - 0.042],
+            color=BORDER_COLOR, linewidth=0.9, transform=ax.transAxes,
+            solid_capstyle="butt")
+    ax.text(x + 0.012, y - 0.069, value, color=TEXT_DARK, fontsize=19, weight="bold",
             transform=ax.transAxes, va="center", ha="left")
 
-def _chip(ax, x, y, w, h, text):
+
+def _fit_font(text, chip_w, base, fig_w_in=17.0, dpi_pts=72.0):
+    """Shrink chip text so it can never spill outside its chip."""
+    usable_pt = chip_w * fig_w_in * dpi_pts * 0.86
+    est_pt = len(str(text)) * base * 0.62
+    return base if est_pt <= usable_pt else max(5.0, base * usable_pt / est_pt)
+
+
+def _chip(ax, x, y, w, h, text, edge="#BAE6FD", bg=None, base=7.4):
     ax.add_patch(FancyBboxPatch((x, y), w, h,
                                 boxstyle="round,pad=0.001,rounding_size=0.008",
-                                linewidth=0.6, edgecolor="#BAE6FD", facecolor=CHIP_BG,
+                                linewidth=0.6, edgecolor=edge, facecolor=bg or CHIP_BG,
                                 transform=ax.transAxes))
-    ax.text(x + w / 2, y + h / 2, text, color="#FFFFFF", fontsize=7.2, weight="bold",
+    ax.text(x + w / 2, y + h / 2, text, color="#FFFFFF",
+            fontsize=_fit_font(text, w, base), weight="bold",
             transform=ax.transAxes, ha="center", va="center")
 
-def _filter_section(ax, x_top, y_top, w, items, label):
-    chip_h = 0.018
-    chip_gap_y = 0.003
-    chip_pad_x = 0.004
-    chip_pad_y = 0.005
-    rows = math.ceil(len(items) / 2)
-    body_h = chip_pad_y * 2 + rows * chip_h + (rows - 1) * chip_gap_y
-    header_h = 0.024
-    box_h = header_h + body_h + 0.004
+
+def _section_box_h(rows):
+    body_h = CHIP_PAD_Y * 2 + rows * CHIP_H + (rows - 1) * CHIP_GAP_Y
+    return SECTION_HEADER_H + body_h + SECTION_TAIL
+
+
+def _filter_section(ax, x_top, y_top, w, items, label, cols, accent,
+                    chip_edge="#BAE6FD", chip_bg=None):
+    rows = math.ceil(len(items) / cols)
+    box_h = _section_box_h(rows)
     box_y = y_top - box_h
     ax.add_patch(FancyBboxPatch((x_top, box_y), w, box_h,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
                                 linewidth=0.8, edgecolor=BORDER_COLOR,
                                 facecolor=CARD_BG, transform=ax.transAxes))
-    ax.add_patch(FancyBboxPatch((x_top, y_top - header_h), w, header_h,
+    ax.add_patch(FancyBboxPatch((x_top, y_top - SECTION_HEADER_H), w, SECTION_HEADER_H,
                                 boxstyle="round,pad=0.001,rounding_size=0.006",
-                                linewidth=0, facecolor=NAVY_MAIN, transform=ax.transAxes))
-    ax.add_patch(Rectangle((x_top, y_top - header_h), w, header_h * 0.55,
-                           facecolor=NAVY_MAIN, transform=ax.transAxes))
-    ax.text(x_top + 0.008, y_top - header_h / 2, label, color="#FFFFFF", fontsize=9.2, weight="bold",
-            transform=ax.transAxes, ha="left", va="center")
-    chip_w = (w - 3 * chip_pad_x) / 2
+                                linewidth=0, facecolor=accent, transform=ax.transAxes))
+    ax.add_patch(Rectangle((x_top, y_top - SECTION_HEADER_H), w, SECTION_HEADER_H * 0.55,
+                           facecolor=accent, transform=ax.transAxes))
+    ax.text(x_top + 0.008, y_top - SECTION_HEADER_H / 2, label, color="#FFFFFF",
+            fontsize=9.2, weight="bold", transform=ax.transAxes, ha="left", va="center")
+    chip_w = (w - (cols + 1) * CHIP_PAD_X) / cols
     for i, item in enumerate(items):
-        row = i // 2
-        col = i % 2
-        cx = x_top + chip_pad_x + col * (chip_w + chip_pad_x)
-        cy = y_top - header_h - chip_pad_y - chip_h - row * (chip_h + chip_gap_y)
-        _chip(ax, cx, cy, chip_w, chip_h, str(item))
-    return box_h + 0.016
+        row, col = divmod(i, cols)
+        cx = x_top + CHIP_PAD_X + col * (chip_w + CHIP_PAD_X)
+        cy = y_top - SECTION_HEADER_H - CHIP_PAD_Y - CHIP_H - row * (CHIP_H + CHIP_GAP_Y)
+        _chip(ax, cx, cy, chip_w, CHIP_H, str(item), edge=chip_edge, bg=chip_bg)
+    return box_h
+
+
+def _panel_footer(ax, x, y_bottom, w, h, title, rows, accent):
+    """Bottom-anchored data-scope card. It absorbs whatever vertical slack the
+    filter stack leaves, so the sidebar always ends level with the dashboard."""
+    ax.add_patch(FancyBboxPatch((x, y_bottom), w, h,
+                                boxstyle="round,pad=0.001,rounding_size=0.006",
+                                linewidth=0.8, edgecolor=BORDER_COLOR,
+                                facecolor=CARD_BG, transform=ax.transAxes))
+    head_h = 0.022
+    ax.add_patch(FancyBboxPatch((x, y_bottom + h - head_h), w, head_h,
+                                boxstyle="round,pad=0.001,rounding_size=0.006",
+                                linewidth=0, facecolor=accent, transform=ax.transAxes))
+    ax.add_patch(Rectangle((x, y_bottom + h - head_h), w, head_h * 0.55,
+                           facecolor=accent, transform=ax.transAxes))
+    ax.text(x + 0.008, y_bottom + h - head_h / 2, title, color="#FFFFFF", fontsize=8.2,
+            weight="bold", transform=ax.transAxes, ha="left", va="center")
+    top = y_bottom + h - head_h - 0.006
+    step = (h - head_h - 0.012) / max(len(rows), 1)
+    for i, (k, v) in enumerate(rows):
+        y = top - step * (i + 0.5)
+        ax.text(x + 0.008, y, k, color=TEXT_MUTED, fontsize=7.4,
+                transform=ax.transAxes, va="center", ha="left")
+        ax.text(x + w - 0.008, y, v, color=TEXT_DARK, fontsize=7.4, weight="bold",
+                transform=ax.transAxes, va="center", ha="right")
+
+
+def _layout_filter_panel(ax, x, panel_top_y, panel_bottom_y, w, sections,
+                         accent, footer_title, footer_rows,
+                         chip_edge="#BAE6FD", chip_bg=None):
+    """Fill the sidebar exactly: sections get an even gap, and the leftover
+    space goes to the bottom-anchored scope card. Nothing floats or overflows."""
+    content_top = panel_top_y - LAYOUT_TITLE_H - 0.008
+    heights = [_section_box_h(math.ceil(len(items) / cols)) for _, items, cols in sections]
+    avail = content_top - panel_bottom_y
+    n_gaps = max(len(sections) - 1, 1)
+    gap = (avail - sum(heights) - FOOTER_GAP - FOOTER_MIN_H) / n_gaps
+    gap = max(0.007, min(gap, MAX_SECTION_GAP))
+    footer_h = max(FOOTER_MIN_H, avail - sum(heights) - gap * n_gaps - FOOTER_GAP)
+
+    y = content_top
+    for i, ((label, items, cols), box_h) in enumerate(zip(sections, heights)):
+        _filter_section(ax, x, y, w, items, label, cols, accent,
+                        chip_edge=chip_edge, chip_bg=chip_bg)
+        y -= box_h + (gap if i < len(sections) - 1 else 0.0)
+    _panel_footer(ax, x, panel_bottom_y, w, footer_h, footer_title, footer_rows, accent)
+    return gap, footer_h
 
 def main() -> None:
     df = pd.read_csv(DATA_PATH)
@@ -118,17 +193,23 @@ def main() -> None:
     order_years = sorted(pd.to_datetime(df["OrderDate"]).dt.year.astype(str).unique())
     channels = sorted(df["Sales_Channel"].unique())
     sections = [
-        ("Category", channels),
-        ("Delivery Status", ["Late", "On Time"]),
-        ("Warehouse Code", wh_codes),
-        ("Order Year", order_years),
+        ("Category", channels, 2),
+        ("Delivery Status", ["Late", "On Time"], 2),
+        ("Warehouse Code", wh_codes, 2),
+        ("Order Year", order_years, 2),
     ]
-    y_cursor = panel_top_y - header_h - 0.010
     inner_x = panel_x + 0.005
     inner_w = panel_w - 0.010
-    for label, items in sections:
-        used = _filter_section(ax, inner_x, y_cursor, inner_w, items, label)
-        y_cursor -= used + 0.002
+    footer_rows = [
+        ("Orders in view", f"{len(df):,}"),
+        ("Channels", f"{df['Sales_Channel'].nunique()}"),
+        ("Warehouses", f"{df['WarehouseCode'].nunique()}"),
+        ("Years", f"{order_years[0]}\u2013{order_years[-1]}"),
+        ("Filter status", "All active"),
+    ]
+    _layout_filter_panel(ax, inner_x, panel_top_y, panel_bottom_y, inner_w, sections,
+                         NAVY_MAIN, "DATA SCOPE", footer_rows,
+                         chip_edge="#BAE6FD", chip_bg=CHIP_BG)
 
     # 3. KPI Cards
     tot_rev = df['revenue'].sum() / 1e6
@@ -157,7 +238,8 @@ def main() -> None:
     # 4. Chart Grid (2x3)
     grid_x0 = kpi_x0
     grid_x1 = 1 - 0.012
-    grid_y0 = 0.05
+    # bottom of the lowest chart card lands exactly on the sidebar bottom edge
+    grid_y0 = panel_bottom_y - 0.005
     grid_y1 = 0.81
     row_gap = 0.032
     cell_w = (grid_x1 - grid_x0) / 3
