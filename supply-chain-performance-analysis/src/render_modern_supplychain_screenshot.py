@@ -16,7 +16,7 @@ from matplotlib.patches import FancyBboxPatch, Rectangle
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "Cleaned_Supplychain_Data.csv"
-OUT_PATH = ROOT / "image" / "Supplychain_Dashboard_v2.png"
+OUT_PATH = ROOT / "image" / "Supplychain_Dashboard_screenshot.png"
 
 # Ocean Executive Theme (Midnight Navy + Teal)
 NAVY_MAIN = "#0B2A4A"

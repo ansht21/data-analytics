@@ -22,7 +22,7 @@ look like?
 
 1. **The assumption** — `image/churn_by_service_payment.png`: fiber-optic service looks like the churn villain.
 2. **The evidence** — `image/churn_by_contract.png`: month-to-month contracts churn at 42.7% (chi-square 1179.5) — contract mix drives most of the fiber effect, and the dashboard splits the two.
-3. **The decision** — `image/Churn_Dashboard_v2.png`: target month-to-month + fiber first — 72% of revenue at risk sits in one filterable segment.
+3. **The decision** — `image/Churn_Dashboard_screenshot.png`: target month-to-month + fiber first — 72% of revenue at risk sits in one filterable segment.
 
 ---
 
@@ -62,7 +62,7 @@ answer / action comment block (same style as the Uber and supply-chain repos).
 
 ## Excel Dashboard (`excel_analysis/Churn_Dashboard.xlsx`)
 
-![Churn Dashboard](./image/Churn_Dashboard_v2.png)
+![Churn Dashboard](./image/Churn_Dashboard_screenshot.png)
 
 **Interactive native Excel workbook** (regenerate with `python src/build_churn_dashboard.py`):
 - **Dashboard** sheet - navy title bar, left-side Filters panel (Contract / Internet / Payment / Tenure / Churn), 5 white KPI cards with coloured accent bars (driven by live SUBTOTAL formulas), six charts in a grid covering contract, tenure, internet service, payment method, revenue-at-risk segments, and tenure trend, plus a compact Key Findings panel — restyled to match the supply-chain executive design

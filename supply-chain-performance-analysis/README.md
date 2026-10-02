@@ -3,7 +3,7 @@
 **Business problem:** Half of all orders arrive late and $36.3M of net revenue is exposed.
 Is that one bad warehouse, or the whole network? 7,991 orders, 2018–2020.
 
-![Executive Supply Chain Analytics Dashboard](image/Supplychain_Dashboard_v2.png)
+![Executive Supply Chain Analytics Dashboard](image/Supplychain_Dashboard_screenshot.png)
 *Six warehouses, near-identical delivery curves. The "Avg Delivery Days by Timeline" panel stays flat at ~5.5 days for three straight years — the lateness never improves and never varies by site.*
 
 > **Financial definition:** every KPI in the Python pipeline, SQL import, outputs, and

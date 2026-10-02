@@ -15,7 +15,7 @@ from matplotlib.patches import FancyBboxPatch, Rectangle
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "Telco_Customer_Churn.csv"
-OUT_PATH = ROOT / "image" / "Churn_Dashboard_v2.png"
+OUT_PATH = ROOT / "image" / "Churn_Dashboard_screenshot.png"
 
 # Crimson Executive Theme
 CRIMSON_MAIN = "#7F1D2D"
