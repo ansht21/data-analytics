@@ -66,6 +66,23 @@ SELECT
 FROM uber_trips_final
 GROUP BY Vehicle_Type
 ORDER BY total_revenue_inr DESC;
+-- -------------------------------------------------------------------------
+-- 3b. BUSINESS QUESTION: How does payment mix vary by vehicle tier?
+-- Metric: revenue by Vehicle_Type x Payment_Method (cross-tab)
+-- Answer: Credit Card Rs 47.0L, Debit Card Rs 33.9L, UPI Rs 28.1L, Cash
+--         Rs 13.5L, Wallet Rs 13.1L. UPI is the preferred digital rail.
+-- Action: Keep UPI first-class in every rider-facing surface. (Q3b)
+-- -------------------------------------------------------------------------
+SELECT
+    Vehicle_Type,
+    Payment_Method,
+    COUNT(Trip_ID)                     AS total_trips,
+    ROUND(SUM(Fare_Amount), 2)         AS total_revenue_inr
+FROM uber_trips_final
+GROUP BY Vehicle_Type, Payment_Method
+ORDER BY Vehicle_Type, total_revenue_inr DESC;
+
+
 
 
 -- -------------------------------------------------------------------------

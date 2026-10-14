@@ -129,7 +129,7 @@ Predictive modeling implemented via Scikit-learn to forecast trip fare amounts a
 | KPI | Value | Definition |
 |---|---|---|
 | Total Trips | **35,000** | Cleaned trip rows after deduplication |
-| Total Revenue | **₹13.54M (₹1,35,44,703)** | Sum of trip fares |
+| Total Revenue | **₹1.35 cr (₹1,35,44,703)** | Sum of trip fares |
 | Avg Fare | **₹387** | Mean fare per trip |
 | Avg Distance | **17.45 km** | Mean trip distance |
 | Avg Duration | **45.5 min** | Mean trip duration |
@@ -200,6 +200,21 @@ Ranked by average fare, the *worst*-rated drivers look like the best earners
 Controlling for distance dissolves the effect entirely — **fare-per-km is ₹22.06–22.41
 across every rating band**. The real signal is that long trips (18.9 km avg for the
 lowest band) attract worse ratings.
+
+### 6. Monthly Trend (one simulated year — not seasonality)
+Monthly trip volume (2,792–3,035 trips) and fare revenue (₹10.7L–11.9L) stay in a
+narrow band across all 12 months ([§8](sql_queries/02_revenue_analysis.sql)).
+Because this is a single synthetic year, this chart documents *stability*, not a
+recurring seasonal cycle — operational decisions here stay on time-of-day signals.
+
+### 7. Payment × Vehicle Mix
+Payment totals by tier ([§3](sql_queries/02_revenue_analysis.sql)): Credit Card
+₹47.0L, Debit Card ₹33.9L, UPI ₹28.1L, Cash ₹13.5L, Wallet ₹13.1L. UPI is the
+preferred digital rail for an Indian market — keep it a first-class payment option
+in every rider-facing surface.
+
+> **Scope note:** this dataset records completed trips only — there is no
+> cancellation column, so a cancellation analysis is not applicable.
 
 ---
 

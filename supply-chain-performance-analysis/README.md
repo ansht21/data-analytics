@@ -1,6 +1,6 @@
 # Supply Chain Performance & Inventory Optimization Dashboard
 
-**Business problem:** Half of all orders arrive late and $36.3M of net revenue is exposed.
+**Business problem:** Half of all orders arrive late and ₹3.63 cr of net revenue is exposed.
 Is that one bad warehouse, or the whole network? 7,991 orders, 2018–2020.
 
 ![Executive Supply Chain Analytics Dashboard](image/Supplychain_Dashboard_screenshot.png)
@@ -35,14 +35,14 @@ Every figure is reproducible: run `python src/analytics.py`, or click through to
 
 | # | Business Question | Metric Used | Finding | Recommended Action | Query |
 |:--|:--|:--|:--|:--|:--|
-| **Q1** | Which channel makes us the most money? | Net revenue & margin by channel | **In-Store leads on volume** ($30.1M net revenue / $8.8M profit), while **Wholesale has the best margin at 30.15%** on the smallest base ($8.2M). | Protect In-Store scale and investigate the strongest-margin Wholesale mix | [§2](sql_queries/02_sales_analysis.sql) |
+| **Q1** | Which channel makes us the most money? | Net revenue & margin by channel | **In-Store leads on volume** (₹3.01 cr net revenue / ₹0.88 cr profit), while **Wholesale has the best margin at 30.15%** on the smallest base (₹0.82 cr). | Protect In-Store scale and investigate the strongest-margin Wholesale mix | [§2](sql_queries/02_sales_analysis.sql) |
 | **Q2** | Half our orders are late. Which warehouse is at fault? | On-time rate + `STDDEV` of delivery days per site | **None — it's systemic.** On-time spans just 48.85%–53.69%, and delivery-time spread is 2.82–2.88 days at *every* site. Only **0.08%** of delivery-time variance is between-warehouse. | Fix the upstream scheduling process, not a facility | [§6](sql_queries/02_sales_analysis.sql) |
 | **Q3** | Is our worst-performing site really the worst? | Share of late orders vs share of all orders | **No — a volume illusion.** NMK1003 causes **31.9% of all late orders**, but handles **31.4% of all orders**. Its rate is average. Ranking by raw count would blame the wrong site. | Always normalise counts by volume before ranking | [§6](sql_queries/02_sales_analysis.sql) |
 | **Q4** | Are discounts eating our margin? Should we cap them? | Realised margin by discount band | **Yes at high discount levels.** 20%+ discounted orders realise only **4.64% margin**, versus 31.02% for the 5–10% band. | Review 20%+ discounts and enforce a product-level profit floor | [§8](sql_queries/02_sales_analysis.sql) |
 | **Q5** | Are we losing money on any orders? | Order-level net revenue vs cost | **373 orders (4.67%) are unprofitable** after discounts. | Investigate high-discount loss makers and protect pricing floors | [§5](sql_queries/02_sales_analysis.sql) |
 | **Q6** | Is our margin eroding over time? | Monthly margin + `LAG()` change | Use the regenerated net-revenue output to monitor monthly margin; the old gross-margin conclusion is retired. | Investigate material month-over-month declines after discounts | [§7](sql_queries/02_sales_analysis.sql) |
 | **Q7** | Where is revenue concentrated? | ABC / cumulative revenue share | **36 of 47 products drive 80.6%** of net revenue. | Prioritise availability for A-items while reviewing the long tail by profit, not revenue alone | [`outputs/abc_classification.csv`](outputs/abc_classification.csv) |
-| **Q8** | Is the business still growing? | Net revenue by year | Net revenue grew from **$27.81M (2019)** to **$28.14M (2020)**, only **+1.2%**. | Plan conservatively and investigate the stalled top line | [§3](sql_queries/02_sales_analysis.sql) |
+| **Q8** | Is the business still growing? | Net revenue by year | Net revenue grew from **₹2.78 cr (2019)** to **₹2.81 cr (2020)**, only **+1.2%**. | Plan conservatively and investigate the stalled top line | [§3](sql_queries/02_sales_analysis.sql) |
 
 The corrected net-revenue view preserves the systemic-delivery finding, but it also reveals
 that high discounts require targeted margin controls.
@@ -73,7 +73,7 @@ Similarly, I applied **A/B-style cohort segmentation** across pricing tiers (Q4)
 ---
 
 ## Business Purpose & Impact
-> **Why I built this:** Companies don't hire analysts to make charts — they hire people who can answer *"where are we making or losing money, and what should we do about it?"* This project proves I can take **7,991 raw order records ($73.0M net revenue)** and turn them into **profit-and-loss decisions**.
+> **Why I built this:** Companies don't hire analysts to make charts — they hire people who can answer *"where are we making or losing money, and what should we do about it?"* This project proves I can take **7,991 raw order records (₹7.30 cr net revenue)** and turn them into **profit-and-loss decisions**.
 
 > **My edge — I read the data critically, not just optimistically.** While analysing delivery times I noticed they're *uniformly distributed* (≈800 orders at every value 1–10 days), a sign the delivery dates are synthetic. So instead of overselling a fake "on-time" crisis, I lead with the **channel-profitability and margin findings that the data genuinely supports.** Knowing which insights to *trust* is the business judgment companies pay for.
 
@@ -157,7 +157,7 @@ python src/build_excel_dashboard.py # -> excel_analysis/Supplychain_Dashboard.xl
 streamlit run app.py
 ```
 
-Opens a live web app where **every sidebar filter (Category, Delivery Status, Warehouse, Year) recomputes all 5 KPI cards and all 6 charts instantly** — e.g. deselect "Online" and watch Total Net Revenue drop from $73.04M to $51.37M. Verified end-to-end with automated browser tests.
+Opens a live web app where **every sidebar filter (Category, Delivery Status, Warehouse, Year) recomputes all 5 KPI cards and all 6 charts instantly** — e.g. deselect "Online" and watch Total Net Revenue drop from ₹7.30 cr to ₹5.14 cr. Verified end-to-end with automated browser tests.
 
 ![Interactive Supply Chain App](image/interactive_app_preview.png)
 
@@ -171,23 +171,23 @@ Opens a live web app where **every sidebar filter (Category, Delivery Status, Wa
 
 | KPI | Value | Definition |
 |---|---|---|
-| Total Net Revenue | **$73.04M** | `Order_Quantity x Unit_Price x (1 - Discount_Applied)` summed over all orders |
-| Total Net Profit | **$21.22M** | Net revenue minus total cost (`Unit_Cost x quantity`) |
+| Total Net Revenue | **₹7.30 cr** | `Order_Quantity x Unit_Price x (1 - Discount_Applied)` summed over all orders |
+| Total Net Profit | **₹2.12 cr** | Net revenue minus total cost (`Unit_Cost x quantity`) |
 | Avg Delivery Days | **5.5 days** | Mean `DeliveryDate - OrderDate`; the on-time target is delivery within 5 days |
 | Total Orders | **8.0K (7,991)** | Cleaned order rows after deduplication and date validation |
 | On-Time Rate | **50.5%** | Share of orders delivered within the 5-day target (order-based, matches the donut) |
 
 ### Chart-by-chart walkthrough
 
-**Monthly Net Revenue Trend** — revenue is seasonal but flat in level: most months land between $2.0M and $2.8M, with the first recorded month (2018-05) ramping from near zero as the dataset begins. No structural growth trend is visible across 2018–2020, which is why the analysis focuses on mix and fulfilment rather than growth storytelling.
+**Monthly Net Revenue Trend** — revenue is seasonal but flat in level: most months land between ₹20L and ₹28L, with the first recorded month (2018-05) ramping from near zero as the dataset begins. No structural growth trend is visible across 2018–2020, which is why the analysis focuses on mix and fulfilment rather than growth storytelling.
 
 ![Monthly Net Revenue Trend](image/supply_monthly_revenue_trend.png)
 
-**Revenue by Channel vs Profit by Channel** — read these two together. In-Store leads both revenue and profit ($8.8M profit), followed by Online ($6.1M), Distributor ($3.9M) and Wholesale ($2.5M). Channel profits sum to ≈$21.3M, reconciling with the $21.22M headline KPI — a useful cross-check that the pipeline has no leakage between aggregation layers.
+**Revenue by Channel vs Profit by Channel** — read these two together. In-Store leads both revenue and profit (₹0.88 cr profit), followed by Online (₹0.61 cr), Distributor (₹0.39 cr) and Wholesale (₹0.25 cr). Channel profits sum to ≈₹2.13 cr, reconciling with the ₹2.12 cr headline KPI — a useful cross-check that the pipeline has no leakage between aggregation layers.
 
 ![Revenue by Sales Channel](image/supply_revenue_by_channel.png)
 
-**Revenue & Profit by Warehouse** — NMK1003 dominates both views ($23.1M revenue, $6.8M profit, ~32% of the business). The remaining five warehouses split the rest fairly evenly ($6.1M–$13.0M revenue each). This concentration is the "volume illusion" behind the warehouse-overhaul trap: NMK1003 looks like the problem only because it carries the most volume, while ANOVA variance decomposition proves just 0.08% of delivery variance sits between warehouses.
+**Revenue & Profit by Warehouse** — NMK1003 dominates both views (₹2.31 cr revenue, ₹0.68 cr profit, ~32% of the business). The remaining five warehouses split the rest fairly evenly (₹0.61–1.30 cr revenue each). This concentration is the "volume illusion" behind the warehouse-overhaul trap: NMK1003 looks like the problem only because it carries the most volume, while ANOVA variance decomposition proves just 0.08% of delivery variance sits between warehouses.
 
 **Avg Delivery Days Timeline** — the network mean sits on the 5.5-day dashed line for three straight years with no site-level or seasonal improvement. Flat lateness at every warehouse is the visual signature of a systemic process problem, not a facility problem — the single most important chart for the "don't do it" recommendation.
 
@@ -244,7 +244,7 @@ Classifying the **47 distinct products** by cumulative revenue contribution show
 > broadly distributed, so blanket "cut the long tail" advice would be misguided here.
 
 ### 2. Fulfillment Performance
-* **On-time rate (≤5-day target): 50.5%** — **3,953 of 7,991 orders ran late**, with **$36.3M (49.7% of net revenue)** riding on those late orders.
+* **On-time rate (≤5-day target): 50.5%** — **3,953 of 7,991 orders ran late**, with **₹3.63 cr (49.7% of net revenue)** riding on those late orders.
 * Delivery speed is **remarkably uniform across warehouses** (avg **5.35–5.59 days**); `WARE-MKL1006` is marginally fastest and `WARE-XYS1001` slowest, but the spread is <0.3 days. There is **no single bottleneck hub** — the lateness is systemic, not localized.
 * Quantified: **only 0.08% of delivery-time variance is between warehouses**, and the standard deviation is 2.82–2.88 days at every single site. The inconsistency lives *inside* each warehouse's process, not in the choice between them.
 
@@ -254,13 +254,13 @@ Classifying the **47 distinct products** by cumulative revenue contribution show
 * Monitor monthly margin on the consistent net-revenue basis; do not reuse the retired gross-revenue conclusion.
 
 ### 4. Growth
-* Net revenue grew from **$17.08M (2018, partial year)** to **$27.81M (2019)** — then **stalled at $28.14M in 2020 (+1.2%)**. The top line stopped growing and needs investigation.
+* Net revenue grew from **₹1.71 cr (2018, partial year)** to **₹2.78 cr (2019)** — then **stalled at ₹2.81 cr in 2020 (+1.2%)**. The top line stopped growing and needs investigation.
 
 ---
 
 ## Business Recommendations
 
-1. **Attack the systemic delivery gap, not a single hub.** With only 0.08% of delivery-time variance sitting between warehouses, a per-site improvement project would fix nothing. The fix is a network-wide carrier/SLA and scheduling review. **$36.3M of net revenue rides on late orders** — this is the largest lever in the dataset.
+1. **Attack the systemic delivery gap, not a single hub.** With only 0.08% of delivery-time variance sitting between warehouses, a per-site improvement project would fix nothing. The fix is a network-wide carrier/SLA and scheduling review. **₹3.63 cr of net revenue rides on late orders** — this is the largest lever in the dataset.
 2. **Do not rank warehouses by late-order count.** NMK1003 tops that list purely because it handles 31.4% of volume. Normalise by order count before any site is held accountable.
 3. **Tier replenishment by the A/B/C split.** The 36 A-items drive ~81% of net revenue — prioritise their stock availability and review the 3 C-items for JIT ordering.
 4. **Apply targeted discount controls.** The 20%+ band has only 4.64% realised margin and contributes to 373 loss-making orders. Set product-level profit floors rather than relying on a blanket policy.

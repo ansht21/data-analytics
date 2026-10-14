@@ -36,9 +36,9 @@ As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating comp
 
 | Project | Scale | Stack | Headline Result |
 |---------|-------|-------|-----------------|
-| **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel | $73.0M net revenue / $21.2M profit analysed; late delivery proven systemic, not warehouse-specific |
+| **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel | ₹7.30 cr net revenue / ₹2.12 cr profit analysed; late delivery proven systemic, not warehouse-specific |
 | **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue |
-| **Subscription Retention** | 7,043 customers (7,032 after cleaning) | Python · SQL · Excel | 26.6% churn; month-to-month + fiber = 72% of revenue at risk |
+| **Subscription Retention** | 7,043 customers (7,032 analysed after removing 11 blank-`TotalCharges` rows) | Python · SQL · Excel | 26.6% churn; month-to-month + fiber = 72% of revenue at risk |
 | **[🤖 Analytics Copilot](./analytics-intelligence-copilot/)** *(interactive capstone — start here)* | 50,034 records across all 3 | Streamlit · Pandas · Plotly · LangGraph · Groq | 9 one-click insight chips + chat + executive-brief generator — glass-box pandas logic, 18/18 tests pass, works offline |
 
 > **60-second recruiter tour:** open the [Copilot](./analytics-intelligence-copilot/) → Supply Chain → **Warehouse Trap Check** (catches the 31.9%-vs-0.08% volume illusion) → **Generate Executive Brief** → switch to Uber → **Peak Surge Detection**.
@@ -87,11 +87,11 @@ In an enterprise setting, analytics projects do not begin with a Jupyter noteboo
 ![Supply Chain Dashboard](./supply-chain-performance-analysis/image/Supplychain_Dashboard_screenshot.png)
 
 *An end-to-end operational analytics project featuring a Python data cleaning pipeline, custom SQL metrics, and an automated, fully interactive 10-chart Excel dashboard.*
-* **Business Challenge:** Half of all orders miss the 5-day delivery target, with $36.3M of net revenue exposed — and leadership needs to know whether to invest in a specific warehouse or the network.
+* **Business Challenge:** Half of all orders miss the 5-day delivery target, with ₹3.63 cr of net revenue exposed — and leadership needs to know whether to invest in a specific warehouse or the network.
 * **Tech Stack:** Python (Pandas, openpyxl), SQL (MySQL — CTEs, `STDDEV`, `LAG`, window functions), Statistical Variance Decomposition (ANOVA principles), Microsoft Excel (native charts and Pivot Tables).
 * **Key Achievements:**
   * **Disproved the obvious answer via statistical hypothesis testing ($H_0$).** Ranking warehouses by late-order count blames the largest site; ANOVA-style variance decomposition shows only **0.08%** of delivery-time variance is between warehouses. Prevented a misdirected improvement programme.
-  * Cleaned and processed raw transactional data, generating consistent net revenue, **Delivery Days**, **Order-to-Ship Days**, and **Profit Margins** ($73.0M net revenue / $21.2M profit across 7,991 orders).
+  * Cleaned and processed raw transactional data, generating consistent net revenue, **Delivery Days**, **Order-to-Ship Days**, and **Profit Margins** (₹7.30 cr net revenue / ₹2.12 cr profit across 7,991 orders).
   * Implemented an automated Excel workbook generator (`build_excel_dashboard.py`) using `openpyxl` with dynamic dropdown selectors, date-range inputs, and custom formula-driven pivot tables.
   * Designed an executive **Summary** sheet containing KPI cards, performance grids, and narrative insights on fulfilment performance.
   * Used **ABC Classification** to segment the 47-SKU catalogue by net-revenue contribution (A-items = 80.6% of net revenue) — with an honest read that this catalogue shows only moderate, not textbook 80/20, concentration.
@@ -117,7 +117,7 @@ In an enterprise setting, analytics projects do not begin with a Jupyter noteboo
 
 ![Churn Dashboard](./subscription-retention-analytics/image/Churn_Dashboard_screenshot.png)
 
-*End-to-end churn risk and revenue-at-risk analysis on 7,032 customers, delivered through a custom Python pipeline, SQL cohort analysis, and an interactive Excel dashboard.*
+*End-to-end churn risk and revenue-at-risk analysis on 7,032 customers (7,043 loaded, 11 blank-`TotalCharges` rows removed), delivered through a custom Python pipeline, SQL cohort analysis, and an interactive Excel dashboard.*
 * **Business Challenge:** A subscription business is losing ~26% of customers. Which customers leave, when, why, and what revenue is exposed — so retention spend can be prioritised by dollars saved, not by gut feel.
 * **Tech Stack:** Python (Pandas, Seaborn, openpyxl), SQL (MySQL — `LAG`, `RANK`, `STDDEV_SAMP`, CTEs), Microsoft Excel (native charts, filterable table), Jupyter.
 * **Key Achievements:**

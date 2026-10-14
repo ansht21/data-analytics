@@ -38,7 +38,10 @@ SELECT COUNT(*) AS total_rows, COUNT(DISTINCT customerID) AS unique_ids FROM tel
 -- Duplicate check: the two counts must be equal
 
 SELECT COUNT(*) AS blank_total_charges FROM telco_churn WHERE TotalCharges IS NULL OR TotalCharges = '';
--- 11 rows: brand-new customers (tenure = 0). Kept in analysis, TotalCharges treated as 0.
+-- 11 rows: brand-new customers (tenure = 0) with blank TotalCharges.
+-- Removing them keeps every downstream KPI on the same 7,032-row frame
+-- quoted in the README (7,043 loaded → 7,032 analysed).
+DELETE FROM telco_churn WHERE TotalCharges IS NULL OR TotalCharges = '';
 
 -- 4. Flag cleaning: normalise target
 SELECT Churn, COUNT(*) FROM telco_churn GROUP BY Churn;   -- expect Yes/No only

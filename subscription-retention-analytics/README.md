@@ -1,6 +1,6 @@
 # Subscription Retention Analytics — Customer Churn Risk & Revenue-at-Risk Intelligence
 
-**Business problem:** A subscription business (real-world telco data, 7,043 customers) is
+**Business problem:** A subscription business (real-world telco data — 7,043 customers loaded, 7,032 analysed after removing 11 blank-`TotalCharges` rows) is
 losing ~26% of customers. Which customers leave, why, and what does the revenue at risk
 look like?
 
@@ -14,7 +14,7 @@ look like?
 | Decision | Rationale |
 | :--- | :--- |
 | **EDA before modeling** | `Churn_EDA_Analysis.ipynb` establishes the KPI baseline and statistical validation (chi-square, Cramér's V) so modeling is built on verified segments, not raw flags |
-| **Modular `src/` pipeline with tests** | data_processing → feature_engineering → modeling → evaluation → explainability — each stage pytest-covered, rerunnable, and independently debuggable |
+| **Modular `src/` pipeline** | data_processing → feature_engineering → dashboard build — each stage rerunnable and independently debuggable |
 | **Excel-native delivery dashboard** | A filterable customer table and charts the retention team can drive themselves |
 | **Revenue-at-risk output over leaderboard** | The model's job is a ranked customer list with revenue exposure (`churn_segment_revenue.csv`), not an accuracy trophy |
 
@@ -50,7 +50,7 @@ answer / action comment block (same style as the Uber and supply-chain repos).
 
 | # | Question | Key query feature | Answer |
 |---|---|---|---|
-| 1 | Overall health? | aggregates | 7,032 customers, 26.6% churn |
+| 1 | Overall health? | aggregates | 7,032 customers analysed (7,043 loaded, 11 blank-`TotalCharges` rows removed), 26.6% churn |
 | 2 | Which contract churns most? | GROUP BY | Month-to-month 42.7% |
 | 3 | When do customers leave? | CASE + LAG() | first 12 months |
 | 4 | Which services/payments? | GROUP BY | fiber 41.9%, e-check 45.3% |
@@ -94,11 +94,11 @@ structural, not sampling noise:
 
 | Metric | Value |
 |---|---|
-| Customers | 7,032 (after cleaning) |
+| Customers | 7,032 (7,043 loaded, 11 blank-`TotalCharges` rows removed) |
 | Churned customers | 1,869 |
 | Churn rate | 26.6% |
-| Monthly revenue | $456.1K |
-| Monthly revenue at risk (churned) | $139.1K |
+| Monthly revenue | $456.1K (USD — Telco dataset is US-dollar denominated) |
+| Monthly revenue at risk (churned) | $139.1K (USD) |
 | Avg tenure | 32.4 months |
 
 ### KPI Handbook — what each headline number means
@@ -108,7 +108,7 @@ structural, not sampling noise:
 | Total Customers | **7,032** | Rows after dropping missing `TotalCharges` (7,043 raw) |
 | Churn Rate | **26.6%** | 1,869 churned / 7,032 customers |
 | Avg Tenure | **32.4 months** | Mean months with the provider across all customers |
-| Revenue at Risk | **$139.1K** | Sum of `MonthlyCharges` over churned customers (one month of their spend exposed) |
+| Revenue at Risk | **$139.1K (USD)** | Sum of `MonthlyCharges` over churned customers (one month of their spend exposed) |
 | Retention Rate | **73.4%** | `1 - churn rate` |
 
 ### Chart-by-chart walkthrough
@@ -119,7 +119,7 @@ structural, not sampling noise:
 
 **Churn Rate by Tenure Band** — churn decays monotonically with tenure: 53.3% in the 0–6 month band falling to 9.5% at 49–72 months. The first year is the danger window; onboarding and early check-ins buy the most risk reduction per rupee.
 
-**Revenue at Risk by Contract + Top Segments** — month-to-month contracts hold $121K of the $139K total exposure (~87%), and the M2M + Fiber segment alone is ~$100K (~72%). Retention spend is therefore rank-ordered by saved revenue, not by headcount — this ranked list (`outputs/churn_segment_revenue.csv`) is the deliverable the retention team actually acts on.
+**Revenue at Risk by Contract + Top Segments** — month-to-month contracts hold $121K of the $139K total exposure (~87% — all USD), and the M2M + Fiber segment alone is ~$100K (~72%). Retention spend is therefore rank-ordered by saved revenue, not by headcount — this ranked list (`outputs/churn_segment_revenue.csv`) is the deliverable the retention team actually acts on.
 
 **Customer Mix by Internet Service** — Fiber 44%, DSL 34%, No internet 22%. Fiber is both the largest base and the highest-churn service, compounding the exposure above.
 
