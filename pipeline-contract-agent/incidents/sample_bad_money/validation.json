@@ -1,0 +1,42 @@
+{
+  "passed": false,
+  "total_rows": 12,
+  "violations": [
+    {
+      "rule_id": "non_numeric_money",
+      "severity": "high",
+      "message": "'Unit_Cost' must be numeric money (e.g. $1,001.18).",
+      "rows_affected": 1,
+      "sample": [
+        {
+          "OrderNumber": "SO - 000107",
+          "Sales_Channel": "In-Store",
+          "WarehouseCode": "WARE-XYS1001",
+          "ProcuredDate": "31/12/17",
+          "OrderDate": "31/5/18",
+          "ShipDate": "8/6/2018",
+          "DeliveryDate": "14/6/18",
+          "CurrencyCode": "USD"
+        }
+      ]
+    },
+    {
+      "rule_id": "non_numeric_money",
+      "severity": "high",
+      "message": "'Unit_Price' must be numeric money (e.g. $1,001.18).",
+      "rows_affected": 1,
+      "sample": [
+        {
+          "OrderNumber": "SO - 000104",
+          "Sales_Channel": "Wholesale",
+          "WarehouseCode": "WARE-NMK1003",
+          "ProcuredDate": "31/12/17",
+          "OrderDate": "31/5/18",
+          "ShipDate": "2/6/2018",
+          "DeliveryDate": "7/6/2018",
+          "CurrencyCode": "USD"
+        }
+      ]
+    }
+  ]
+}

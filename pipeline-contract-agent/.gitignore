@@ -1,0 +1,17 @@
+__pycache__/
+*.py[codz]
+*$py.class
+.venv/
+venv/
+env/
+.env
+.streamlit/secrets.toml
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+dist/
+build/
+*.egg-info/
+incidents/*
+!incidents/sample_bad_money/

@@ -1,0 +1,8 @@
+--- a/contract/supply_orders.contract.yaml
++++ b/contract/supply_orders.contract.yaml
+@@ guardrails added by pipeline-contract-agent @@
+# Auto-proposed guards for broken rules: non_numeric_money
+# 1. Keep validator as pre-load gate (already enforced).
+# 2. Add NOT NULL constraint on _CustomerID in warehouse DDL.
+# 3. Pin date serialisation to DD/MM/YY at source export.
+# 4. Add regression test tests/test_regressions.py::test_<rule>.

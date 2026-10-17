@@ -1,0 +1,11 @@
+# pipeline-contract-agent — core dependencies
+# Offline-first: validator, API, UI and tests run with THESE ALONE. No API keys needed.
+pandas>=2.0
+pyyaml>=6.0
+fastapi>=0.110
+uvicorn[standard]>=0.29
+streamlit>=1.36
+plotly>=5.20
+python-dotenv>=1.0.0
+httpx>=0.27
+pytest>=8.0.0

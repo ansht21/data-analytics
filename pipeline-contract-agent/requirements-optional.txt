@@ -1,0 +1,9 @@
+# Optional extras — install only what you need.
+# Live AI investigation (Groq + LangGraph ReAct). The built-in rule-based
+# investigator works fully offline without these.
+langchain-core>=0.3.60
+langchain-groq>=0.2.0
+langgraph>=0.6.0
+# GitLab MR automation convenience wrapper.
+# (src/open_fix_mr.py also has a stdlib-urllib fallback, so this is optional.)
+python-gitlab>=4.0

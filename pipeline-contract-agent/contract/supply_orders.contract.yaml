@@ -1,0 +1,63 @@
+contract:
+  name: supply-chain-orders
+  version: 1.0.0
+  owner: pipeline-contract-agent
+source:
+  name: supply-chain-raw-log
+  path: ../supply-chain-performance-analysis/data/Supplychain_rawData.csv
+  description: Raw supply-chain transactional log (7,991 orders). New batches must match this shape before cleaning.
+destination:
+  name: supply-chain-cleaned
+  path: ../supply-chain-performance-analysis/data/Cleaned_Supplychain_Data.csv
+  description: Cleaned + feature-engineered table produced by supply-chain-performance-analysis/src/data_cleaning.py
+  model: one row per order, ISO dates, numeric money, engineered revenue/profit/delivery_days
+
+# Header normalisation (mirrors src/data_cleaning.py::_standardize_headers):
+#   strip whitespace, spaces -> underscores. Validation runs on NORMALISED names.
+normalisation:
+  strip_whitespace: true
+  space_to_underscore: true
+
+fields:
+  OrderNumber:      {type: string, nullable: false, unique: true}
+  Sales_Channel:    {type: string, nullable: false, allowed: [In-Store, Online, Distributor, Wholesale]}
+  WarehouseCode:    {type: string, nullable: false, allowed: [WARE-UHY1004, WARE-NMK1003, WARE-MKL1006, WARE-NBV1002, WARE-PUJ1005, WARE-XYS1001]}
+  ProcuredDate:     {type: date, nullable: false, raw_format: DD/MM/YY-or-YYYY-slash, output_format: ISO-YYYY-MM-DD}
+  OrderDate:        {type: date, nullable: false, raw_format: DD/MM/YY-or-YYYY-slash, output_format: ISO-YYYY-MM-DD}
+  ShipDate:         {type: date, nullable: false, raw_format: DD/MM/YY-or-YYYY-slash, output_format: ISO-YYYY-MM-DD}
+  DeliveryDate:    {type: date, nullable: false, raw_format: DD/MM/YY-or-YYYY-slash, output_format: ISO-YYYY-MM-DD}
+  CurrencyCode:     {type: string, nullable: false, allowed: [USD]}
+  _SalesTeamID:     {type: int, nullable: false, min: 1}
+  _CustomerID:      {type: int, nullable: false, min: 1}
+  _StoreID:         {type: int, nullable: false, min: 1}
+  _ProductID:       {type: int, nullable: false, min: 1}
+  Order_Quantity:   {type: int, nullable: false, min: 1}
+  Discount_Applied: {type: float, nullable: false, min: 0.0, max: 1.0}
+  Unit_Cost:        {type: money, nullable: false, min: 0.0}
+  Unit_Price:       {type: money, nullable: false, min: 0.0}
+
+business_rules:
+  - id: R01-Chronology
+    description: ProcuredDate <= OrderDate <= ShipDate <= DeliveryDate
+    expression: procured <= order <= ship <= delivery
+  - id: R02-NonNegativeDelivery
+    description: delivery_days >= 0
+  - id: R03-RealisedRevenue
+    description: revenue == Order_Quantity * Unit_Price * (1 - Discount_Applied)
+  - id: R04-ProfitIdentity
+    description: profit == revenue - total_cost where total_cost == Order_Quantity * Unit_Cost
+  - id: R05-NoFutureOrderDate
+    description: OrderDate must not be in the future vs batch max (guards clock skew)
+
+failure_policy:
+  on_failure: quarantine_batch
+  quarantine_dir: incidents/
+  keep_sample_rows: 20
+  trigger_agent: true
+  open_mr: true
+  severity:
+    null_customer_id: critical
+    bad_date_format: high
+    non_numeric_money: high
+    chronology_violation: medium
+    duplicate_order: medium

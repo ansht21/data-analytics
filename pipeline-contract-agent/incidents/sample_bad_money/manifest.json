@@ -1,0 +1,12 @@
+{
+  "batch_file": "bad_money.csv",
+  "contract": "contract/supply_orders.contract.yaml",
+  "total_rows": 12,
+  "failed_rules": [
+    "non_numeric_money",
+    "non_numeric_money"
+  ],
+  "quarantined_at_utc": "20261017T165401Z",
+  "downstream_blocked": true,
+  "note": "Cleaned data NOT overwritten. Fix forward via agent + MR, then re-ingest."
+}

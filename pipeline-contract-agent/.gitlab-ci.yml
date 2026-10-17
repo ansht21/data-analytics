@@ -1,0 +1,28 @@
+stages: [test, scheduled-batch]
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+test:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - pip install -r requirements.txt
+    - python fixtures/make_fixtures.py
+    - pytest -q
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+daily-batch:
+  stage: scheduled-batch
+  image: python:3.11-slim
+  script:
+    - pip install -r requirements.txt
+    - python src/ingest_sim.py --inject-drift all
+    - python -m src.pipeline --batch data/batches/*.csv || true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  artifacts:
+    paths: [incidents/, warehouse/]
+    expire_in: 30 days
