@@ -76,13 +76,15 @@ def analyse(validation: dict) -> dict:
 def enhance_with_llm(analysis: dict, validation: dict) -> dict:
     """Upgrade narrative via Groq when available; else return analysis unchanged."""
     if not os.getenv("GROQ_API_KEY"):
-        analysis["mode"] = "offline-rule-based (no GROQ_API_KEY)"
+        analysis["mode"] = "offline-rule-based"
+        analysis["llm_note"] = "Offline mode: no GROQ_API_KEY — rule-based findings only."
         return analysis
     try:
         from langchain_groq import ChatGroq
         from langchain_core.messages import HumanMessage
-    except Exception as exc:
-        analysis["mode"] = f"offline-rule-based (llm import failed: {exc})"
+    except Exception:
+        analysis["mode"] = "offline-rule-based"
+        analysis["llm_note"] = "Offline mode: LLM libs not installed — rule-based findings only."
         return analysis
     try:
         from dotenv import load_dotenv
@@ -95,8 +97,9 @@ def enhance_with_llm(analysis: dict, validation: dict) -> dict:
         out = llm.invoke([HumanMessage(content=prompt)])
         analysis["llm_note"] = str(out.content)[:2000]
         analysis["mode"] = "live-groq-enhanced"
-    except Exception as exc:
-        analysis["mode"] = f"offline-rule-based (llm call failed: {exc})"
+    except Exception:
+        analysis["mode"] = "offline-rule-based"
+        analysis["llm_note"] = "Offline mode: LLM call failed — rule-based findings only."
     return analysis
 
 

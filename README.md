@@ -17,6 +17,8 @@
 </div>
 
 > **Start here → [🤖 Analytics Intelligence Copilot](./analytics-intelligence-copilot/)** — pick a dataset, tap a one-click insight chip, or ask in chat. Every answer shows its finding, why it matters, what to do, a chart, and the exact pandas code. Recruiters: try the **Warehouse Trap Check** first — it catches a ₹-crore mistake in one click.
+>
+> **Data-engineering capstone → [🛡️ Pipeline Contract Agent](./pipeline-contract-agent/)** — contract-first guard for the supply-chain log. The contract enforces, the agent investigates, the human approves. Bad batch → quarantine → incident report → `fix.patch` + MR. **22/22 tests pass**, works fully offline.
 
 ---
 
@@ -40,8 +42,12 @@ As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating comp
 | **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue |
 | **Subscription Retention** | 7,043 customers (7,032 analysed after removing 11 blank-`TotalCharges` rows) | Python · SQL · Excel | 26.6% churn; month-to-month + fiber = 72% of revenue at risk |
 | **[🤖 Analytics Copilot](./analytics-intelligence-copilot/)** *(interactive capstone — start here)* | 50,034 records across all 3 | Streamlit · Pandas · Plotly · LangGraph · Groq | 9 one-click insight chips + chat + executive-brief generator — glass-box pandas logic, 18/18 tests pass, works offline |
+| **[🛡️ Pipeline Contract Agent](./pipeline-contract-agent/)** *(data-engineering layer)* | Contract v1.0.0 · 8 rule families | Python · FastAPI · LangGraph · Groq · Docker | Contract-first validator quarantines bad batches; AI agent investigates and proposes fixes via MR — deterministic gates, human approves, 22 tests green |
+| **[🛡️ Pipeline Contract Agent](./pipeline-contract-agent/)** *(data-engineering capstone)* | 7,991 supply-chain orders + drift batches | Contract YAML · Pandas · FastAPI · Streamlit · Groq ReAct | Deterministic gate → quarantine → agent report → `fix.patch` + MR — contract enforces, agent investigates, human approves, 22/22 tests pass |
 
-> **60-second recruiter tour:** open the [Copilot](./analytics-intelligence-copilot/) → Supply Chain → **Warehouse Trap Check** (catches the 31.9%-vs-0.08% volume illusion) → **Generate Executive Brief** → switch to Uber → **Peak Surge Detection**.
+> **60-second recruiter tour (analyst):** open the [Copilot](./analytics-intelligence-copilot/) → Supply Chain → **Warehouse Trap Check** (catches the 31.9%-vs-0.08% volume illusion) → **Generate Executive Brief** → switch to Uber → **Peak Surge Detection**.
+>
+> **60-second tour (data engineer):** open the [Contract Agent](./pipeline-contract-agent/) → run `fixtures/bad_money.csv --auto-investigate` → show `validation.json` (`non_numeric_money [high]`) → `incident_report.md` (rule → cause → impact → fix) → `fix.patch` (per-rule guardrail, human approves).
 
 ---
 
@@ -143,6 +149,21 @@ runtime — 0% hallucination by construction for chips.*
   * **Glass-box transparency:** no black-box numbers — pandas snippet + ms runtime under every card.
 * **Try it:** `cd analytics-intelligence-copilot; $env:PYTHONPATH='.'; python -m streamlit run app.py` → `http://localhost:8501`
 
+### 5. [Pipeline Contract Agent](./pipeline-contract-agent/)
+
+*The data-engineering layer that keeps the analytics trustworthy: a contract-first
+pipeline guard for the supply-chain order log. **The contract enforces, the agent
+investigates, the human approves.***
+* **Business Challenge:** When a source quietly changes format (ISO dates instead of DD/MM/YY slashes, text in money fields, null customer IDs), cleaned tables still load — but every downstream KPI is silently wrong. Catch it before load, and turn every failure into an investigated, fixable incident.
+* **Tech Stack:** Python (Pandas), YAML data contract (sha-pinned, versioned), FastAPI, Streamlit, LangGraph ReAct agent + Groq (optional live investigation), Docker, GitHub Actions (tests on push + scheduled daily batch), GitLab CI.
+* **Key Achievements:**
+  * **Deterministic validation, zero AI in the gate:** 8 rule families (nullability, date-format allowlist, money parsing, warehouse/channel allowlists, uniqueness, R01 date chronology) — identical input always yields identical verdict.
+  * **Fail-safe routing:** PASS → SQLite warehouse with load metadata; FAIL → batch quarantined untouched with `validation.json` + manifest (audit trail), never deleted.
+  * **AI agent as response layer:** on breach, an investigator maps each broken rule to root cause → pipeline location → downstream impact → fix; Groq upgrades the narrative only. Emits `incident_report.md` + `fix.patch` + MR body (dry-run default; human applies).
+  * **Deploy-shaped:** FastAPI `POST /ingest` (200 pass / 422 quarantined + report), operations console, `docker compose up`, CI runs the suite and a daily drift-injected batch.
+  * **22 offline-safe tests** — every rule has a pass and a fail case; no API key needed.
+* **Try it:** `cd pipeline-contract-agent; pytest -q; python -W ignore pipeline/ingest.py --batch fixtures/bad_money.csv --auto-investigate`
+
 ---
 
 ## 🤝 AI-Assisted Workflow & Validation Gates
@@ -167,6 +188,17 @@ Each directory is fully self-contained, including its own documentation, SQL scr
 
 ```bash
 data-analytics/
+│
+├── pipeline-contract-agent/ # 🛡️ DATA-ENGINEERING CAPSTONE — contract-first guard
+│ ├── contract/ # supply_orders.contract.yaml (v1.0.0, sha-pinned law)
+│ ├── src/ # validate (deterministic, NO AI) / trigger / investigate / report / mr
+│ ├── pipeline/ingest.py # CLI: validate -> quarantine/pass -> investigate
+│ ├── api/main.py # FastAPI: POST /ingest (200 pass / 422 quarantine)
+│ ├── app.py # Streamlit operations console
+│ ├── fixtures/ # good + 4 bad batches
+│ ├── tests/ # 22 green (validator + pipeline + agent offline)
+│ ├── incidents/ # quarantine audit trail (batch + validation + report + patch)
+│ └── README.md # 60-second demo + design decisions
 │
 ├── analytics-intelligence-copilot/ # ⭐ START HERE — interactive AI copilot over all 3 datasets
 │ ├── app.py # Streamlit: dataset switcher, insight chips, brief, chat

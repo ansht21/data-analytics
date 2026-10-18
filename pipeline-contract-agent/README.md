@@ -16,7 +16,7 @@ batch arrives → validate (deterministic pandas, NO AI)
 ```bash
 pip install -r requirements.txt
 python fixtures/make_fixtures.py
-pytest -q                                   # 20 tests
+pytest -q                                   # 22 tests
 python -W ignore pipeline/ingest.py --batch fixtures/good_sample.csv
 python -W ignore pipeline/ingest.py --batch fixtures/bad_nulls.csv --auto-investigate
 ```
@@ -62,4 +62,18 @@ docker compose up --build               # api :8000 + ui :8501
 
 `contract/` law · `src/` validate/trigger/investigate/report/mr/pipeline/warehouse ·
 `pipeline/ingest.py` CLI · `api/main.py` service · `app.py` console ·
-`fixtures/` good + 4 bad · `tests/` 20 green · `incidents/` audit trail.
+`fixtures/` good + 4 bad · `tests/` 22 green · `incidents/` audit trail.
+
+## 60-second demo (recruiter tour)
+
+```bash
+python -W ignore pipeline/ingest.py --batch fixtures/bad_money.csv --auto-investigate
+# QUARANTINED -> incidents/<utc>_bad_money/
+# Report: incidents/<utc>_bad_money/incident_report.md
+# MR: fix.patch + mr_body.md (dry-run; live GitLab MR with GITLAB_TOKEN)
+```
+
+What to show:
+1. `validation.json` — `non_numeric_money [high]` on `Unit_Cost`/`Unit_Price`.
+2. `incident_report.md` — rule → cause (`_clean_money` regex) → impact (revenue NaN) → fix.
+3. `fix.patch` — per-rule guardrail proposal (human must approve + apply).
