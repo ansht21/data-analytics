@@ -16,14 +16,71 @@ batch arrives → validate (deterministic pandas, NO AI)
                   → fix.patch + MR body (dry-run default; live GitLab MR with token)
 ```
 
-## Quickstart
+## Quickstart — start from zero (copy-paste)
 
-```bash
+```powershell
+# 0. Clone + enter (skip if already inside)
+git clone https://github.com/ansht21/data-analytics.git
+cd data-analytics/pipeline-contract-agent
+
+# 1. Create + activate venv (Windows PowerShell)
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+# macOS/Linux: python3 -m venv .venv && source .venv/bin/activate
+
+# 2. Install (offline-first: validator, API, UI, tests run on THESE ALONE)
 pip install -r requirements.txt
+
+# 3. (Optional) live AI narrative + live GitLab MR — else offline dry-run
+copy .env.example .env
+# edit .env: GROQ_API_KEY=..., GITLAB_TOKEN=..., GITLAB_PROJECT_ID=...
+
+# 4. Build demo fixtures + run tests (22 green)
 python fixtures/make_fixtures.py
-pytest -q                                   # 22 tests
+pytest -q
+
+# 5. Try it — good batch passes, bad batch quarantines
 python -W ignore pipeline/ingest.py --batch fixtures/good_sample.csv
 python -W ignore pipeline/ingest.py --batch fixtures/bad_nulls.csv --auto-investigate
+```
+
+```bash
+# same on macOS/Linux (bash)
+git clone https://github.com/ansht21/data-analytics.git
+cd data-analytics/pipeline-contract-agent
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env  # optional: add GROQ_API_KEY / GITLAB_TOKEN
+python fixtures/make_fixtures.py
+pytest -q
+python -W ignore pipeline/ingest.py --batch fixtures/good_sample.csv
+python -W ignore pipeline/ingest.py --batch fixtures/bad_nulls.csv --auto-investigate
+```
+
+## ▶ How to start each service (3 terminals)
+
+```powershell
+# Terminal 1 — FastAPI gate (http://localhost:8000/docs)
+cd data-analytics/pipeline-contract-agent
+.\.venv\Scripts\Activate.ps1
+uvicorn api.main:app --reload --port 8000
+# try: GET /health, GET /contract, POST /ingest (upload CSV), GET /incidents
+
+# Terminal 2 — Streamlit console (http://localhost:8501)
+cd data-analytics\pipeline-contract-agent
+.\.venv\Scripts\Activate.ps1
+streamlit run app.py --server.port 8501
+# try: upload fixtures/bad_money.csv → red QUARANTINED → expand incident
+
+# Terminal 3 — CLI batch runs (no server needed)
+cd data-analytics\pipeline-contract-agent
+.\.venv\Scripts\Activate.ps1
+python -W ignore pipeline/ingest.py --batch fixtures/good_sample.csv
+python -W ignore pipeline/ingest.py --batch fixtures/bad_money.csv --auto-investigate
+
+# One-command alternative (both services containerised):
+# docker compose up --build
+# api → http://localhost:8000/docs | ui → http://localhost:8501
 ```
 
 ## Simulate a daily batch (drift on demand)
