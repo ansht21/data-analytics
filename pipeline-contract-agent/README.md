@@ -202,3 +202,26 @@ docker compose up --build               # api :8000 + ui :8501
 - **GitHub Actions** (`.github/workflows/pipeline.yml`): tests on every push + scheduled daily drift batch, `incidents/` + `warehouse/` kept as artifacts.
 - **GitLab CI** (`.gitlab-ci.yml`): `test` stage (fixtures → `pytest -q`, 22 green) + `scheduled-batch` stage (drift injection → quarantine), artifacts expire in 30 days.
 - **Sample evidence:** committed under `incidents/sample_bad_money/` — open its `validation.json` + `incident_report.md` without running anything.
+
+### 📸 Working proof (screenshots)
+
+> Capture once, embed here. Filenames below are reserved in `docs/images/`:
+
+| Step | File | What to capture |
+|---|---|---|
+| 1. Terminal PASS vs FAIL | `docs/images/01_terminal_pass_fail.png` | `good_sample.csv` → green PASS (30 rows) side-by-side with `bad_money.csv` → red FAIL → QUARANTINED |
+| 2. Validator output | `docs/images/02_validation_json.png` | `incidents/sample_bad_money/validation.json` open in editor — 2× `non_numeric_money [high]` |
+| 3. Agent report | `docs/images/03_incident_report.png` | `incident_report.md` rendered — rule → cause → impact → fix |
+| 4. Ops console | `docs/images/04_streamlit_quarantine.png` | Streamlit `:8501` — upload bad CSV → red QUARANTINED banner + expanded incident |
+| 5. API gate | `docs/images/05_api_swagger_200_422.png` | Swagger `/docs` → `POST /ingest`: 200 (good) vs 422 + `incident_dir` (bad) |
+
+```markdown
+| PASS → terminal | FAIL → quarantined |
+|---|---|
+| ![terminal](docs/images/01_terminal_pass_fail.png) | ![report](docs/images/03_incident_report.png) |
+
+| Streamlit ops console | FastAPI gate |
+|---|---|
+| ![ui](docs/images/04_streamlit_quarantine.png) | ![api](docs/images/05_api_swagger_200_422.png) |
+```
+*(Uncomment the table above once the PNGs are dropped into `docs/images/`.)*
