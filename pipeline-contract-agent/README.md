@@ -83,6 +83,35 @@ python -W ignore pipeline/ingest.py --batch fixtures/bad_money.csv --auto-invest
 # api → http://localhost:8000/docs | ui → http://localhost:8501
 ```
 
+### 🖥️ Presentation setup — exact session you demoed (19-Oct-2026)
+
+```powershell
+# 1. Go to project + confirm fixtures (5 CSVs)
+cd C:\Users\ansht\data-analytics\pipeline-contract-agent
+dir fixtures\*.csv
+# good_sample.csv, bad_nulls.csv, bad_dates.csv, bad_money.csv, bad_chronology.csv
+
+# 2. Green path — clean file passes
+python -W ignore pipeline/ingest.py --batch fixtures/good_sample.csv
+# PASS: 30 rows satisfy the contract.
+
+# 3. Red path — dirty file quarantined (+ agent report + fix proposal)
+python -W ignore pipeline/ingest.py --batch fixtures/bad_money.csv --auto-investigate
+# FAIL: 2 rule(s) → QUARANTINED -> incidents/<utc>_bad_money/
+
+# 4. Read the proof (Tab-autocomplete the <utc> folder)
+Get-Content incidents\<utc>_bad_money\validation.json
+Get-Content incidents\<utc>_bad_money\incident_report.md
+
+# 5. Graphical demo — ops console (HTTP 200)
+streamlit run app.py --server.port 8501
+# open http://localhost:8501 → upload good_sample.csv (green PASS)
+# → upload bad_money.csv (red QUARANTINED) → expand 📁 Incident history
+
+# 6. Stop when done
+# Ctrl + C
+```
+
 ## Simulate a daily batch (drift on demand)
 
 ```bash
