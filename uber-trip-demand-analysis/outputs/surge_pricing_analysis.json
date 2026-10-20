@@ -1,0 +1,539 @@
+{
+  "source_file": "Uber_Cleaned_data.csv",
+  "rows": 35000,
+  "headline": {
+    "question": "Is the evening revenue peak a price effect or just more trips?",
+    "peak_hours": [
+      8,
+      9,
+      17,
+      18,
+      19
+    ],
+    "peak_fare_per_km_all_trips": 26.25,
+    "quiet_fare_per_km_all_trips": 19.39,
+    "peak_fare_per_km_non_airport": 27.23,
+    "quiet_fare_per_km_non_airport": 20.02,
+    "premium_pp_all_trips": 6.86,
+    "premium_pp_non_airport": 7.21,
+    "premium_survives_airport_control_pct": 105.1,
+    "peak_airport_pct": 39.96,
+    "network_airport_pct": 39.61,
+    "airport_share_peak_vs_network_pp": 0.35,
+    "airport_share_max_spread_across_hours": 9.03,
+    "verdict": "A genuine peak-hour price premium exists and it survives removing airport trips, so it is not a mix artefact."
+  },
+  "peak_window_all_trips": {
+    "peak_hours": [
+      8,
+      9,
+      17,
+      18,
+      19
+    ],
+    "quiet_hours": [
+      2,
+      3,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      20,
+      21
+    ],
+    "peak_fare_per_km": 26.25,
+    "quiet_fare_per_km": 19.39,
+    "fare_per_km_premium_pct": 35.38,
+    "peak_avg_fare": 447.43,
+    "quiet_avg_fare": 330.27,
+    "peak_avg_km": 17.47,
+    "quiet_avg_km": 17.44,
+    "peak_airport_pct": 39.96,
+    "quiet_airport_pct": 39.3,
+    "network_airport_pct": 39.61
+  },
+  "peak_window_non_airport": {
+    "peak_hours": [
+      8,
+      9,
+      17,
+      18,
+      19
+    ],
+    "quiet_hours": [
+      2,
+      3,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      20,
+      21
+    ],
+    "peak_fare_per_km": 27.23,
+    "quiet_fare_per_km": 20.02,
+    "fare_per_km_premium_pct": 36.01,
+    "peak_avg_fare": 335.81,
+    "quiet_avg_fare": 245.88,
+    "peak_avg_km": 12.53,
+    "quiet_avg_km": 12.51,
+    "peak_airport_pct": 0.0,
+    "quiet_airport_pct": 0.0,
+    "network_airport_pct": 0.0
+  },
+  "hourly_profile": {
+    "0": {
+      "trips": 357,
+      "revenue": 143779.56,
+      "avg_fare": 402.74,
+      "avg_km": 17.91,
+      "fare_per_km": 22.94,
+      "airport_pct": 44.26,
+      "revenue_mix_pct": 1.06
+    },
+    "1": {
+      "trips": 357,
+      "revenue": 139489.88,
+      "avg_fare": 390.73,
+      "avg_km": 17.37,
+      "fare_per_km": 23.33,
+      "airport_pct": 36.97,
+      "revenue_mix_pct": 1.03
+    },
+    "2": {
+      "trips": 328,
+      "revenue": 108423.56,
+      "avg_fare": 330.56,
+      "avg_km": 17.92,
+      "fare_per_km": 19.04,
+      "airport_pct": 41.46,
+      "revenue_mix_pct": 0.8
+    },
+    "3": {
+      "trips": 352,
+      "revenue": 111495.81,
+      "avg_fare": 316.75,
+      "avg_km": 16.69,
+      "fare_per_km": 19.28,
+      "airport_pct": 35.23,
+      "revenue_mix_pct": 0.82
+    },
+    "4": {
+      "trips": 314,
+      "revenue": 109126.94,
+      "avg_fare": 347.54,
+      "avg_km": 18.15,
+      "fare_per_km": 19.4,
+      "airport_pct": 41.4,
+      "revenue_mix_pct": 0.81
+    },
+    "5": {
+      "trips": 672,
+      "revenue": 224710.01,
+      "avg_fare": 334.39,
+      "avg_km": 17.43,
+      "fare_per_km": 19.63,
+      "airport_pct": 38.54,
+      "revenue_mix_pct": 1.66
+    },
+    "6": {
+      "trips": 713,
+      "revenue": 228167.57,
+      "avg_fare": 320.01,
+      "avg_km": 17.22,
+      "fare_per_km": 19.01,
+      "airport_pct": 37.45,
+      "revenue_mix_pct": 1.68
+    },
+    "7": {
+      "trips": 1010,
+      "revenue": 331667.25,
+      "avg_fare": 328.38,
+      "avg_km": 17.42,
+      "fare_per_km": 19.4,
+      "airport_pct": 39.7,
+      "revenue_mix_pct": 2.45
+    },
+    "8": {
+      "trips": 2005,
+      "revenue": 914192.9,
+      "avg_fare": 455.96,
+      "avg_km": 17.52,
+      "fare_per_km": 26.62,
+      "airport_pct": 41.3,
+      "revenue_mix_pct": 6.75
+    },
+    "9": {
+      "trips": 2716,
+      "revenue": 1219424.23,
+      "avg_fare": 448.98,
+      "avg_km": 17.49,
+      "fare_per_km": 26.3,
+      "airport_pct": 39.36,
+      "revenue_mix_pct": 9.0
+    },
+    "10": {
+      "trips": 1410,
+      "revenue": 473496.02,
+      "avg_fare": 335.81,
+      "avg_km": 17.61,
+      "fare_per_km": 19.53,
+      "airport_pct": 40.78,
+      "revenue_mix_pct": 3.5
+    },
+    "11": {
+      "trips": 972,
+      "revenue": 325057.75,
+      "avg_fare": 334.42,
+      "avg_km": 17.41,
+      "fare_per_km": 19.57,
+      "airport_pct": 38.48,
+      "revenue_mix_pct": 2.4
+    },
+    "12": {
+      "trips": 1031,
+      "revenue": 347246.36,
+      "avg_fare": 336.81,
+      "avg_km": 17.77,
+      "fare_per_km": 19.34,
+      "airport_pct": 42.0,
+      "revenue_mix_pct": 2.56
+    },
+    "13": {
+      "trips": 1064,
+      "revenue": 353482.06,
+      "avg_fare": 332.22,
+      "avg_km": 17.48,
+      "fare_per_km": 19.47,
+      "airport_pct": 38.06,
+      "revenue_mix_pct": 2.61
+    },
+    "14": {
+      "trips": 1326,
+      "revenue": 421840.59,
+      "avg_fare": 318.13,
+      "avg_km": 17.03,
+      "fare_per_km": 19.17,
+      "airport_pct": 38.01,
+      "revenue_mix_pct": 3.11
+    },
+    "15": {
+      "trips": 1371,
+      "revenue": 447097.97,
+      "avg_fare": 326.11,
+      "avg_km": 17.35,
+      "fare_per_km": 19.17,
+      "airport_pct": 38.51,
+      "revenue_mix_pct": 3.3
+    },
+    "16": {
+      "trips": 1976,
+      "revenue": 654914.56,
+      "avg_fare": 331.43,
+      "avg_km": 17.44,
+      "fare_per_km": 19.52,
+      "airport_pct": 39.27,
+      "revenue_mix_pct": 4.84
+    },
+    "17": {
+      "trips": 3467,
+      "revenue": 1560133.41,
+      "avg_fare": 450.0,
+      "avg_km": 17.45,
+      "fare_per_km": 26.5,
+      "airport_pct": 39.23,
+      "revenue_mix_pct": 11.52
+    },
+    "18": {
+      "trips": 4053,
+      "revenue": 1784725.65,
+      "avg_fare": 440.35,
+      "avg_km": 17.39,
+      "fare_per_km": 25.98,
+      "airport_pct": 40.0,
+      "revenue_mix_pct": 13.18
+    },
+    "19": {
+      "trips": 3411,
+      "revenue": 1524671.6,
+      "avg_fare": 446.99,
+      "avg_km": 17.56,
+      "fare_per_km": 26.05,
+      "airport_pct": 40.34,
+      "revenue_mix_pct": 11.26
+    },
+    "20": {
+      "trips": 2670,
+      "revenue": 883611.74,
+      "avg_fare": 330.94,
+      "avg_km": 17.45,
+      "fare_per_km": 19.45,
+      "airport_pct": 39.44,
+      "revenue_mix_pct": 6.52
+    },
+    "21": {
+      "trips": 1766,
+      "revenue": 584905.98,
+      "avg_fare": 331.2,
+      "avg_km": 17.53,
+      "fare_per_km": 19.32,
+      "airport_pct": 39.52,
+      "revenue_mix_pct": 4.32
+    },
+    "22": {
+      "trips": 981,
+      "revenue": 387558.45,
+      "avg_fare": 395.06,
+      "avg_km": 17.21,
+      "fare_per_km": 23.22,
+      "airport_pct": 39.96,
+      "revenue_mix_pct": 2.86
+    },
+    "23": {
+      "trips": 678,
+      "revenue": 265483.12,
+      "avg_fare": 391.57,
+      "avg_km": 17.38,
+      "fare_per_km": 23.19,
+      "airport_pct": 39.09,
+      "revenue_mix_pct": 1.96
+    }
+  },
+  "hourly_profile_non_airport": {
+    "0": {
+      "trips": 199,
+      "avg_fare": 297.85,
+      "avg_km": 12.63,
+      "fare_per_km": 23.77
+    },
+    "1": {
+      "trips": 225,
+      "avg_fare": 296.97,
+      "avg_km": 12.74,
+      "fare_per_km": 24.02
+    },
+    "2": {
+      "trips": 192,
+      "avg_fare": 243.77,
+      "avg_km": 12.64,
+      "fare_per_km": 19.78
+    },
+    "3": {
+      "trips": 228,
+      "avg_fare": 242.06,
+      "avg_km": 12.53,
+      "fare_per_km": 19.74
+    },
+    "4": {
+      "trips": 184,
+      "avg_fare": 245.93,
+      "avg_km": 12.5,
+      "fare_per_km": 19.96
+    },
+    "5": {
+      "trips": 413,
+      "avg_fare": 255.92,
+      "avg_km": 12.76,
+      "fare_per_km": 20.33
+    },
+    "6": {
+      "trips": 446,
+      "avg_fare": 243.61,
+      "avg_km": 12.53,
+      "fare_per_km": 19.67
+    },
+    "7": {
+      "trips": 609,
+      "avg_fare": 254.86,
+      "avg_km": 12.87,
+      "fare_per_km": 20.2
+    },
+    "8": {
+      "trips": 1177,
+      "avg_fare": 333.43,
+      "avg_km": 12.33,
+      "fare_per_km": 27.55
+    },
+    "9": {
+      "trips": 1647,
+      "avg_fare": 338.71,
+      "avg_km": 12.6,
+      "fare_per_km": 27.21
+    },
+    "10": {
+      "trips": 835,
+      "avg_fare": 247.17,
+      "avg_km": 12.4,
+      "fare_per_km": 20.3
+    },
+    "11": {
+      "trips": 598,
+      "avg_fare": 246.4,
+      "avg_km": 12.7,
+      "fare_per_km": 19.84
+    },
+    "12": {
+      "trips": 598,
+      "avg_fare": 247.7,
+      "avg_km": 12.62,
+      "fare_per_km": 19.95
+    },
+    "13": {
+      "trips": 659,
+      "avg_fare": 253.64,
+      "avg_km": 12.68,
+      "fare_per_km": 20.21
+    },
+    "14": {
+      "trips": 822,
+      "avg_fare": 238.49,
+      "avg_km": 12.33,
+      "fare_per_km": 19.81
+    },
+    "15": {
+      "trips": 843,
+      "avg_fare": 241.13,
+      "avg_km": 12.43,
+      "fare_per_km": 19.76
+    },
+    "16": {
+      "trips": 1200,
+      "avg_fare": 248.82,
+      "avg_km": 12.48,
+      "fare_per_km": 20.31
+    },
+    "17": {
+      "trips": 2107,
+      "avg_fare": 343.73,
+      "avg_km": 12.66,
+      "fare_per_km": 27.58
+    },
+    "18": {
+      "trips": 2432,
+      "avg_fare": 331.34,
+      "avg_km": 12.52,
+      "fare_per_km": 26.94
+    },
+    "19": {
+      "trips": 2035,
+      "avg_fare": 331.98,
+      "avg_km": 12.44,
+      "fare_per_km": 27.05
+    },
+    "20": {
+      "trips": 1617,
+      "avg_fare": 245.37,
+      "avg_km": 12.4,
+      "fare_per_km": 20.16
+    },
+    "21": {
+      "trips": 1068,
+      "avg_fare": 246.88,
+      "avg_km": 12.73,
+      "fare_per_km": 19.78
+    },
+    "22": {
+      "trips": 589,
+      "avg_fare": 287.31,
+      "avg_km": 12.36,
+      "fare_per_km": 23.52
+    },
+    "23": {
+      "trips": 413,
+      "avg_fare": 294.03,
+      "avg_km": 12.54,
+      "fare_per_km": 23.98
+    }
+  },
+  "airport_corridor": {
+    "airport_trips": 13864,
+    "airport_trip_pct": 39.61,
+    "airport_revenue": 7427851.44,
+    "airport_revenue_pct": 54.84,
+    "airport_avg_fare": 535.77,
+    "non_airport_avg_fare": 289.4,
+    "airport_avg_km": 24.95,
+    "non_airport_avg_km": 12.53,
+    "airport_fare_per_km": 21.53,
+    "non_airport_fare_per_km": 23.48,
+    "note": "Airport trips earn more per TRIP but slightly LESS per km. The corridor premium is distance, not price."
+  },
+  "driver_profile": {
+    "distinct_drivers": 100,
+    "trips_per_driver_min": 318,
+    "trips_per_driver_max": 390,
+    "trips_per_driver_mean": 350.0,
+    "revenue_per_driver_min": 120300.48,
+    "revenue_per_driver_max": 158358.24,
+    "fare_per_km_min": 20.96,
+    "fare_per_km_max": 23.48,
+    "top10_drivers_revenue_pct": 11.04,
+    "hhi": 100.3,
+    "effective_drivers": 99.7,
+    "corr_driver_rating_fare_per_km": 0.0814,
+    "corr_driver_trips_revenue_per_trip": -0.0678
+  },
+  "rating_profile": {
+    "trips_rated_below_4": 7621,
+    "pct_rated_below_4": 21.77,
+    "low_rating_avg_fare": 419.18,
+    "low_rating_avg_km": 18.94,
+    "low_rating_fare_per_km": 22.59,
+    "network_fare_per_km": 22.71,
+    "low_rating_drivers": 100,
+    "network_avg_km": 17.45,
+    "trips_over_20km": 10341,
+    "pct_trips_over_20km": 29.55,
+    "long_trip_avg_rating": 4.251,
+    "network_avg_rating": 4.324,
+    "corr_distance_rating": -0.1264
+  },
+  "payment_profile": {
+    "Cash": {
+      "trips": 3485,
+      "revenue": 1345419.2,
+      "avg_fare": 386.06,
+      "fare_per_km": 22.63,
+      "trip_mix_pct": 9.96,
+      "revenue_mix_pct": 9.93
+    },
+    "Credit Card": {
+      "trips": 12164,
+      "revenue": 4693784.07,
+      "avg_fare": 385.88,
+      "fare_per_km": 22.58,
+      "trip_mix_pct": 34.75,
+      "revenue_mix_pct": 34.65
+    },
+    "Debit Card": {
+      "trips": 8807,
+      "revenue": 3392527.34,
+      "avg_fare": 385.21,
+      "fare_per_km": 22.78,
+      "trip_mix_pct": 25.16,
+      "revenue_mix_pct": 25.05
+    },
+    "UPI": {
+      "trips": 7175,
+      "revenue": 2806742.74,
+      "avg_fare": 391.18,
+      "fare_per_km": 22.88,
+      "trip_mix_pct": 20.5,
+      "revenue_mix_pct": 20.72
+    },
+    "Wallet": {
+      "trips": 3369,
+      "revenue": 1306229.62,
+      "avg_fare": 387.72,
+      "fare_per_km": 22.71,
+      "trip_mix_pct": 9.63,
+      "revenue_mix_pct": 9.64
+    }
+  }
+}

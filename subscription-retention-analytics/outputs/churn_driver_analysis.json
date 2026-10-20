@@ -1,0 +1,663 @@
+{
+  "source_file": "Telco_Customer_Churn.csv",
+  "rows_analysed": 7032,
+  "rows_loaded": 7043,
+  "churn_rate_pct": 26.58,
+  "headline": {
+    "total_monthly_revenue": 455661.0,
+    "monthly_revenue_at_risk": 139130.85,
+    "value_of_1pp_churn_reduction": 4556.61,
+    "one_pp_reduction_pct_of_at_risk": 3.28,
+    "verdict": "Churn is a revenue-concentration problem, not a price problem. Paperless billing is a real, independent driver worth re-engineering -- not a proxy for contract type."
+  },
+  "tenure_profile": {
+    "0-6": {
+      "customers": 1360,
+      "churn_pct": 54.71,
+      "monthly_revenue": 74387.55,
+      "mrr_at_risk": 46852.7,
+      "mrr_at_risk_pct": 33.68
+    },
+    "6-12": {
+      "customers": 698,
+      "churn_pct": 36.53,
+      "monthly_revenue": 41136.75,
+      "mrr_at_risk": 19169.6,
+      "mrr_at_risk_pct": 13.78
+    },
+    "12-24": {
+      "customers": 1047,
+      "churn_pct": 29.51,
+      "monthly_revenue": 63713.4,
+      "mrr_at_risk": 24143.5,
+      "mrr_at_risk_pct": 17.35
+    },
+    "24-36": {
+      "customers": 876,
+      "churn_pct": 22.03,
+      "monthly_revenue": 57052.0,
+      "mrr_at_risk": 16162.25,
+      "mrr_at_risk_pct": 11.62
+    },
+    "36-48": {
+      "customers": 748,
+      "churn_pct": 19.52,
+      "monthly_revenue": 49690.1,
+      "mrr_at_risk": 12418.25,
+      "mrr_at_risk_pct": 8.93
+    },
+    "48-60": {
+      "customers": 820,
+      "churn_pct": 15.0,
+      "monthly_revenue": 57182.8,
+      "mrr_at_risk": 10790.2,
+      "mrr_at_risk_pct": 7.76
+    },
+    "60+": {
+      "customers": 1483,
+      "churn_pct": 6.68,
+      "monthly_revenue": 112498.4,
+      "mrr_at_risk": 9594.35,
+      "mrr_at_risk_pct": 6.9
+    }
+  },
+  "contract_profile": {
+    "Month-to-month": {
+      "customers": 3875,
+      "churn_pct": 42.71,
+      "mrr_at_risk": 120847.1,
+      "mrr_at_risk_pct": 26.52
+    },
+    "One year": {
+      "customers": 1472,
+      "churn_pct": 11.28,
+      "mrr_at_risk": 14118.45,
+      "mrr_at_risk_pct": 3.1
+    },
+    "Two year": {
+      "customers": 1685,
+      "churn_pct": 2.85,
+      "mrr_at_risk": 4165.3,
+      "mrr_at_risk_pct": 0.91
+    }
+  },
+  "price_test": {
+    "by_charge_quartile": {
+      "(18.249, 35.588]": {
+        "customers": 1758,
+        "churn_pct": 11.32,
+        "avg_monthly_charges": 22.25
+      },
+      "(35.588, 70.35]": {
+        "customers": 1761,
+        "churn_pct": 24.59,
+        "avg_monthly_charges": 55.75
+      },
+      "(70.35, 89.862]": {
+        "customers": 1755,
+        "churn_pct": 37.55,
+        "avg_monthly_charges": 80.34
+      },
+      "(89.862, 118.75]": {
+        "customers": 1758,
+        "churn_pct": 32.88,
+        "avg_monthly_charges": 100.9
+      }
+    },
+    "churn_pct_by_quartile": [
+      11.32,
+      24.59,
+      37.55,
+      32.88
+    ],
+    "monotonic_in_price": false,
+    "note": "The top charge quartile churns LESS than the third quartile, so churn is not a simple price effect -- it is concentrated in the mid-price month-to-month segment."
+  },
+  "paperless_test": {
+    "uncontrolled_by_paperless": {
+      "No": {
+        "customers": 2864,
+        "churn_pct": 16.38
+      },
+      "Yes": {
+        "customers": 4168,
+        "churn_pct": 33.59
+      }
+    },
+    "within_payment_method": [
+      {
+        "payment_method": "Electronic check",
+        "paperless": "Yes",
+        "customers": 1742,
+        "churn_pct": 49.8
+      },
+      {
+        "payment_method": "Electronic check",
+        "paperless": "No",
+        "customers": 623,
+        "churn_pct": 32.7
+      },
+      {
+        "payment_method": "Mailed check",
+        "paperless": "Yes",
+        "customers": 655,
+        "churn_pct": 27.3
+      },
+      {
+        "payment_method": "Mailed check",
+        "paperless": "No",
+        "customers": 949,
+        "churn_pct": 13.6
+      },
+      {
+        "payment_method": "Bank transfer (automatic)",
+        "paperless": "Yes",
+        "customers": 889,
+        "churn_pct": 20.9
+      },
+      {
+        "payment_method": "Bank transfer (automatic)",
+        "paperless": "No",
+        "customers": 653,
+        "churn_pct": 11.0
+      },
+      {
+        "payment_method": "Credit card (automatic)",
+        "paperless": "Yes",
+        "customers": 882,
+        "churn_pct": 19.0
+      },
+      {
+        "payment_method": "Credit card (automatic)",
+        "paperless": "No",
+        "customers": 639,
+        "churn_pct": 10.0
+      }
+    ],
+    "cells": [
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "0-12",
+        "payment_method": "Electronic check",
+        "n_paperless": 666,
+        "churn_paperless_pct": 68.9,
+        "n_standard": 251,
+        "churn_standard_pct": 50.6,
+        "lift_pp": 18.300000000000004
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "0-12",
+        "payment_method": "Mailed check",
+        "n_paperless": 283,
+        "churn_paperless_pct": 46.3,
+        "n_standard": 338,
+        "churn_standard_pct": 30.8,
+        "lift_pp": 15.499999999999996
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "0-12",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 112,
+        "churn_paperless_pct": 56.2,
+        "n_standard": 76,
+        "churn_standard_pct": 38.2,
+        "lift_pp": 18.0
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "0-12",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 111,
+        "churn_paperless_pct": 48.6,
+        "n_standard": 71,
+        "churn_standard_pct": 33.8,
+        "lift_pp": 14.800000000000004
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "12-24",
+        "payment_method": "Electronic check",
+        "n_paperless": 282,
+        "churn_paperless_pct": 54.3,
+        "n_standard": 82,
+        "churn_standard_pct": 39.0,
+        "lift_pp": 15.299999999999997
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "12-24",
+        "payment_method": "Mailed check",
+        "n_paperless": 76,
+        "churn_paperless_pct": 27.6,
+        "n_standard": 77,
+        "churn_standard_pct": 13.0,
+        "lift_pp": 14.600000000000001
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "12-24",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 85,
+        "churn_paperless_pct": 32.9,
+        "n_standard": 47,
+        "churn_standard_pct": 23.4,
+        "lift_pp": 9.5
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "12-24",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 86,
+        "churn_paperless_pct": 33.7,
+        "n_standard": 30,
+        "churn_standard_pct": 13.3,
+        "lift_pp": 20.400000000000002
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "24-48",
+        "payment_method": "Electronic check",
+        "n_paperless": 311,
+        "churn_paperless_pct": 46.9,
+        "n_standard": 88,
+        "churn_standard_pct": 22.7,
+        "lift_pp": 24.2
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "24-48",
+        "payment_method": "Mailed check",
+        "n_paperless": 55,
+        "churn_paperless_pct": 20.0,
+        "n_standard": 48,
+        "churn_standard_pct": 8.3,
+        "lift_pp": 11.7
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "24-48",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 114,
+        "churn_paperless_pct": 35.1,
+        "n_standard": 62,
+        "churn_standard_pct": 21.0,
+        "lift_pp": 14.100000000000001
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "24-48",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 123,
+        "churn_paperless_pct": 30.1,
+        "n_standard": 44,
+        "churn_standard_pct": 29.5,
+        "lift_pp": 0.6000000000000014
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "48+",
+        "payment_method": "Electronic check",
+        "n_paperless": 138,
+        "churn_paperless_pct": 34.8,
+        "n_standard": 32,
+        "churn_standard_pct": 28.1,
+        "lift_pp": 6.699999999999996
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "48+",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 72,
+        "churn_paperless_pct": 20.8,
+        "n_standard": 21,
+        "churn_standard_pct": 9.5,
+        "lift_pp": 11.3
+      },
+      {
+        "contract": "Month-to-month",
+        "tenure_band": "48+",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 62,
+        "churn_paperless_pct": 21.0,
+        "n_standard": 16,
+        "churn_standard_pct": 25.0,
+        "lift_pp": -4.0
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "0-12",
+        "payment_method": "Mailed check",
+        "n_paperless": 17,
+        "churn_paperless_pct": 11.8,
+        "n_standard": 44,
+        "churn_standard_pct": 2.3,
+        "lift_pp": 9.5
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "12-24",
+        "payment_method": "Electronic check",
+        "n_paperless": 11,
+        "churn_paperless_pct": 27.3,
+        "n_standard": 14,
+        "churn_standard_pct": 0.0,
+        "lift_pp": 27.3
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "12-24",
+        "payment_method": "Mailed check",
+        "n_paperless": 28,
+        "churn_paperless_pct": 7.1,
+        "n_standard": 59,
+        "churn_standard_pct": 6.8,
+        "lift_pp": 0.2999999999999998
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "12-24",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 16,
+        "churn_paperless_pct": 18.8,
+        "n_standard": 27,
+        "churn_standard_pct": 14.8,
+        "lift_pp": 4.0
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "12-24",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 20,
+        "churn_paperless_pct": 20.0,
+        "n_standard": 24,
+        "churn_standard_pct": 4.2,
+        "lift_pp": 15.8
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "24-48",
+        "payment_method": "Electronic check",
+        "n_paperless": 75,
+        "churn_paperless_pct": 24.0,
+        "n_standard": 42,
+        "churn_standard_pct": 4.8,
+        "lift_pp": 19.2
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "24-48",
+        "payment_method": "Mailed check",
+        "n_paperless": 43,
+        "churn_paperless_pct": 18.6,
+        "n_standard": 81,
+        "churn_standard_pct": 3.7,
+        "lift_pp": 14.900000000000002
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "24-48",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 73,
+        "churn_paperless_pct": 8.2,
+        "n_standard": 61,
+        "churn_standard_pct": 3.3,
+        "lift_pp": 4.8999999999999995
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "24-48",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 66,
+        "churn_paperless_pct": 9.1,
+        "n_standard": 69,
+        "churn_standard_pct": 7.2,
+        "lift_pp": 1.8999999999999995
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "48+",
+        "payment_method": "Electronic check",
+        "n_paperless": 137,
+        "churn_paperless_pct": 19.0,
+        "n_standard": 51,
+        "churn_standard_pct": 23.5,
+        "lift_pp": -4.5
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "48+",
+        "payment_method": "Mailed check",
+        "n_paperless": 34,
+        "churn_paperless_pct": 2.9,
+        "n_standard": 30,
+        "churn_standard_pct": 6.7,
+        "lift_pp": -3.8000000000000003
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "48+",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 129,
+        "churn_paperless_pct": 14.0,
+        "n_standard": 76,
+        "churn_standard_pct": 5.3,
+        "lift_pp": 8.7
+      },
+      {
+        "contract": "One year",
+        "tenure_band": "48+",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 134,
+        "churn_paperless_pct": 13.4,
+        "n_standard": 71,
+        "churn_standard_pct": 8.5,
+        "lift_pp": 4.9
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "0-12",
+        "payment_method": "Mailed check",
+        "n_paperless": 6,
+        "churn_paperless_pct": 0.0,
+        "n_standard": 29,
+        "churn_standard_pct": 0.0,
+        "lift_pp": 0.0
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "12-24",
+        "payment_method": "Mailed check",
+        "n_paperless": 7,
+        "churn_paperless_pct": 0.0,
+        "n_standard": 44,
+        "churn_standard_pct": 0.0,
+        "lift_pp": 0.0
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "24-48",
+        "payment_method": "Electronic check",
+        "n_paperless": 15,
+        "churn_paperless_pct": 13.3,
+        "n_standard": 13,
+        "churn_standard_pct": 0.0,
+        "lift_pp": 13.3
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "24-48",
+        "payment_method": "Mailed check",
+        "n_paperless": 31,
+        "churn_paperless_pct": 3.2,
+        "n_standard": 74,
+        "churn_standard_pct": 0.0,
+        "lift_pp": 3.2
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "24-48",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 22,
+        "churn_paperless_pct": 0.0,
+        "n_standard": 39,
+        "churn_standard_pct": 0.0,
+        "lift_pp": 0.0
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "24-48",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 28,
+        "churn_paperless_pct": 0.0,
+        "n_standard": 47,
+        "churn_standard_pct": 4.3,
+        "lift_pp": -4.3
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "48+",
+        "payment_method": "Electronic check",
+        "n_paperless": 96,
+        "churn_paperless_pct": 9.4,
+        "n_standard": 43,
+        "churn_standard_pct": 4.7,
+        "lift_pp": 4.7
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "48+",
+        "payment_method": "Mailed check",
+        "n_paperless": 65,
+        "churn_paperless_pct": 1.5,
+        "n_standard": 119,
+        "churn_standard_pct": 0.8,
+        "lift_pp": 0.7
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "48+",
+        "payment_method": "Bank transfer (automatic)",
+        "n_paperless": 257,
+        "churn_paperless_pct": 5.1,
+        "n_standard": 227,
+        "churn_standard_pct": 2.6,
+        "lift_pp": 2.4999999999999996
+      },
+      {
+        "contract": "Two year",
+        "tenure_band": "48+",
+        "payment_method": "Credit card (automatic)",
+        "n_paperless": 240,
+        "churn_paperless_pct": 2.9,
+        "n_standard": 237,
+        "churn_standard_pct": 1.7,
+        "lift_pp": 1.2
+      }
+    ],
+    "control": "contract x tenure band x payment method",
+    "mean_lift_pp": 8.3,
+    "cells_where_paperless_worse": 31,
+    "cells_tested": 38,
+    "verdict": "The paperless-billing penalty survives controlling for contract type, tenure band AND payment method at the same time, so it is a real driver rather than a proxy for any of them."
+  },
+  "household_test": {
+    "SeniorCitizen": {
+      "all_contracts": {
+        "0": {
+          "customers": 5890,
+          "churn_pct": 23.65
+        },
+        "1": {
+          "customers": 1142,
+          "churn_pct": 41.68
+        }
+      },
+      "month_to_month_only": {
+        "0": {
+          "customers": 3068,
+          "churn_pct": 39.57
+        },
+        "1": {
+          "customers": 807,
+          "churn_pct": 54.65
+        }
+      },
+      "month_to_month_and_paperless": {
+        "0": {
+          "customers": 1938,
+          "churn_pct": 45.36
+        },
+        "1": {
+          "customers": 648,
+          "churn_pct": 57.1
+        }
+      }
+    },
+    "Partner": {
+      "all_contracts": {
+        "No": {
+          "customers": 3639,
+          "churn_pct": 32.98
+        },
+        "Yes": {
+          "customers": 3393,
+          "churn_pct": 19.72
+        }
+      },
+      "month_to_month_only": {
+        "No": {
+          "customers": 2495,
+          "churn_pct": 44.69
+        },
+        "Yes": {
+          "customers": 1380,
+          "churn_pct": 39.13
+        }
+      },
+      "month_to_month_and_paperless": {
+        "No": {
+          "customers": 1636,
+          "churn_pct": 50.79
+        },
+        "Yes": {
+          "customers": 950,
+          "churn_pct": 44.0
+        }
+      }
+    },
+    "Dependents": {
+      "all_contracts": {
+        "No": {
+          "customers": 4933,
+          "churn_pct": 31.28
+        },
+        "Yes": {
+          "customers": 2099,
+          "churn_pct": 15.53
+        }
+      },
+      "month_to_month_only": {
+        "No": {
+          "customers": 3086,
+          "churn_pct": 45.24
+        },
+        "Yes": {
+          "customers": 789,
+          "churn_pct": 32.83
+        }
+      },
+      "month_to_month_and_paperless": {
+        "No": {
+          "customers": 2116,
+          "churn_pct": 50.85
+        },
+        "Yes": {
+          "customers": 470,
+          "churn_pct": 36.81
+        }
+      }
+    }
+  }
+}

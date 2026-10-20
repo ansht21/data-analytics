@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2026-10-20
+### Added
+- Supply chain: `src/customer_concentration_analysis.py` (`outputs/customer_concentration_analysis.json`) — customer/store concentration risk (Herfindahl) and sales-team margin-spread mechanism test (README Q11/Q12)
+- Uber: `src/surge_pricing_analysis.py` (`outputs/surge_pricing_analysis.json`) — genuine peak-hour price premium with airport-trip control, airport corridor price-vs-distance split, driver concentration and rating-distance confounder test (README Q9-Q12)
+- Subscription retention: `src/churn_driver_analysis.py` (`outputs/churn_driver_analysis.json`) — tenure-band revenue-at-risk ranking, price-quartile non-monotonicity test, paperless-billing triple-control confounder test, corrected household-driver claims (README Q6-Q10)
+- Root README: new Problem → Methodology → Finding → Decision rows for customer concentration, sales-team margin, genuine surge premium, non-price churn and the paperless-billing confounder test
+
+### Changed
+- Root README: supply chain, Uber and churn project sections now list the new analyses as key achievements
+- Churn project: paperless-billing claim upgraded to a contract × tenure × payment-method triple control (old "negative findings" were under-tested)
+
 ## [2.1.0] - 2026-10-20
 ### Added
 - Supply chain: `src/revenue_root_cause.py` — reproducible volume/price/mix root-cause analysis for "why did revenue stall?" (writes `outputs/revenue_root_cause.json`)

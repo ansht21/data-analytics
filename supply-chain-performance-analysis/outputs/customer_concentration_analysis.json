@@ -1,0 +1,290 @@
+{
+  "source_file": "Cleaned_Supplychain_Data.csv",
+  "rows": 7991,
+  "headline": {
+    "question": "How exposed are we to one customer, and which team leaks margin?",
+    "distinct_customers": 50,
+    "distinct_stores": 367,
+    "top_customer_revenue_pct": 2.75,
+    "customer_hhi": 203.0,
+    "effective_customers": 49.3,
+    "concentration_verdict": "The revenue base is well diversified -- the largest customer is under 3% of net revenue -- so customer concentration is NOT a material risk here.",
+    "team_margin_spread_pp": 5.03,
+    "team_leak_verdict": "Sales-team margin correlates far more strongly with average discount than with ASP, so the spread is a discount-behaviour difference, not a pricing-ability difference."
+  },
+  "customer_concentration": {
+    "dimension": "customer",
+    "count": 50,
+    "total_net_revenue": 73036584.22,
+    "top1_revenue_pct": 2.75,
+    "top3_revenue_pct": 7.69,
+    "top5_revenue_pct": 12.35,
+    "top10_revenue_pct": 23.6,
+    "hhi": 203.0,
+    "effective_count": 49.3,
+    "min_net_revenue": 1173497.29,
+    "max_net_revenue": 2009795.78
+  },
+  "store_concentration": {
+    "dimension": "store",
+    "count": 367,
+    "total_net_revenue": 73036584.22,
+    "top1_revenue_pct": 0.6,
+    "top3_revenue_pct": 1.64,
+    "top5_revenue_pct": 2.59,
+    "top10_revenue_pct": 4.89,
+    "hhi": 29.8,
+    "effective_count": 335.6,
+    "min_net_revenue": 60066.24,
+    "max_net_revenue": 435100.81
+  },
+  "sales_team_profile": {
+    "teams": 28,
+    "margin_spread_pp": 5.03,
+    "best_team": 10,
+    "best_team_margin_pct": 31.55,
+    "best_team_avg_discount_pct": 11.11,
+    "worst_team": 9,
+    "worst_team_margin_pct": 26.52,
+    "worst_team_avg_discount_pct": 11.63,
+    "median_margin_pct": 29.08,
+    "corr_margin_vs_avg_discount": -0.6381,
+    "corr_margin_vs_asp": 0.1027,
+    "orders_spread_x": 1.38,
+    "bottom5_teams": [
+      9,
+      18,
+      1,
+      2,
+      12
+    ],
+    "bottom5_profit_gap_to_median": 245956.81,
+    "bottom5_profit_gap_pct_of_total": 1.16,
+    "per_team": {
+      "9": {
+        "orders": 285,
+        "net_revenue": 2633670.71,
+        "profit": 698391.63,
+        "margin_pct": 26.52,
+        "avg_discount_pct": 11.63,
+        "asp": 2038.44
+      },
+      "18": {
+        "orders": 316,
+        "net_revenue": 2681846.12,
+        "profit": 723011.25,
+        "margin_pct": 26.96,
+        "avg_discount_pct": 12.03,
+        "asp": 1816.97
+      },
+      "1": {
+        "orders": 302,
+        "net_revenue": 2822397.18,
+        "profit": 775802.32,
+        "margin_pct": 27.49,
+        "avg_discount_pct": 12.72,
+        "asp": 2066.18
+      },
+      "2": {
+        "orders": 246,
+        "net_revenue": 2442319.44,
+        "profit": 671484.38,
+        "margin_pct": 27.49,
+        "avg_discount_pct": 12.04,
+        "asp": 2069.76
+      },
+      "12": {
+        "orders": 314,
+        "net_revenue": 2782383.44,
+        "profit": 770743.2,
+        "margin_pct": 27.7,
+        "avg_discount_pct": 11.59,
+        "asp": 1997.4
+      },
+      "17": {
+        "orders": 275,
+        "net_revenue": 2404982.35,
+        "profit": 667721.88,
+        "margin_pct": 27.76,
+        "avg_discount_pct": 11.76,
+        "asp": 1933.27
+      },
+      "19": {
+        "orders": 293,
+        "net_revenue": 2812653.3,
+        "profit": 788112.18,
+        "margin_pct": 28.02,
+        "avg_discount_pct": 11.86,
+        "asp": 2173.61
+      },
+      "13": {
+        "orders": 340,
+        "net_revenue": 2815257.92,
+        "profit": 790081.47,
+        "margin_pct": 28.06,
+        "avg_discount_pct": 11.91,
+        "asp": 1909.94
+      },
+      "20": {
+        "orders": 288,
+        "net_revenue": 2587967.46,
+        "profit": 740507.39,
+        "margin_pct": 28.61,
+        "avg_discount_pct": 11.27,
+        "asp": 2009.29
+      },
+      "14": {
+        "orders": 261,
+        "net_revenue": 2445549.51,
+        "profit": 702556.77,
+        "margin_pct": 28.73,
+        "avg_discount_pct": 11.58,
+        "asp": 2022.79
+      },
+      "6": {
+        "orders": 265,
+        "net_revenue": 2285274.93,
+        "profit": 658002.48,
+        "margin_pct": 28.79,
+        "avg_discount_pct": 12.0,
+        "asp": 1964.98
+      },
+      "5": {
+        "orders": 283,
+        "net_revenue": 2440924.77,
+        "profit": 703693.88,
+        "margin_pct": 28.83,
+        "avg_discount_pct": 11.5,
+        "asp": 1954.3
+      },
+      "23": {
+        "orders": 277,
+        "net_revenue": 2565661.95,
+        "profit": 741230.42,
+        "margin_pct": 28.89,
+        "avg_discount_pct": 11.58,
+        "asp": 2064.09
+      },
+      "16": {
+        "orders": 298,
+        "net_revenue": 2627848.61,
+        "profit": 763996.16,
+        "margin_pct": 29.07,
+        "avg_discount_pct": 12.0,
+        "asp": 1965.48
+      },
+      "15": {
+        "orders": 271,
+        "net_revenue": 2644860.17,
+        "profit": 769126.88,
+        "margin_pct": 29.08,
+        "avg_discount_pct": 11.54,
+        "asp": 2153.79
+      },
+      "21": {
+        "orders": 296,
+        "net_revenue": 2703578.31,
+        "profit": 788658.74,
+        "margin_pct": 29.17,
+        "avg_discount_pct": 11.41,
+        "asp": 1947.82
+      },
+      "8": {
+        "orders": 315,
+        "net_revenue": 2853026.96,
+        "profit": 834920.55,
+        "margin_pct": 29.26,
+        "avg_discount_pct": 11.88,
+        "asp": 2024.86
+      },
+      "11": {
+        "orders": 289,
+        "net_revenue": 2842264.42,
+        "profit": 835721.14,
+        "margin_pct": 29.4,
+        "avg_discount_pct": 11.65,
+        "asp": 2156.5
+      },
+      "26": {
+        "orders": 296,
+        "net_revenue": 2975303.17,
+        "profit": 880275.61,
+        "margin_pct": 29.59,
+        "avg_discount_pct": 11.2,
+        "asp": 2138.97
+      },
+      "25": {
+        "orders": 259,
+        "net_revenue": 2497940.97,
+        "profit": 743341.37,
+        "margin_pct": 29.76,
+        "avg_discount_pct": 11.39,
+        "asp": 2095.59
+      },
+      "3": {
+        "orders": 296,
+        "net_revenue": 2627627.51,
+        "profit": 784123.33,
+        "margin_pct": 29.84,
+        "avg_discount_pct": 10.99,
+        "asp": 1916.58
+      },
+      "22": {
+        "orders": 266,
+        "net_revenue": 2612737.63,
+        "profit": 784158.58,
+        "margin_pct": 30.01,
+        "avg_discount_pct": 11.42,
+        "asp": 2122.45
+      },
+      "24": {
+        "orders": 284,
+        "net_revenue": 2752361.27,
+        "profit": 827521.76,
+        "margin_pct": 30.07,
+        "avg_discount_pct": 11.37,
+        "asp": 2212.51
+      },
+      "28": {
+        "orders": 247,
+        "net_revenue": 2193817.65,
+        "profit": 665961.01,
+        "margin_pct": 30.36,
+        "avg_discount_pct": 12.21,
+        "asp": 1846.65
+      },
+      "4": {
+        "orders": 292,
+        "net_revenue": 2531754.53,
+        "profit": 777624.45,
+        "margin_pct": 30.71,
+        "avg_discount_pct": 10.27,
+        "asp": 1973.31
+      },
+      "27": {
+        "orders": 274,
+        "net_revenue": 2267938.88,
+        "profit": 702082.27,
+        "margin_pct": 30.96,
+        "avg_discount_pct": 10.89,
+        "asp": 1912.26
+      },
+      "7": {
+        "orders": 303,
+        "net_revenue": 2717742.57,
+        "profit": 851313.43,
+        "margin_pct": 31.32,
+        "avg_discount_pct": 10.98,
+        "asp": 2080.97
+      },
+      "10": {
+        "orders": 260,
+        "net_revenue": 2466892.5,
+        "profit": 778350.82,
+        "margin_pct": 31.55,
+        "avg_discount_pct": 11.11,
+        "asp": 2023.7
+      }
+    }
+  }
+}

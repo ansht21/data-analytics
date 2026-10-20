@@ -34,6 +34,8 @@ to position premium vehicles, and *which* fleet tier to grow — using 35,000 tr
 pip install pandas numpy matplotlib seaborn jupyter
 # 1. Run the SQL queries in order: 01_data_cleaning.sql → 02_revenue_analysis.sql
 # 2. Generate visuals: jupyter notebook UberTripAnalysis.ipynb
+# 3. Peak-hour pricing analysis (Q9-Q12): python src/surge_pricing_analysis.py
+#    -> outputs/surge_pricing_analysis.json
 ```
 All charts are saved to `image/` by the notebook itself. Power BI report: [`powerbi/UberTrip_Dashboard.pbix`](powerbi/UberTrip_Dashboard.pbix). Excel dashboard: [`excel_analysis/uber_trips_data.xlsx`](excel_analysis/uber_trips_data.xlsx).
 
@@ -53,8 +55,12 @@ Every figure below is reproducible from the committed SQL. Click a query link to
 | **Q6** | Should weekend pricing differ? | Avg fare by weekend flag | **No.** ₹389.34 vs ₹386.05 — a **0.9%** gap, with near-identical trip distance. | Do not build a weekend pricing tier | [§6](sql_queries/02_revenue_analysis.sql) |
 | **Q7** | When does the evening rush actually *start*? | Hour-over-hour trip-volume change (`LAG`) | The query measures trip-volume acceleration separately from revenue, so incentive timing is based on demand rather than fare mix. | Use the highest positive trip-volume jump to schedule incentives; validate operationally | [§9](sql_queries/02_revenue_analysis.sql) |
 | **Q8** | Is there visible within-year variation? | Trips and revenue by month | Monthly results describe one simulated year only; they do not establish recurring annual seasonality. | Use time-of-day for current operations; validate seasonality with multi-year production data | [§8](sql_queries/02_revenue_analysis.sql) |
+| **Q9** | *Is the evening revenue peak actually a surge-pricing effect, or just more trips?* | Fare-per-km by hour, then re-run with airport trips removed | **A genuine price premium exists — and it is not a mix artefact.** Peak hours (8–9 AM, 5–7 PM) earn **₹26.25/km vs ₹19.39/km** in quiet hours (**+6.86**). Airport share is essentially identical in peak and quiet hours (**39.96% vs 39.61%**, +0.35 pp), so mixing cannot explain it. | Price the peak window explicitly — the premium is **~35% per km** and is being captured implicitly. Review the surge multiplier curve against the 5 PM trigger | [`src/surge_pricing_analysis.py`](src/surge_pricing_analysis.py) |
+| **Q10** | *Does removing airport trips kill the peak-hour premium?* | Same analysis on the 21,136 non-airport trips only | **No — the premium gets slightly stronger.** Non-airport peak hours earn **₹27.23/km vs ₹20.02/km** (**+7.21**), so **105% of the headline premium survives** the control. The evening peak is a *market-wide* pricing phenomenon, not an airport artefact. | Treat the peak premium as systemic — a single airport-corridor strategy would leave most of the effect on the table | [`src/surge_pricing_analysis.py`](src/surge_pricing_analysis.py) |
+| **Q11** | *Is the airport corridor premium price or distance?* | Fare and distance split, airport vs non-airport | **Distance, not price.** Airport trips earn **₹535.77 vs ₹289.40** per trip but **24.95 km vs 12.53 km** — and **less per km** (₹21.53 vs ₹23.48). | Don't over-invest in airport pricing; the win is reducing the long empty return leg, not raising the airport fare |
+| **Q12** | *How dependent are we on our drivers, and is rating a quality signal?* | Driver concentration (HHI) + rating/fare-per-km correlation | **No concentration risk, and rating is not a quality signal.** 100 drivers, HHI **100.3** → **99.7 effective drivers**; the top 10 earn only **11.04%** of revenue. Driver rating vs fare-per-km correlates just **+0.081**. And the 21.8% of trips rated below 4.0 have a *slightly lower* fare-per-km (22.59) than the network (22.71) — their higher fares come from longer trips (18.94 km vs 17.45 km). | No driver churn risk to hedge, and do not build a driver-rating incentive scheme on fare assumptions — the low-rating cohort is a *distance* artefact, not a *quality* one |
 
-**Three of these eight are negative findings.** Q5, Q6 and Q8 tell the business *not* to
+**Twelve questions; four are negative findings.** Q5, Q6, Q8 and Q11 tell the business *not* to
 act — which prevents wasted spend. Reporting them is part of the job.
 
 ---
