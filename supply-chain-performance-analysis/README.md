@@ -43,10 +43,99 @@ Every figure is reproducible: run `python src/analytics.py`, or click through to
 | **Q6** | Is our margin eroding over time? | Monthly margin + `LAG()` change | Use the regenerated net-revenue output to monitor monthly margin; the old gross-margin conclusion is retired. | Investigate material month-over-month declines after discounts | [§7](sql_queries/02_sales_analysis.sql) |
 | **Q7** | Where is revenue concentrated? | ABC / cumulative revenue share | **36 of 47 products drive 80.6%** of net revenue. | Prioritise availability for A-items while reviewing the long tail by profit, not revenue alone | [`outputs/abc_classification.csv`](outputs/abc_classification.csv) |
 | **Q8** | Is the business still growing? | Net revenue by year | Net revenue grew from **₹2.78 cr (2019)** to **₹2.81 cr (2020)**, only **+1.2%**. | Plan conservatively and investigate the stalled top line | [§3](sql_queries/02_sales_analysis.sql) |
+| **Q9** | *Sales have been flat for the last 6 months — why?* | Volume vs price vs mix decomposition, H2-2020 vs H2-2019 | **Revenue is flat, not down — but profit fell 4.09%.** Net revenue **+0.50%** (₹1.40 cr) while profit dropped **₹1.69 lakh** and margin fell **134 bps** (29.44% → 28.10%). Orders **+4.94%**, units **+4.84%** — so demand *grew*. The gap is **price**: ASP fell **4.14%** (₹2,054 → ₹1,969), of which **−3.97 pp** is underlying gross price and only **−0.18 pp** is the discount factor. | **Do not launch a demand campaign.** Fix price realisation — review Distributor (−4.17 pp margin) and Online (−1.67 pp) first, and audit pricing at WARE-PUJ1005 (revenue −12.8% on only −4.8% units) | [§1–§2, §4–§5](sql_queries/03_revenue_root_cause.sql) |
+| **Q10** | Is deep discounting the real cause — and is delivery the cause? | Discount-band mix counterfactual + on-time trend | **Discounting is a real but partial cause; delivery is NOT.** Revenue in the 20%+ discount band grew **13.03% → 16.79%** of net revenue (**+3.75 pp**). Reverting to the 2019H2 band mix would have held margin at **28.62%** instead of 28.10% — the mix shift alone cost **52 bps ≈ ₹73,617**. Meanwhile on-time delivery went **49.4% → 52.3% → 48.5%**, and late-order revenue exposure stayed flat at ~50% in every window. | Apply a **product-level profit floor** on deep-discount orders (not a blanket cap — the 5–10% band realises ~33% margin). Treat delivery as a **separate, independent** problem | [§3, §7](sql_queries/03_revenue_root_cause.sql) |
 
 The corrected net-revenue view preserves the systemic-delivery finding, but it also reveals
 that high discounts require targeted margin controls.
 launching a warehouse improvement project that would have fixed nothing.
+
+---
+
+## 🔍 Why Did Revenue Stall? A Root-Cause Decomposition
+
+*This is the section I'd walk a CFO through. Reproduce it with `python src/revenue_root_cause.py` → `outputs/revenue_root_cause.json`.*
+
+**The question as it arrives:** *"Sales have been flat for the last six months — what happened, and what do we do?"*
+
+**The trap in the question:** it assumes sales fell. They didn't.
+
+| H2 comparison (Jul–Dec) | 2019 | 2020 | Change |
+| :--- | ---: | ---: | ---: |
+| Net revenue | ₹1.40 cr | ₹1.41 cr | **+0.50%** |
+| Profit | ₹41.21 lakh | ₹39.53 lakh | **−4.09%** |
+| Margin | 29.44% | 28.10% | **−134 bps** |
+| Orders | 1,499 | 1,573 | **+4.94%** |
+| Units sold | 6,814 | 7,144 | **+4.84%** |
+| ASP (net) | ₹2,054.43 | ₹1,969.28 | **−4.14%** |
+
+> **Verdict:** the business sold **more**, at a **lower price**. Demand is not the problem — pricing is. A demand-generation campaign would have spent money to solve a problem that doesn't exist.
+
+### The decomposition: volume vs price vs mix
+
+```
+net_revenue = orders × units × ASP          ASP = gross_price × (1 − discount)
+
+orders      +4.94%      ← volume
+units       +4.84%      ← volume
+ASP         −4.14%      ← PRICE  ← the entire problem
+                ├─ gross price per unit   −3.97 pp   ← the real driver
+                └─ discount factor        −0.18 pp   ← noise
+```
+
+Discounting looks like the culprit only if you stop at the aggregate. Splitting ASP into its two components shows the **discount policy barely moved (−0.18 pp)** — the price realisation itself fell.
+
+### SKU-level confirmation
+
+Decomposing by SKU (effects reconcile exactly to the ₹69,603 net-revenue delta):
+
+| Effect | Amount | Read |
+| :--- | ---: | :--- |
+| Price per unit | **−₹5,13,505** | the cause |
+| Volume | **+₹5,83,108** | the offset |
+| SKU mix | ₹0 | no assortment change |
+| **Total** | **+₹69,603** | flat revenue |
+
+The product-level picture confirms it: the top decliners fell **34–70%** (SKU 44 −70%, SKU 31 −54%, SKU 16 −53%) *while a comparable set grew 42–216%* (SKU 27 +216%, SKU 24 +214%, SKU 43 +149%). Simultaneous losers and winners is the signature of a **price/assortment change**, not one failed product.
+
+### Where the margin actually leaked
+
+**1. The discount-band mix shift — 52 bps (₹73,617)**
+
+| Discount band | Revenue mix 2019H2 | Revenue mix 2020H2 | Shift | Margin 2020H2 |
+| :--- | ---: | ---: | ---: | ---: |
+| 5–10% | 57.49% | 57.43% | −0.06 pp | ~33% |
+| 10–15% | 16.90% | 15.21% | −1.69 pp | ~28% |
+| 15–20% | 12.57% | 10.58% | −2.00 pp | ~25% |
+| **20%+** | **13.03%** | **16.79%** | **+3.75 pp** | **~12–13%** |
+
+Counterfactual: hold 2020H2's per-band margins but revert to the 2019H2 revenue mix → margin would have been **28.62%**, not 28.10%. The mix shift alone cost **52 bps ≈ ₹73,617** of profit.
+
+**2. Channel margin collapse — every channel lost**
+
+| Channel | Margin 2019H2 | Margin 2020H2 | Δ | Revenue mix 2020H2 |
+| :--- | ---: | ---: | ---: | ---: |
+| Distributor | 31.58% | 27.41% | **−4.17 pp** | 17.95% |
+| Online | 28.30% | 26.63% | **−1.67 pp** | 30.38% |
+| In-Store | 28.91% | 29.40% | +0.49 pp | 38.92% (shrinking) |
+| Wholesale | 31.05% | 28.58% | −2.47 pp | 12.74% (grew +17.2%) |
+
+**3. Two warehouses, and it wasn't demand**
+
+`WARE-PUJ1005` fell **12.8%** (−₹3,47,347) on units down only **4.8%** — ASP fell **8.4%** and average discount rose **11.58% → 12.59%**. That is a commercial problem, not an operational one. `WARE-UHY1004` fell 6.2%. Meanwhile `WARE-NMK1003` *grew* 7.2% with a **lower** average discount (11.68% → 11.15%).
+
+### What it is *not*
+
+**Not delivery.** On-time delivery went **49.4% → 52.3% → 48.5%** across the three windows, average delivery days **5.53 → 5.40 → 5.63**, and late-order revenue exposure stayed flat at **~50% of net revenue** in every window. The H2-2020 dip is real but small, and it mirrors the same network-wide pattern already identified in **Q2** — it is not a new, localised failure. Delivery and pricing are **two independent problems** that need two separate fixes.
+
+### Recommendations
+
+1. **Do not spend on demand generation.** Volume grew 4.94%; a demand campaign treats a symptom that isn't there.
+2. **Lead with Distributor and Online pricing.** They carry 48% of revenue and lost 4.17 pp and 1.67 pp of margin respectively.
+3. **Audit pricing and discount approvals at PUJ1005 and UHY1004.** Units barely moved; price did all the damage.
+4. **Apply a product-level profit floor, not a blanket discount cap.** The 5–10% band realises ~33% margin and is healthy; the 20%+ band realises ~12–13% and is where the leak is.
+5. **Fix the assortment/pricing table, not individual SKUs.** Winners and losers appeared simultaneously — a portfolio pricing review is the right instrument, delisting is not.
+6. **Keep delivery on its own track.** It is the largest single exposure (₹3.63 cr of net revenue rides on late orders) but it did **not** cause the revenue plateau.
 
 ---
 
@@ -148,6 +237,7 @@ A Power BI report built on the cleaned CSV, with DAX measures and a 3-page layou
 pip install -r requirements.txt
 python src/data_cleaning.py # -> data/Cleaned_Supplychain_Data.csv
 python src/analytics.py # -> outputs/kpi_summary.json, abc_classification.csv, warehouse_performance.csv
+python src/revenue_root_cause.py # -> outputs/revenue_root_cause.json  (Q9 / Q10 root-cause decomposition)
 python src/build_excel_dashboard.py # -> excel_analysis/Supplychain_Dashboard.xlsx
 ```
 
