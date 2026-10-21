@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated artifacts
+reports/*.xlsx
+logs/
+data/processed/*.parquet
+data/archive/*
+
+# Secrets / local env
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep directory placeholders
+!reports/.gitkeep
+!data/processed/.gitkeep
+!logs/.gitkeep

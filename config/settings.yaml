@@ -1,0 +1,55 @@
+data:
+  raw_path: "data/raw/Amazon_Sale_Report.csv"
+  processed_path: "data/processed/cleaned_transactions.parquet"
+  archive_dir: "data/archive"
+
+cleaning:
+  drop_columns: ["index", "New", "PendingS"]
+  date_column: "Date"
+  amount_column: "Amount"
+  default_currency: "INR"
+  unknown_state: "UNKNOWN"
+
+fiscal:
+  week_column: "fiscal_week"
+  year_column: "fiscal_year"
+  label_column: "week_label"
+
+buckets:
+  "Net Realized":
+    - "Shipped - Delivered to Buyer"
+  "Cancellation Leakage":
+    - "Cancelled"
+  "Return Leakage":
+    - "Shipped - Returned to Seller"
+    - "Shipped - Returning to Seller"
+    - "Shipped - Rejected by Buyer"
+  "Loss Leakage":
+    - "Shipped - Lost in Transit"
+    - "Shipped - Damaged"
+  "In-Transit":
+    - "Shipped"
+    - "Shipped - Picked Up"
+    - "Shipped - Out for Delivery"
+    - "Shipping"
+  "Pending":
+    - "Pending"
+    - "Pending - Waiting for Pick Up"
+
+thresholds:
+  # Audit target applied to the SETTLED base (Net Realized + true leakage),
+  # not to gross invoiced - gross-based clearance is dominated by In-Transit
+  # settlement lag and would flag every single week.
+  settled_clearance_critical_below: 70.0
+  leakage_warning_above: 35.0
+  cancellation_warning_above: 15.0
+  wow_drop_alert_below: -10.0
+  min_days_for_full_week: 7
+
+reports:
+  output_dir: "reports"
+  workbook_prefix: "Revenue_Reconciliation_Dashboard"
+
+logging:
+  level: "INFO"
+  file: "logs/pipeline.log"
