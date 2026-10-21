@@ -110,13 +110,15 @@ def _kpi(ax, x, y, w, h, label, value, subtext, delta, delta_up, accent):
     ax.text(x + 0.012, y - 0.062, value, color=accent, fontsize=19, weight="bold",
             transform=ax.transAxes, va="center", ha="left", zorder=3)
 
-    bw = 0.050
+    bw = 0.060
     bcol = KPI_TEAL if delta_up else KPI_CORAL
     arrow = "\u25b2" if delta_up else "\u25bc"
     _rect(ax, x + 0.012, y - 0.090, bw, 0.017, "#25252A", edge=bcol, lw=0.7, z=3)
-    ax.text(x + 0.012 + bw / 2, y - 0.0815, f"{arrow} {delta}", color=bcol, fontsize=6.8,
+    # "WoW" is spelled out: without it a -43% chip on Net Realized reads as
+    # "the business collapsed" rather than "one flagged week vs the prior one".
+    ax.text(x + 0.012 + bw / 2, y - 0.0815, f"{arrow} {delta} WoW", color=bcol, fontsize=6.4,
             weight="bold", transform=ax.transAxes, va="center", ha="center", zorder=4)
-    ax.text(x + 0.012 + bw + 0.006, y - 0.0815, subtext, color=TEXT_MUTED, fontsize=6.8,
+    ax.text(x + 0.012 + bw + 0.005, y - 0.0815, subtext, color=TEXT_MUTED, fontsize=6.4,
             transform=ax.transAxes, va="center", ha="left", zorder=4)
 
 
@@ -350,12 +352,11 @@ def main():
         ("Gross Invoiced Revenue", f"\u20b9{kpi.gross_revenue / 1e7:,.2f} Cr",
          f"{kpi.total_lines:,} lines", f"{abs(d_gross):.1f}%", d_gross >= 0, KPI_SLATE),
         ("Net Realized Cash", f"\u20b9{kpi.net_realized / 1e7:,.2f} Cr",
-         f"{kpi.settled_clearance_rate:.1f}% of settled base", f"{abs(d_net):.1f}%", d_net >= 0, KPI_TEAL),
+         f"{kpi.settled_clearance_rate:.1f}% settled", f"{abs(d_net):.1f}%", d_net >= 0, KPI_TEAL),
         ("Total Revenue Leakage", f"\u20b9{kpi.total_leakage / 1e7:,.2f} Cr",
          f"\u20b9{kpi.cancellation_leakage / 1e5:,.1f}L cancelled", f"{abs(d_leak):.1f}%", d_leak <= 0, KPI_CORAL),
         ("Settled Clearance Rate", f"{kpi.settled_clearance_rate:.1f}%",
-         f"target 70% \u00b7 leakage {100 - kpi.settled_clearance_rate:.1f}%",
-         f"{abs(d_clr):.1f}pp", d_clr >= 0, KPI_TEAL if clearance_ok else KPI_AMBER),
+         "target 70%", f"{abs(d_clr):.1f}pp", d_clr >= 0, KPI_TEAL if clearance_ok else KPI_AMBER),
         ("Avg Order Value (AOV)", f"\u20b9{kpi.avg_order_value:,.0f}",
          f"peak \u20b9{weekly['avg_order_value'].max():,.0f}", f"{abs(d_aov):.1f}%", d_aov >= 0, KPI_INDIGO),
     ]
