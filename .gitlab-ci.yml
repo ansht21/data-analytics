@@ -33,7 +33,6 @@ engine-test:
     - cd weekly-revenue-reconciliation-engine
     - pip install --quiet -r requirements.txt -r requirements-dev.txt
   script:
-    - cd weekly-revenue-reconciliation-engine
     - pytest --cov=src --cov-report=term-missing --cov-fail-under=80
   coverage: '/TOTAL.*?(\d+\.\d+)\%$/'
   rules:
@@ -50,7 +49,6 @@ contract-agent-test:
     - cd pipeline-contract-agent
     - pip install --quiet -r requirements.txt
   script:
-    - cd pipeline-contract-agent
     - python fixtures/make_fixtures.py
     - pytest -q
   rules:
