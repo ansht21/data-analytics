@@ -39,7 +39,7 @@ I built a deterministic reconciliation engine (no ML — auditable SUM() math):
 
 Outputs: 3-tab Excel workbook (live formulas + native charts) + 4-page Streamlit dashboard. One command: python run_pipeline.py
 
-Repo: https://gitlab.com/ansht_121/data-analytics/-/tree/main/weekly-revenue-reconciliation-engine
+Repo: https://gitlab.com/ansht_121/weekly-revenue-reconciliation-engine
 
 #DataAnalytics #Finance #Python #Excel #OpenToWork
 ---

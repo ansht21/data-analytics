@@ -2,7 +2,9 @@
 
 <p align="center">
   <b>Production-grade Amazon Marketplace financial pipeline</b><br/>
-  <sub>Part of <code>data-analytics</code> portfolio repo · 128,976 transactions · ₹7.86 Cr Gross · W13–W26 FY22</sub>
+  <sub>Part of <code>data-analytics</code> portfolio repo · 128,976 transactions · ₹7.86 Cr Gross · W13–W26 FY22</sub><br/>
+  <sub>Also published standalone at
+  <a href="https://gitlab.com/ansht_121/weekly-revenue-reconciliation-engine">gitlab.com/ansht_121/weekly-revenue-reconciliation-engine</a></sub>
 </p>
 
 <p align="center">
