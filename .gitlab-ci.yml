@@ -24,7 +24,7 @@ engine-lint:
     - pip install --quiet ruff mypy pandas openpyxl pyarrow pyyaml
   script:
     - cd weekly-revenue-reconciliation-engine
-    - ruff check src tests run_pipeline.py streamlit_app
+    - ruff check src tests scripts run_pipeline.py streamlit_app
     - mypy src
 
 engine-test:

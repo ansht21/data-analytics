@@ -2,6 +2,7 @@
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -60,7 +61,7 @@ x = list(range(7))
 # Gross bar 0..gross, steps, net bar 0..net
 bar_bottoms = [0] + bottoms + [0]
 bar_tops = [gross] + tops + [net]
-bar_heights = [t - b for b, t in zip(bar_bottoms, bar_tops)]
+bar_heights = [t - b for b, t in zip(bar_bottoms, bar_tops, strict=False)]
 bar_colors = [NAVY] + step_colors + [TEAL]
 
 bars = ax.bar(x, bar_heights, bottom=bar_bottoms, color=bar_colors,
@@ -77,7 +78,7 @@ for i in range(6):
 # Labels: value on top of each bar; tiny Loss bar gets offset label with arrow
 offset = gross * 0.022
 all_vals = [gross] + deltas + [net]
-for i, (b, h, v) in enumerate(zip(bar_bottoms, bar_heights, all_vals)):
+for i, (b, h, v) in enumerate(zip(bar_bottoms, bar_heights, all_vals, strict=False)):
     top = b + h
     if labels[i].startswith("Loss"):
         ax.annotate(fmt(v), xy=(i, top), xytext=(i + 0.9, top + gross * 0.06),

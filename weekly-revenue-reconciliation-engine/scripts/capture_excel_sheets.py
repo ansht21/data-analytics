@@ -1,8 +1,10 @@
 """Export high-resolution images of Excel sheets using Excel COM interface."""
 from __future__ import annotations
+
 import os
 import time
 from pathlib import Path
+
 import win32com.client
 from PIL import ImageGrab
 

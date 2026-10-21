@@ -70,7 +70,7 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
 def weekly_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Aggregate gross/net/leakage KPIs per fiscal week."""
     rows = []
-    for (lbl, yr, wk), g in df.groupby(["week_label", "fiscal_year", "fiscal_week"]):
+    for (lbl, _yr, _wk), g in df.groupby(["week_label", "fiscal_year", "fiscal_week"]):
         gross = float(g["Amount"].sum())
         net = float(g.loc[g["financial_bucket"] == "Net Realized", "Amount"].sum())
         canc = float(g.loc[g["financial_bucket"] == "Cancellation Leakage", "Amount"].sum())
