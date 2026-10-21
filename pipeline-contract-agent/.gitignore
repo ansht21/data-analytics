@@ -13,5 +13,7 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+# generated SQLite warehouse (recreated on every run)
+warehouse/*.db
 incidents/*
 !incidents/sample_bad_money/

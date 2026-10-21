@@ -95,7 +95,7 @@ def load_contract(contract_path: str | Path) -> dict:
 
 def validate_batch(csv_path, contract_path=None) -> ValidationResult:
     """Validate one raw batch CSV. Never raises on bad data."""
-    from . import CONTRACT_PATH as _default
+    from .paths import CONTRACT_PATH as _default
 
     contract_path = Path(contract_path) if contract_path else _default
     contract = load_contract(contract_path)

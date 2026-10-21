@@ -7,7 +7,7 @@ from src import agent_investigate, trigger
 from src.contract import contract_info, load_data_contract
 from src.pipeline import run
 from src.validate import validate_batch
-from src import CONTRACT_PATH
+from src.paths import CONTRACT_PATH
 
 FIX = Path(__file__).resolve().parents[1] / "fixtures"
 

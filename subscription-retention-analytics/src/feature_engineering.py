@@ -1,7 +1,7 @@
 """Feature engineering — identical definitions to Churn_Prediction_Analysis.ipynb
 (cells 3) so existing model results remain comparable, but refactored into a
 fit/transform class so the same statistics (monthly-charge average) are learned
-on TRAINING data only and reused everywhere (train, test, app, SHAP, copilot).
+on TRAINING data only and reused everywhere (train, test, app, SHAP, reporting).
 
 Leakage policy (unchanged from the existing notebook):
   - raw TotalCharges is excluded: it approximates tenure x MonthlyCharges

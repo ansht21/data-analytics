@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src import agent_investigate, open_fix_mr, report, trigger, warehouse
 from src.contract import contract_info
-from src import CONTRACT_PATH
+from src.paths import CONTRACT_PATH
 from src.validate import validate_batch
 
 

@@ -2,7 +2,7 @@
 
 <p align="center">
   <b>Production-grade Amazon Marketplace financial pipeline</b><br/>
-  <sub>Repository: <code>weekly-revenue-reconciliation-engine</code> · 128,976 transactions · ₹7.86 Cr Gross · W13–W26 FY22</sub>
+  <sub>Part of <code>data-analytics</code> portfolio repo · 128,976 transactions · ₹7.86 Cr Gross · W13–W26 FY22</sub>
 </p>
 
 <p align="center">
@@ -242,8 +242,10 @@ python run_pipeline.py --config my.yaml     # alternate settings file
   engine math, fiscal calendar, metrics layer, workbook builder + a full
   end-to-end integration test (synthetic CSV → clean → KPIs → workbook).
 - **Ruff lint:** all checks passed · **MyPy:** typed end-to-end.
-- **`.gitlab-ci.yml`** — 3 stages: `lint` (Ruff + MyPy) → `test`
-  (pytest, coverage gate **≥ 80 %**) → `build` (Docker image + smoke run).
+- **CI** — GitHub Actions workflow `weekly-revenue-reconciliation-engine.yml`
+  (`lint` → `test` with coverage gate **≥ 80 %** → `build`), plus the
+  repo-root `.gitlab-ci.yml` which runs the same lint + test stages for
+  this project alongside the Pipeline Contract Agent.
 
 ### Docker
 
@@ -284,7 +286,7 @@ weekly-revenue-reconciliation-engine/
 │                            render_executive_dashboard_cockpit.py
 ├── reports/                 generated workbooks (timestamped)
 ├── run_pipeline.py          CLI entry point
-├── Makefile · Dockerfile · docker-compose.yml · .gitlab-ci.yml
+├── Makefile · Dockerfile · docker-compose.yml
 └── pyproject.toml · requirements.txt · requirements-dev.txt · .env.example
 ```
 
@@ -292,13 +294,18 @@ weekly-revenue-reconciliation-engine/
 
 ## 🚧 Known Gaps (open, tracked)
 
-Honest status of this repo — nothing here is broken, but it is not finished:
+Honest status of this project — nothing here is broken, but it is not finished:
 
 | # | Gap | Where | How to close |
 |:--|:---|:---|:---|
-| 1 | Excel screenshots `docs/images/06_…png` / `07_…png` still show the **previous** build | `docs/images/` | `python run_pipeline.py` then `python scripts/capture_excel_sheets.py` (needs Excel + `pywin32`; the capture range was already widened to `A1:R22` for the 4 new Trends columns) |
-| 2 | GitLab project **description and topics are empty** | project settings page | Set via https://gitlab.com/ansht_121/weekly-revenue-reconciliation-engine/edit — the stored API token returns 401 (it still works for `git push`), so it must be done in the web UI |
-| 3 | `.gitlab-ci.yml` has not yet had its **first green run** on GitLab | CI | Trigger a push and check the pipeline badge |
+| 1 | GitLab project **description and topics are empty** | project settings page | Set via https://gitlab.com/ansht_121/data-analytics/edit — the stored API token returns 401 (it still works for `git push`), so it must be done in the web UI |
+| 2 | This project has no **first green run** on the parent repo's GitLab pipeline yet | CI | Push to `data-analytics` and check the pipeline badge |
+
+> ✅ **Closed since the last update:** the stale Excel screenshots
+> (`docs/images/06_…png` / `07_…png`) were regenerated against the current
+> build — `python run_pipeline.py` then `python scripts/capture_excel_sheets.py`
+> (needs Excel + `pywin32`; the capture range was widened to `A1:R22` for the
+> 4 new Trends columns).
 
 > **Data quirk (already verified against the raw CSV, and now documented in
 > [`docs/data_dictionary.md`](docs/data_dictionary.md)):** in this Kaggle

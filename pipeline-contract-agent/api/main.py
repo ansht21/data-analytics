@@ -28,7 +28,7 @@ def health():
 @app.get("/contract")
 def contract():
     from src.validate import load_contract
-    from src import CONTRACT_PATH
+    from src.paths import CONTRACT_PATH
     return load_contract(CONTRACT_PATH)
 
 
@@ -63,7 +63,7 @@ async def ingest(file: UploadFile = File(...), auto_investigate: bool = True):
 
 @app.get("/incidents")
 def incidents():
-    from src import INCIDENTS_DIR
+    from src.paths import INCIDENTS_DIR
     if not INCIDENTS_DIR.exists():
         return {"incidents": []}
     return {"incidents": sorted(p.name for p in INCIDENTS_DIR.iterdir() if p.is_dir())}

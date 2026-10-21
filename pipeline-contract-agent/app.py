@@ -14,9 +14,9 @@ import streamlit as st
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from src import INCIDENTS_DIR
+from src.paths import INCIDENTS_DIR
 from src.contract import contract_info
-from src import CONTRACT_PATH
+from src.paths import CONTRACT_PATH
 from src.pipeline import run as run_pipeline
 
 st.set_page_config(page_title="Pipeline Contract Agent", page_icon="🛡️", layout="wide")

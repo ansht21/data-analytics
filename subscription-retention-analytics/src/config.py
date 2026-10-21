@@ -37,7 +37,7 @@ ENGINEERED_COLS = ["charge_ratio", "tenure_x_monthly", "monthly_above_avg"]
 # tenure x MonthlyCharges (a near-duplicate of tenure). It is redrafted into the
 # engineered features above. See README "Leakage policy".
 
-# Attributes the GenAI copilot is allowed to see (dataset whitelist).
+# Attributes the downstream consumers are allowed to see (dataset whitelist).
 ALLOWED_ATTRIBUTES = CATEGORICAL_COLS + NUMERIC_COLS + ENGINEERED_COLS
 
 # --- risk levels (probability bands, documented in README) ------------------

@@ -1,11 +1,10 @@
 <div align="center">
 
 # Data Analytics Portfolio
-### Turning Raw Data into Business Strategy — Now Askable in Plain English
+### Turning Raw Data into Business Strategy
 
-[![Live Copilot](https://img.shields.io/badge/🤖_Try_the_Copilot-Streamlit_App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](./analytics-intelligence-copilot/)
-[![Tests](https://img.shields.io/badge/Tests-18_Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](./analytics-intelligence-copilot/tests/)
-[![Records](https://img.shields.io/badge/Records-50,034%20verified-00C7B7?style=for-the-badge&logo=database&logoColor=white)](#portfolio-at-a-glance)
+[![Tests](https://img.shields.io/badge/Tests-50_Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](#featured-analytical-projects)
+[![Records](https://img.shields.io/badge/Records-179K%20verified-00C7B7?style=for-the-badge&logo=database&logoColor=white)](#portfolio-at-a-glance)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
@@ -16,7 +15,7 @@
 
 </div>
 
-> **Start here → [🤖 Analytics Intelligence Copilot](./analytics-intelligence-copilot/)** — pick a dataset, tap a one-click insight chip, or ask in chat. Every answer shows its finding, why it matters, what to do, a chart, and the exact pandas code. Recruiters: try the **Warehouse Trap Check** first — it catches a ₹-crore mistake in one click.
+> **Start here → [💰 Weekly Revenue Reconciliation Engine](./weekly-revenue-reconciliation-engine/)** — 128,976 Amazon marketplace transactions reconciled week over week: ₹7.86 cr gross vs ₹1.86 cr actually realized, with ₹82 L+ of cancellation and return leakage isolated and audited. Deterministic engine (no ML), 3-tab Excel + 4-page Streamlit cockpit, **28/28 tests pass**.
 >
 > **Data-engineering capstone → [🛡️ Pipeline Contract Agent](./pipeline-contract-agent/)** — contract-first guard for the supply-chain log. The contract enforces, the agent investigates, the human approves. Bad batch → quarantine → incident report → `fix.patch` + MR. **22/22 tests pass**, works fully offline.
 
@@ -24,11 +23,10 @@
 
 **I answer business questions with data — including the ones where the answer is "don't do it."**
 
-Three end-to-end analytics projects covering **50,034 records**: a supply-chain P&L and
-fulfilment audit, a ride-demand and pricing analysis, and subscription-retention analytics. Every figure below is
+Four end-to-end analytics projects covering **179,010 records**: a supply-chain P&L and
+fulfilment audit, a ride-demand and pricing analysis, subscription-retention analytics, and an
+Amazon marketplace weekly revenue reconciliation and leakage audit. Every figure below is
 reproducible from the committed SQL and Python in this repository.
-
-Plus the interactive capstone — **[🤖 Analytics Intelligence Copilot](./analytics-intelligence-copilot/)** — that puts all three datasets behind one chat + 9 one-click insight chips. Ask in English, get **Finding → Why it matters → What to do** with a Plotly chart and the exact pandas code shown. **18/18 regression tests pass** — every chip figure asserted against the committed SQL. Works fully offline; live AI chat unlocks with a Groq key.
 
 As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating complex datasets into clean, reliable, and actionable business insights that drive real decisions.
 
@@ -41,11 +39,10 @@ As a **B.Sc IT graduate** and **Data Analyst**, I specialize in translating comp
 | **Supply Chain Performance** | 7,991 orders · 47 SKUs | Python · SQL · Excel | ₹7.30 cr net revenue / ₹2.12 cr profit analysed; late delivery proven systemic, not warehouse-specific |
 | **Uber Trip Demand** | 35,000 trips | MySQL · Python · Power BI | 5–7 PM carries 31.2% of demand; airport trips are 39.6% of volume but 54.8% of revenue |
 | **Subscription Retention** | 7,043 customers (7,032 analysed after removing 11 blank-`TotalCharges` rows) | Python · SQL · Excel | 26.6% churn; month-to-month + fiber = 72% of revenue at risk |
-| **[🤖 Analytics Copilot](./analytics-intelligence-copilot/)** *(interactive capstone — start here)* | 50,034 records across all 3 | Streamlit · Pandas · Plotly · LangGraph · Groq | 9 one-click insight chips + chat + executive-brief generator — glass-box pandas logic, 18/18 tests pass, works offline |
-| **[🛡️ Pipeline Contract Agent](./pipeline-contract-agent/)** *(data-engineering layer)* | Contract v1.0.0 · 8 rule families | Python · FastAPI · LangGraph · Groq · Docker | Contract-first validator quarantines bad batches; AI agent investigates and proposes fixes via MR — deterministic gates, human approves, 22 tests green |
+| **[💰 Weekly Revenue Reconciliation Engine](./weekly-revenue-reconciliation-engine/)** *(finance capstone — start here)* | 128,976 orders · 14 fiscal weeks | Python · Pandas · openpyxl · Streamlit | ₹7.86 cr gross vs ₹1.86 cr net realized (23.7% clearance); ₹82 L+ cancellation/return leakage isolated, Excel + cockpit dashboard, 28/28 tests pass |
 | **[🛡️ Pipeline Contract Agent](./pipeline-contract-agent/)** *(data-engineering capstone)* | 7,991 supply-chain orders + drift batches | Contract YAML · Pandas · FastAPI · Streamlit · Groq ReAct | Deterministic gate → quarantine → agent report → `fix.patch` + MR — contract enforces, agent investigates, human approves, 22/22 tests pass |
 
-> **60-second recruiter tour (analyst):** open the [Copilot](./analytics-intelligence-copilot/) → Supply Chain → **Warehouse Trap Check** (catches the 31.9%-vs-0.08% volume illusion) → **Generate Executive Brief** → switch to Uber → **Peak Surge Detection**.
+> **60-second recruiter tour (analyst):** open the [Revenue Engine](./weekly-revenue-reconciliation-engine/) → **Executive Summary** (₹7.86 cr gross → ₹1.86 cr net) → **Weekly Trends** (14 fiscal weeks) → **Leakage Analysis** (₹82 L+ cancellation + return) → **Exception Audit** (every row traceable).
 >
 > **60-second tour (data engineer):** open the [Contract Agent](./pipeline-contract-agent/) → run `fixtures/bad_money.csv --auto-investigate` → show `validation.json` (`non_numeric_money [high]`) → `incident_report.md` (rule → cause → impact → fix) → `fix.patch` (per-rule guardrail, human approves).
 
@@ -71,7 +68,7 @@ In an enterprise setting, analytics projects do not begin with a Jupyter noteboo
 | **"Is churn a price problem — do customers leave because they pay more?"** | Binned customers into monthly-charges quartiles and compared churn rates. | **No — and the relationship is not even monotonic.** Churn by quartile is **11.32% → 24.59% → 37.55% → 32.88%**. The *most expensive* quartile churns **4.67 pp less** than the third. | **Rejected blanket discounting to retain customers** — it would have added cost without saving revenue. Redirected to contract structure and onboarding. |
 | **"Is paperless billing a real churn driver, or just a proxy for contract and payment method?"** | Compared churn with and without paperless billing **within every contract × tenure-band × payment-method cell**, so all three confounders are held constant at once. | **Real — it survives a triple control.** Uncontrolled, paperless churns **33.59% vs 16.38%**, but paperless is also over-represented on month-to-month plans and on electronic-check accounts. Holding contract, *tenure and payment method* constant at once, paperless still churns worse in **31 of 38 cells** (mean lift **+8.30 pp**; month-to-month / 0–12 mo / electronic check: **67.8% vs 50.2%**). The effect holds *within* every single payment method. | **Reframed paperless billing as a product defect to fix** — first-payment failures, card expiry, refund friction — rather than a segment to target. A cheap, high-leverage fix the churn-rate table would have hidden. |
 
-**Notice the pattern:** Several of these analyses concluded with **"don't act" or "stop the planned initiative."** In the real world, knowing what *not* to fund saves more capital than launching unvalidated projects. Every finding is explorable in one click inside the [Copilot](./analytics-intelligence-copilot/).
+**Notice the pattern:** Several of these analyses concluded with **"don't act" or "stop the planned initiative."** In the real world, knowing what *not* to fund saves more capital than launching unvalidated projects. Every finding here is reproducible from the committed SQL, Python and Excel in this repository.
 
 ---
 
@@ -87,13 +84,13 @@ In an enterprise setting, analytics projects do not begin with a Jupyter noteboo
 | **SQL Techniques** | CTEs, `LAG()`, `RANK()`, `ROW_NUMBER()`, running `SUM() OVER`, `STDDEV_SAMP` | Cohort Banding, Pareto Analysis, Deduplication Pipelines, Trend Detection |
 | **AI Engineering** | Streamlit, LangGraph ReAct agents, Groq LLMs, Plotly | Deterministic-first design, glass-box validation, offline fallbacks |
 
-> Skill proof: the [Copilot](./analytics-intelligence-copilot/) uses all three layers — deterministic pandas for numbers (never hallucinated), Plotly for charts, and an optional LLM only for conversation.
+> Skill proof: the [Revenue Engine](./weekly-revenue-reconciliation-engine/) uses all three layers — deterministic pandas for every number (never hallucinated), Plotly for charts, and an optional LLM only for narrative enrichment.
 
 ---
 
 ## Featured Analytical Projects
 
-> 🖱️ **Don't want to read? [Run the Copilot](./analytics-intelligence-copilot/)** — all four projects below are clickable inside it.
+> 🖱️ **Don't want to read? [Run the Revenue Engine](./weekly-revenue-reconciliation-engine/)** — the finance capstone below has a 4-page interactive cockpit over 128,976 real orders.
 
 ### 1. [Inventory & Logistics Performance Analytics](./supply-chain-performance-analysis/)
 
@@ -144,21 +141,21 @@ In an enterprise setting, analytics projects do not begin with a Jupyter noteboo
   * **Corrected three claims with stronger evidence.** Seniors are *not* immaterial (41.68% vs 23.65%, surviving every control), dependents churn *less* (15.53% vs 31.28%), and the old "negative findings" were under-tested — each is now tested against its confounders.
 
 
-### 4. [Analytics Intelligence Copilot](./analytics-intelligence-copilot/)
+### 4. [Weekly Revenue Reconciliation Engine](./weekly-revenue-reconciliation-engine/)
 
-*The interactive capstone over all three datasets (50,034 records): pick a dataset, tap a
-one-click insight chip, or ask anything in chat. Every answer ships as
-**Finding → Business explanation → Suggested decision**, with an interactive Plotly chart
-and an expandable **"🔍 Inspect logic & query"** panel showing the exact pandas code and
-runtime — 0% hallucination by construction for chips.*
-* **Business Challenge:** Recruiters and executives won't run SQL — but they will click one button. The agent makes every headline finding in this repo explorable in 60 seconds.
-* **Tech Stack:** Streamlit, Pandas (deterministic analytics), Plotly, LangGraph ReAct agent + Groq LLM (optional live chat; full offline insight mode without a key).
+*The finance capstone over 128,976 real Amazon marketplace transactions: how much of the
+money actually reached us, week over week, and exactly where the rest leaked.*
+* **Business Challenge:** "We invoiced ₹7.86 cr last quarter — but cash in the bank says ₹1.86 cr. Where did the other ₹6 cr go?" Most marketplaces cannot answer this weekly, so leakage stays invisible until year-end.
+* **Tech Stack:** Python (Pandas, PyArrow), YAML config, openpyxl (3-tab Excel with live formulas), Plotly + Streamlit (4-page cockpit), Docker, GitLab CI + GitHub Actions, Ruff + MyPy + Pytest.
 * **Key Achievements:**
-  * **9 quick-insight chips** whose figures are regression-tested against the committed SQL/outputs (e.g. SQL Q8 margin bands, `warehouse_performance.csv`, `churn_segment_revenue.csv`) — `pytest` → **18 passed** (`$env:PYTHONPATH='.'; python -m pytest tests/ -q`).
-  * **Analytical-trap guardrail:** the Warehouse Trap chip names the volume illusion (31.9% of late orders, 0.08% variance) and recommends *not* funding a per-site fix.
-  * **Executive-brief generator:** one button → KPI cards, risks, decisions + Markdown download.
-  * **Glass-box transparency:** no black-box numbers — pandas snippet + ms runtime under every card.
-* **Try it:** `cd analytics-intelligence-copilot; $env:PYTHONPATH='.'; python -m streamlit run app.py` → `http://localhost:8501`
+  * **Deterministic rules engine, no ML:** 13 order states classified into Net Realized / Cancellation / Return / Loss / In-Transit / Pending across 14 fiscal weeks — every number is auditable `SUM()` math, so a reviewer can trace it back to a row.
+  * **Separated true leakage from settlement lag:** ₹82 L+ of genuine cancellation + return leakage (18,334 cancelled orders = ₹69.18 L) is isolated from ₹5.10 Cr that is merely In-Transit — *not* loss. A ₹7.86 cr gross vs ₹1.86 cr net realized split (23.7% clearance) is the headline.
+  * **Anomaly detection that fires on business rules:** settled clearance < 70% → CRITICAL, leakage share > 35% → WARNING, week-over-week net drop > 10% → ALERT (12 triggers raised across the period).
+  * **Exec-ready deliverables:** a 3-tab Excel workbook (Executive Dashboard, Weekly Trends, Exception Audit) with live formulas and native charts, plus a 4-page Streamlit cockpit — both from one command.
+  * **Exception audit trail:** every leakage row is exported to a reviewable `exception_audit.csv` so finance can act on the specific order, not just the aggregate.
+  * **28 offline-safe tests** (`pytest`) + clean Ruff and MyPy passes.
+* **Try it:** `cd weekly-revenue-reconciliation-engine; python run_pipeline.py` → Excel workbook + exception audit; `streamlit run streamlit_app/Dashboard.py` → the cockpit.
+
 
 ### 5. [Pipeline Contract Agent](./pipeline-contract-agent/)
 
@@ -211,13 +208,16 @@ data-analytics/
 │ ├── incidents/ # quarantine audit trail (batch + validation + report + patch)
 │ └── README.md # 60-second demo + design decisions
 │
-├── analytics-intelligence-copilot/ # ⭐ START HERE — interactive AI copilot over all 3 datasets
-│ ├── app.py # Streamlit: dataset switcher, insight chips, brief, chat
-│ ├── src/ # datasets, analytics, brief, agent (LangGraph + offline mode)
-│ ├── tests/ # 18 regression tests vs committed SQL/outputs
-│ ├── requirements.txt # streamlit, pandas, plotly, langchain, langgraph
-│ ├── FUTURE_IDEAS.md # 🔒 saved post-validation roadmap (locked)
-│ └── README.md # Agent walkthrough + validation table
+├── weekly-revenue-reconciliation-engine/ # 💰 finance capstone — weekly reconciliation + leakage audit
+│   ├── src/ # reconciliation engine (classifier, metrics, variance, anomalies)
+│   ├── streamlit_app/ # 4-page cockpit (exec summary, trends, leakage, exceptions)
+│   ├── config/ # settings.yaml (thresholds + bucket map) + logging.yaml
+│   ├── data/ # raw + processed datasets (git-tracked)
+│   ├── docs/ # architecture, data dictionary, deployment guide, screenshots
+│   ├── tests/ # 28 green (loader, engine, metrics, classifier, Excel)
+│   ├── scripts/ # Excel capture + waterfall + cockpit renderers
+│   └── README.md # findings, known gaps, how to run
+│   
 │
 ├── supply-chain-performance-analysis/ # Operational efficiency & inventory dashboards
 │ ├── src/ # Reproducible Python pipeline (clean, analytics, excel)

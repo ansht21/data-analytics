@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import INCIDENTS_DIR
+from .paths import INCIDENTS_DIR
 from .validate import ValidationResult
 
 
