@@ -7,7 +7,7 @@ variables:
   PYTHON_VERSION: "3.12"
 
 default:
-  image: python:$PYTHON_VERSION-slim
+  image: python:3.12-slim
   before_script:
     - pip install --quiet --upgrade pip
 

@@ -16,6 +16,8 @@
   <img src="https://img.shields.io/badge/pytest-28%2F28%20passing-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="pytest" />
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   <img src="https://img.shields.io/badge/GitLab%20CI-lint%C2%B7test%C2%B7build-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white" alt="GitLab CI" />
+[![CI](https://github.com/ansht21/data-analytics/actions/workflows/weekly-revenue-reconciliation-engine.yml/badge.svg)](https://github.com/ansht21/data-analytics/actions/workflows/weekly-revenue-reconciliation-engine.yml)
+
   <img src="https://img.shields.io/badge/Engine-Deterministic%20Rules%20(No%20ML)-0A7A42?style=for-the-badge" alt="Deterministic rules engine, no ML" />
 </p>
 
