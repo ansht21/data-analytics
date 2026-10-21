@@ -1,0 +1,37 @@
+[project]
+name = "weekly-revenue-reconciliation-engine"
+version = "1.0.0"
+description = "Production-grade e-commerce weekly revenue reconciliation engine (Gross vs Net, leakage, WoW variance, Excel + Streamlit reporting)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Ansh Thakur" }]
+dependencies = [
+    "pandas>=2.2",
+    "pyarrow>=15",
+    "openpyxl>=3.1",
+    "streamlit>=1.35",
+    "plotly>=5.20",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.5", "mypy>=1.10"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
