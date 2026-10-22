@@ -28,6 +28,7 @@ from streamlit_app.components.charts import (  # noqa: E402
     waterfall_gross_net,
     weekly_combo,
 )
+from streamlit_app.components.cockpit import panel  # noqa: E402
 
 st.set_page_config(page_title="Executive Summary", layout="wide",
                    initial_sidebar_state="expanded")
@@ -51,7 +52,7 @@ kpi = headline_kpis(fdf, fweekly)
 
 st.markdown("### 📊 Executive Summary")
 st.caption(
-    "Every figure below respects the Audit Controls in the sidebar "
+    "Every figure below respects the Channels filters in the sidebar "
     "(applied on the dashboard home page)."
 )
 
@@ -77,34 +78,37 @@ kpi_row(
     columns=3,
 )
 
-section_title("Gross → Net Waterfall")
-st.plotly_chart(waterfall_gross_net(fweekly, fdf), use_container_width=True)
+with panel("Gross → Net Waterfall", "Where the invoiced money went"):
+    st.plotly_chart(waterfall_gross_net(fweekly, fdf), use_container_width=True)
 
-section_title("Weekly Trend & Audit Target")
-c1, c2 = st.columns(2)
+c1, c2 = st.columns(2, gap="medium")
 with c1:
-    st.plotly_chart(weekly_combo(fweekly), use_container_width=True)
+    with panel("Weekly Trend", "Gross vs net realized cash"):
+        st.plotly_chart(weekly_combo(fweekly), use_container_width=True)
 with c2:
-    st.plotly_chart(
-        settled_clearance_vs_target(
-            fweekly, settings.thresholds.settled_clearance_critical_below
-        ),
-        use_container_width=True,
-    )
+    with panel("Settled Clearance vs Target",
+               f"Audit target {settings.thresholds.settled_clearance_critical_below:.0f}%"
+               " of the settled base"):
+        st.plotly_chart(
+            settled_clearance_vs_target(
+                fweekly, settings.thresholds.settled_clearance_critical_below
+            ),
+            use_container_width=True,
+        )
 
-section_title("Revenue by Financial Bucket")
-st.plotly_chart(bucket_mix_donut(fdf), use_container_width=True)
+with panel("Revenue by Financial Bucket", "Where every rupee landed"):
+    st.plotly_chart(bucket_mix_donut(fdf), use_container_width=True)
 
-section_title("🚨 Anomaly Log")
-if len(anomalies):
-    st.dataframe(anomalies, use_container_width=True, hide_index=True)
-    st.caption(
-        f"CRITICAL: settled clearance < {settings.thresholds.settled_clearance_critical_below:.0f}% · "
-        f"WARNING: leakage share > {settings.thresholds.leakage_warning_above:.0f}% or "
-        f"cancellation > {settings.thresholds.cancellation_warning_above:.0f}% · "
-        f"ALERT: WoW net drop < {settings.thresholds.wow_drop_alert_below:.0f}%. "
-        "Partial weeks are excluded."
-    )
-else:
-    st.success("No anomaly triggers — every full week is within thresholds.")
+with panel("🚨 Anomaly Log", "Weeks that breached an audit threshold"):
+    if len(anomalies):
+        st.dataframe(anomalies, use_container_width=True, hide_index=True)
+        st.caption(
+            f"CRITICAL: settled clearance < {settings.thresholds.settled_clearance_critical_below:.0f}% · "
+            f"WARNING: leakage share > {settings.thresholds.leakage_warning_above:.0f}% or "
+            f"cancellation > {settings.thresholds.cancellation_warning_above:.0f}% · "
+            f"ALERT: WoW net drop < {settings.thresholds.wow_drop_alert_below:.0f}%. "
+            "Partial weeks are excluded."
+        )
+    else:
+        st.success("No anomaly triggers — every full week is within thresholds.")
 

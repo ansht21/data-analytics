@@ -1,12 +1,10 @@
 param(
-    [string]$Xlsx = "C:\Users\ansht\data-analytics\weekly-revenue-reconciliation-engine\reports\Command_Center_Preview.xlsx",
-    [string]$Png  = "C:\Users\ansht\data-analytics\weekly-revenue-reconciliation-engine\reports\command_center_excel.png",
-    [string]$Png2 = "C:\Users\ansht\data-analytics\weekly-revenue-reconciliation-engine\reports\command_center_excel_lower.png"
+    [string]$Xlsx = "C:\Users\ansht\data-analytics\weekly-revenue-reconciliation-engine\reports\Revenue_Reconciliation_Dashboard_20261022_142512.xlsx",
+    [string]$OutDir = "C:\Users\ansht\data-analytics\weekly-revenue-reconciliation-engine\docs\images"
 )
 
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
-Add-Type -AssemblyName System.Windows.Forms
 Add-Type @"
 using System;
 using System.Drawing;
@@ -14,55 +12,53 @@ using System.Runtime.InteropServices;
 public class Win32 {
     [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT r);
     [DllImport("user32.dll")] public static extern bool PrintWindow(IntPtr hWnd, IntPtr hdc, uint flags);
-    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
-    [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT { public int Left, Top, Right, Bottom; }
 }
 "@
 
+# Sheet index (1-based) -> README image name.
+$Sheets = @(
+    @{ Index = 1; Name = "06_excel_executive_dashboard" },
+    @{ Index = 2; Name = "07_excel_weekly_trends" }
+)
+
+if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Force -Path $OutDir | Out-Null }
+
 $excel = New-Object -ComObject Excel.Application
 $excel.DisplayAlerts = $false
 try {
     $book = $excel.Workbooks.Open($Xlsx)
-    $sheet = $book.Worksheets.Item(1)
-    $sheet.Activate()
     $excel.Visible = $true
     $excel.WindowState = -4137          # xlMaximized
     $excel.ActiveWindow.Zoom = 80
-    $sheet.Range("A1").Select() | Out-Null
-    Start-Sleep -Seconds 4
 
-    # PrintWindow renders the Excel window itself, so other apps on top of
-    # it (the terminal) do not appear in the capture.
-    $hwnd = [IntPtr]$excel.Hwnd
-    $rect = New-Object Win32+RECT
-    [Win32]::GetWindowRect($hwnd, [ref]$rect) | Out-Null
-    $w = $rect.Right - $rect.Left
-    $h = $rect.Bottom - $rect.Top
-    $bmp = New-Object System.Drawing.Bitmap($w, $h)
-    $gfx = [System.Drawing.Graphics]::FromImage($bmp)
-    $hdc = $gfx.GetHdc()
-    [Win32]::PrintWindow($hwnd, $hdc, 2) | Out-Null   # PW_RENDERFULLCONTENT
-    $gfx.ReleaseHdc($hdc)
-    $bmp.Save($Png, [System.Drawing.Imaging.ImageFormat]::Png)
-    $gfx.Dispose(); $bmp.Dispose()
+    foreach ($spec in $Sheets) {
+        $sheet = $book.Worksheets.Item($spec.Index)
+        $sheet.Activate()
+        $sheet.Range("A1").Select() | Out-Null
+        $excel.ActiveWindow.ScrollRow = 1
+        $excel.ActiveWindow.ScrollColumn = 1
+        Start-Sleep -Seconds 4
 
-    # Second capture: scrolled to the lower half of the dashboard.
-    $sheet.Range("A28").Select() | Out-Null
-    $excel.ActiveWindow.ScrollRow = 26
-    $excel.ActiveWindow.ScrollColumn = 1
-    Start-Sleep -Seconds 3
-    $bmp2 = New-Object System.Drawing.Bitmap($w, $h)
-    $gfx2 = [System.Drawing.Graphics]::FromImage($bmp2)
-    $hdc2 = $gfx2.GetHdc()
-    [Win32]::PrintWindow($hwnd, $hdc2, 2) | Out-Null
-    $gfx2.ReleaseHdc($hdc2)
-    $bmp2.Save($Png2, [System.Drawing.Imaging.ImageFormat]::Png)
-    $gfx2.Dispose(); $bmp2.Dispose()
-
+        # PrintWindow renders the Excel window itself, so other apps on top
+        # of it (the terminal) do not appear in the capture.
+        $hwnd = [IntPtr]$excel.Hwnd
+        $rect = New-Object Win32+RECT
+        [Win32]::GetWindowRect($hwnd, [ref]$rect) | Out-Null
+        $w = $rect.Right - $rect.Left
+        $h = $rect.Bottom - $rect.Top
+        $bmp = New-Object System.Drawing.Bitmap($w, $h)
+        $gfx = [System.Drawing.Graphics]::FromImage($bmp)
+        $hdc = $gfx.GetHdc()
+        [Win32]::PrintWindow($hwnd, $hdc, 2) | Out-Null   # PW_RENDERFULLCONTENT
+        $gfx.ReleaseHdc($hdc)
+        $target = Join-Path $OutDir ($spec.Name + ".png")
+        $bmp.Save($target, [System.Drawing.Imaging.ImageFormat]::Png)
+        $gfx.Dispose(); $bmp.Dispose()
+        Write-Output "Sheet $($spec.Index) -> $target ($w x $h)"
+    }
     $book.Close($false)
-    Write-Output "Exported -> $Png / $Png2 ($w x $h)"
 }
 finally {
     $excel.Quit()

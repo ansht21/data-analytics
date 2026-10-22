@@ -12,6 +12,7 @@ deep-navy / sky-cyan / emerald palette instead of the mock's purple-magenta.
 
 from __future__ import annotations
 
+import pandas as pd
 import streamlit as st
 
 from streamlit_app.theme import (
@@ -30,6 +31,7 @@ __all__ = [
     "cta_button",
     "nav_sub",
     "render_cockpit_sidebar",
+    "render_export_button",
     "PAGES",
 ]
 
@@ -420,6 +422,28 @@ def render_cockpit_sidebar(
         profile_block("Ansh Thakur", "Revenue Analytics", "AT"),
         unsafe_allow_html=True,
     )
-    st.sidebar.markdown(cta_button("Export Report"), unsafe_allow_html=True)
     return weeks, categories, fulfilments, states
+
+
+def render_export_button(
+    weekly_filtered: pd.DataFrame,
+    filename: str = "revenue_reconciliation_report.csv",
+) -> None:
+    """Render the sidebar "Export Report" download button.
+
+    Exports the *filtered* weekly reconciliation matrix, so what the user
+    downloads is exactly what the dashboard is showing.
+
+    Args:
+        weekly_filtered: Weekly KPI frame for the current filter selection.
+        filename: Download filename offered to the browser.
+    """
+    st.sidebar.download_button(
+        "Export Report",
+        data=weekly_filtered.to_csv(index=False).encode("utf-8"),
+        file_name=filename,
+        mime="text/csv",
+        use_container_width=True,
+        key="sidebar_export_report",
+    )
 

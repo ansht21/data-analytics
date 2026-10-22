@@ -40,8 +40,10 @@ fig, ax = plt.subplots(figsize=(13, 6.5))
 fig.patch.set_facecolor("white")
 ax.set_facecolor("white")
 
-NAVY, RED, AMBER, GREY, TEAL = "#0D2137", "#C0392B", "#B9822E", "#5D6D7E", "#1D6C64"
-step_colors = [RED, AMBER, "#7F8C8D", GREY, GREY]
+# Same hue family as the "Midnight Deck" dashboard, darkened for a light
+# background (this chart is shared on LinkedIn, where white reads best).
+NAVY, RED, AMBER, GREY, TEAL = "#0B1220", "#E11D48", "#D97706", "#64748B", "#059669"
+step_colors = [RED, AMBER, "#94A3B8", GREY, GREY]
 
 # Floating steps: running total before each step
 tops, bottoms, heights = [], [], []
@@ -73,7 +75,7 @@ for i in range(6):
     # level after bar i = levels[i+1] for i=0..4, and net for i=5
     y_level = running_levels[i + 1] if i < 5 else net
     ax.plot([x[i] + width / 2, x[i + 1] - width / 2], [y_level, y_level],
-            color="#0D2137", linestyle=":", linewidth=1.2, alpha=0.6, zorder=2)
+            color=NAVY, linestyle=":", linewidth=1.2, alpha=0.6, zorder=2)
 
 # Labels: value on top of each bar; tiny Loss bar gets offset label with arrow
 offset = gross * 0.022

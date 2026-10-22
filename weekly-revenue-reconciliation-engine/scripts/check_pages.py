@@ -44,10 +44,20 @@ def main() -> None:
                 print(f"FAIL     {page}")
                 for exc in app.exception:
                     print(f"         {exc.value}")
-            else:
-                print(f"OK       {page}  "
-                      f"(markdown={len(app.markdown)}, "
-                      f"dataframes={len(app.dataframe)})")
+                continue
+            # The export button must be present on every page. AppTest has
+            # no click() for download buttons in this Streamlit version, so
+            # the button is checked for presence and the payload is unit
+            # tested separately.
+            downloads = list(app.get("download_button"))
+            export_ok = f"export_button={len(downloads)}"
+            if not downloads:
+                failures += 1
+                print(f"FAIL     {page} (no export button)")
+                continue
+            print(f"OK       {page}  "
+                  f"(markdown={len(app.markdown)}, "
+                  f"dataframes={len(app.dataframe)}, {export_ok})")
         except Exception as exc:  # noqa: BLE001 - report and continue
             failures += 1
             print(f"ERROR    {page}: {type(exc).__name__}: {exc}")

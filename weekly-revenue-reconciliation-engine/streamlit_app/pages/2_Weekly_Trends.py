@@ -23,6 +23,7 @@ from streamlit_app.components.charts import (  # noqa: E402
     settled_clearance_vs_target,
     weekly_combo,
 )
+from streamlit_app.components.cockpit import panel  # noqa: E402
 
 st.set_page_config(page_title="Weekly Trends", layout="wide",
                    initial_sidebar_state="expanded")
@@ -49,33 +50,37 @@ st.caption(
     "clearance audit metric plotted against target."
 )
 
-c1, c2 = st.columns(2)
+c1, c2 = st.columns(2, gap="medium")
 with c1:
-    st.plotly_chart(weekly_combo(fweekly), use_container_width=True)
+    with panel("Weekly Revenue", "Gross invoiced vs net realized cash"):
+        st.plotly_chart(weekly_combo(fweekly), use_container_width=True)
 with c2:
-    st.plotly_chart(
-        settled_clearance_vs_target(
-            fweekly, settings.thresholds.settled_clearance_critical_below
-        ),
-        use_container_width=True,
-    )
+    with panel("Settled Clearance vs Target",
+               f"Audit target {settings.thresholds.settled_clearance_critical_below:.0f}%"
+               " of the settled base"):
+        st.plotly_chart(
+            settled_clearance_vs_target(
+                fweekly, settings.thresholds.settled_clearance_critical_below
+            ),
+            use_container_width=True,
+        )
 
-section_title("Leakage by Week")
-st.plotly_chart(leakage_stacked(fweekly), use_container_width=True)
+with panel("Leakage by Week", "Cancellations, returns and losses per fiscal week"):
+    st.plotly_chart(leakage_stacked(fweekly), use_container_width=True)
 
-section_title("Week-over-Week Metrics")
-tbl = fweekly[[
-    "week_label", "gross_revenue", "net_realized", "total_leakage",
-    "settled_clearance_rate", "clearance_rate", "cancellation_rate",
-    "wow_net_growth", "total_orders", "avg_order_value", "days_observed",
-    "is_partial_week",
-]].copy()
-tbl.columns = [
-    "Week", "Gross ₹", "Net ₹", "Leakage ₹", "Settled Clearance %",
-    "Gross Coverage %", "Cancel %", "WoW Net %", "Lines", "AOV ₹",
-    "Days", "Partial",
-]
-st.dataframe(tbl.round(2), use_container_width=True, hide_index=True)
+with panel("Week-over-Week Metrics", "Every weekly KPI, filter-aware"):
+    tbl = fweekly[[
+        "week_label", "gross_revenue", "net_realized", "total_leakage",
+        "settled_clearance_rate", "clearance_rate", "cancellation_rate",
+        "wow_net_growth", "total_orders", "avg_order_value", "days_observed",
+        "is_partial_week",
+    ]].copy()
+    tbl.columns = [
+        "Week", "Gross ₹", "Net ₹", "Leakage ₹", "Settled Clearance %",
+        "Gross Coverage %", "Cancel %", "WoW Net %", "Lines", "AOV ₹",
+        "Days", "Partial",
+    ]
+    st.dataframe(tbl.round(2), use_container_width=True, hide_index=True)
 
 neg = tbl[tbl["WoW Net %"] < 0]
 partial = tbl[tbl["Partial"]]

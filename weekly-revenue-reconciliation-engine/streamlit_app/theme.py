@@ -439,6 +439,23 @@ section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {{ padding-top
     margin-top: 10px;
     border: none;
 }}
+/* The sidebar "Export Report" download button wears the CTA gradient. */
+[data-testid="stSidebar"] .stDownloadButton button {{
+    background: {GRAD_CTA};
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0.4rem 0;
+    margin-top: 10px;
+    width: 100%;
+}}
+[data-testid="stSidebar"] .stDownloadButton button:hover {{
+    background: {ACCENT_DEEP};
+    color: #FFFFFF;
+    border: none;
+}}
 
 /* ---------- Section title + status banner ---------- */
 .section-title {{

@@ -173,7 +173,10 @@ def render_global_sidebar(active_key: str, df, weekly) -> None:
     """
     # Imported lazily: the cockpit components import Streamlit, and this
     # module is imported by the pages themselves.
-    from streamlit_app.components.cockpit import render_cockpit_sidebar
+    from streamlit_app.components.cockpit import (
+        render_cockpit_sidebar,
+        render_export_button,
+    )
 
     weeks, categories, fulfilments, states = render_cockpit_sidebar(
         active_key=active_key,
@@ -187,6 +190,13 @@ def render_global_sidebar(active_key: str, df, weekly) -> None:
         "fulfilments": fulfilments,
         "states": states,
     }
+
+    # The export button downloads exactly what the dashboard is showing, so
+    # it is built from the filtered set rather than the full dataset.
+    filtered = apply_filters(
+        df, weeks, categories, fulfilments, states
+    )
+    render_export_button(filtered_weekly(weekly, filtered))
 
 
 def apply_filters(

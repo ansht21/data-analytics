@@ -6,17 +6,22 @@ Output: docs/images/Revenue_Reconciliation_Dashboard_Cockpit.png
         (The previous build came out 3880x2204 RGBA with alpha, which made
         it render as a non-rectangular blob on light backgrounds.)
 
-Aesthetic: dark "Metric Flow" executive dashboard. Every panel, card, chip
-and badge is drawn as a **rectangle** (square corners). The previous build
-used heavily rounded boxes and fully-pill shapes, which read as bubbly and
-made the dashboard look non-rectangular.
+Aesthetic: dark "Midnight Deck" executive dashboard, matching the Streamlit
+cockpit and the Excel Command Center tab. Every panel, card, chip and badge
+is drawn as a **rectangle** (square corners). The previous build used
+heavily rounded boxes and fully-pill shapes, which read as bubbly and made
+the dashboard look non-rectangular.
+
+The colour tokens are imported from :mod:`streamlit_app.theme` so this
+static render, the Streamlit app and the Excel workbook are guaranteed to
+share one palette (deep navy canvas, sky-cyan and emerald accents).
 
 KPI colours are **semantic**, not one accent for everything:
-    gross invoiced     slate    (neutral context)
-    net realized cash  teal     (positive - money that arrived)
-    total leakage      coral    (negative - money that leaked)
-    settled clearance  amber    (below audit target) / teal (at or above)
-    avg order value    indigo   (unit economics)
+    gross invoiced     sky     (neutral context)
+    net realized cash  emerald (positive - money that arrived)
+    total leakage      rose    (negative - money that leaked)
+    settled clearance  amber   (below audit target) / emerald (at or above)
+    avg order value    violet  (unit economics)
 
 Every number is computed from the cleaned parquet via
 ``src.reconciliation.metrics`` -- the same single source of truth the
@@ -45,38 +50,44 @@ from src.reconciliation.metrics import (  # noqa: E402
     leakage_by_dimension,
 )
 from src.reconciliation.variance_analyzer import add_wow_variance  # noqa: E402
+from streamlit_app.theme import (  # noqa: E402
+    ACCENT,
+    ACCENT_SOFT,
+    BORDER,
+    CANVAS_BG,
+    CARD_BG,
+    CARD_HI,
+    GRID,
+    NEGATIVE,
+    NEUTRAL,
+    PANEL_BG,
+    POSITIVE,
+    TEXT_LIGHT,
+    TEXT_MUTED,
+    WARNING,
+)
 
 PARQUET_PATH = ROOT / "data" / "processed" / "cleaned_transactions.parquet"
 OUT_PATH = ROOT / "docs" / "images" / "Revenue_Reconciliation_Dashboard_Cockpit.png"
 
-# ---- Dark theme ----
-CANVAS_BG = "#131316"
-PANEL_BG = "#1B1B1F"
-CARD_BG = "#202024"
-BORDER = "#31313A"
-TEXT_LIGHT = "#F4F4F5"
-TEXT_MUTED = "#9CA0A8"
-GRID_COLOR = "#34343C"
-
-ACCENT = "#F4573D"        # coral primary
-ACCENT_SOFT = "#F79C8D"
-NEUTRAL = "#7C8089"
-CHIP_BG = "#2B2B31"
-CHIP_EDGE = "#3C3C45"
+# ---- Dark theme (shared with the Streamlit app and the Excel workbook) ----
+GRID_COLOR = GRID
+CHIP_BG = CARD_HI
+CHIP_EDGE = BORDER
 
 # ---- Semantic KPI palette ----
-KPI_SLATE = "#6EA8FE"     # gross invoiced - neutral context
-KPI_TEAL = "#2DD4A7"      # net realized cash - positive
-KPI_CORAL = "#F4573D"     # total leakage - negative
-KPI_AMBER = "#F5A524"     # clearance below target - warning
-KPI_INDIGO = "#A78BFA"    # avg order value - unit economics
+KPI_SLATE = ACCENT_SOFT     # gross invoiced - neutral context
+KPI_TEAL = POSITIVE         # net realized cash - positive
+KPI_CORAL = NEGATIVE        # total leakage - negative
+KPI_AMBER = WARNING         # clearance below target - warning
+KPI_INDIGO = "#A78BFA"      # avg order value - unit economics
 
 # Gross -> Net composition stack colours.
-C_NET = "#2DD4A7"
-C_CANCEL = "#F4573D"
-C_RETURN = "#F79C8D"
-C_LOSS = "#C23F2C"
-C_TRANSIT = "#5A5A64"
+C_NET = POSITIVE
+C_CANCEL = NEGATIVE
+C_RETURN = WARNING
+C_LOSS = "#B91C1C"
+C_TRANSIT = NEUTRAL
 
 FIG_W_IN, FIG_H_IN, DPI = 12.8, 7.2, 200   # -> exactly 2560 x 1440
 
