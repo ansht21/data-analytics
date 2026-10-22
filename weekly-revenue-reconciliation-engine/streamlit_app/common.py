@@ -160,6 +160,35 @@ def status_banner(title: str, sub: str) -> None:
     )
 
 
+def render_global_sidebar(active_key: str, df, weekly) -> None:
+    """Render the bespoke sidebar and publish the global filter selection.
+
+    Every page calls this so the grouped navigation and the filter controls
+    are always present, and so the selections stay shared across pages.
+
+    Args:
+        active_key: Key of the page currently being viewed.
+        df: Cleaned transaction frame.
+        weekly: Weekly KPI frame.
+    """
+    # Imported lazily: the cockpit components import Streamlit, and this
+    # module is imported by the pages themselves.
+    from streamlit_app.components.cockpit import render_cockpit_sidebar
+
+    weeks, categories, fulfilments, states = render_cockpit_sidebar(
+        active_key=active_key,
+        df=df,
+        weekly=weekly,
+        render_filters=render_sidebar_filters,
+    )
+    st.session_state["filters"] = {
+        "weeks": weeks,
+        "categories": categories,
+        "fulfilments": fulfilments,
+        "states": states,
+    }
+
+
 def apply_filters(
     df: pd.DataFrame,
     weeks: list[str],
@@ -208,9 +237,8 @@ def render_sidebar_filters(
     Returns:
         Tuple of (weeks, categories, fulfilments, states) selections.
     """
-    st.sidebar.markdown(
-        '<div class="section-title">Audit Controls</div>', unsafe_allow_html=True
-    )
+    # The bespoke sidebar already renders the group header ("Channels"),
+    # so only the controls themselves are emitted here.
     weeks_all = weekly["week_label"].tolist()
     weeks = st.sidebar.multiselect(
         "Fiscal Week", weeks_all, default=weeks_all,

@@ -22,6 +22,7 @@ from streamlit_app.common import (  # noqa: E402
     kpi_card,
     kpi_row,
     load_all,
+    render_global_sidebar,
     section_title,
 )
 from streamlit_app.components.charts import (  # noqa: E402
@@ -37,6 +38,8 @@ inject_theme()
 
 with st.spinner("Loading reconciliation data ..."):
     df, weekly, anomalies, settings = load_all()
+
+render_global_sidebar(active_key="leakage", df=df, weekly=weekly)
 
 filters = st.session_state.get("filters", {})
 fdf = apply_filters(

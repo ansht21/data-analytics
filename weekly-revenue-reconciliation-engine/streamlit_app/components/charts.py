@@ -11,8 +11,11 @@ import plotly.graph_objects as go
 
 from streamlit_app.theme import (
     ACCENT,
+    ACCENT_DEEP,
     ACCENT_SOFT,
     BORDER,
+    CARD_BG,
+    GRID,
     NEGATIVE,
     NEUTRAL,
     POSITIVE,
@@ -23,6 +26,16 @@ from streamlit_app.theme import (
 )
 
 LEAKAGE_BUCKETS = ["Cancellation Leakage", "Return Leakage", "Loss Leakage"]
+
+# Financial bucket -> colour, shared by the donut and the HTML colour key.
+BUCKET_PALETTE = {
+    "Net Realized": POSITIVE,
+    "Cancellation Leakage": NEGATIVE,
+    "Return Leakage": WARNING,
+    "Loss Leakage": NEUTRAL,
+    "In-Transit": ACCENT,
+    "Pending": ACCENT_SOFT,
+}
 
 
 def _short(v: float) -> str:
@@ -329,3 +342,279 @@ def bucket_mix_donut(df: pd.DataFrame) -> go.Figure:
         margin=dict(t=64, b=96, l=10, r=10),
     )
     return fig
+
+
+# ---------------------------------------------------------------------------
+# Cockpit charts — the "Midnight Deck" rebuild.
+#
+# These mirror the reference CRM mock: a large filled area chart with an
+# annotation callout, a small secondary area sparkline, a vertical volume bar
+# chart and a radial gauge.
+# ---------------------------------------------------------------------------
+
+
+def _gradient_fill(color: str, top_alpha: float = 0.42, bottom_alpha: float = 0.02):
+    """Build a vertical rgba gradient fill for a Plotly area trace.
+
+    Args:
+        color: Hex colour of the series.
+        top_alpha: Opacity at the top of the area.
+        bottom_alpha: Opacity at the baseline.
+
+    Returns:
+        A ``fillgradient`` dict accepted by ``go.Scatter``.
+    """
+    r = int(color[1:3], 16)
+    g = int(color[3:5], 16)
+    b = int(color[5:7], 16)
+    return {
+        "type": "vertical",
+        "colorscale": [
+            [0.0, f"rgba({r},{g},{b},{bottom_alpha})"],
+            [1.0, f"rgba({r},{g},{b},{top_alpha})"],
+        ],
+    }
+
+
+def cockpit_area_trend(weekly: pd.DataFrame, height: int = 380) -> go.Figure:
+    """Filled area chart of Gross vs Net revenue with a peak-week callout.
+
+    This is the centrepiece of the cockpit: two overlapping gradient areas
+    (Gross Invoiced, Net Realized) with the best-performing week annotated
+    inline, matching the reference dashboard's annotated area chart.
+
+    Args:
+        weekly: Weekly KPI frame.
+        height: Figure height in pixels.
+
+    Returns:
+        A themed area figure.
+    """
+    fig = go.Figure()
+    fig.add_scatter(
+        x=weekly["week_label"], y=weekly["gross_revenue"],
+        name="Gross Invoiced", mode="lines",
+        line=dict(color=ACCENT_SOFT, width=2.4),
+        fill="tozeroy", fillgradient=_gradient_fill(ACCENT_SOFT, 0.34, 0.01),
+        hovertemplate="%{x}<br>₹%{y:,.0f}<extra>Gross Invoiced</extra>",
+    )
+    fig.add_scatter(
+        x=weekly["week_label"], y=weekly["net_realized"],
+        name="Net Realized", mode="lines",
+        line=dict(color=POSITIVE, width=2.4),
+        fill="tozeroy", fillgradient=_gradient_fill(POSITIVE, 0.30, 0.01),
+        hovertemplate="%{x}<br>₹%{y:,.0f}<extra>Net Realized</extra>",
+    )
+
+    # Annotate the best net-realized week — the reference mock highlights a
+    # single point on the curve with a boxed callout.
+    if len(weekly):
+        peak_idx = weekly["net_realized"].idxmax()
+        peak_x = weekly.loc[peak_idx, "week_label"]
+        peak_y = float(weekly.loc[peak_idx, "net_realized"])
+        fig.add_trace(go.Scatter(
+            x=[peak_x], y=[peak_y], mode="markers",
+            marker=dict(size=11, color=ACCENT,
+                        line=dict(color="#FFFFFF", width=2)),
+            showlegend=False, hoverinfo="skip",
+        ))
+        fig.add_annotation(
+            x=peak_x, y=peak_y, text=f"<b>Peak {peak_x}</b><br>₹{peak_y/1e7:,.2f} Cr",
+            showarrow=True, arrowhead=2, arrowwidth=1.4,
+            arrowcolor=ACCENT, ax=0, ay=-46,
+            bgcolor=ACCENT_DEEP, bordercolor=ACCENT, borderwidth=1,
+            borderpad=6, font=dict(color="#FFFFFF", size=11),
+        )
+
+    fig.update_layout(
+        hovermode="x unified",
+        xaxis=dict(showgrid=False, tickfont=dict(size=10)),
+        yaxis=dict(gridcolor=GRID, tickprefix="₹", tickformat="~s",
+                   tickfont=dict(size=10), zeroline=False),
+        # Extra headroom so the legend sits above the plot area instead of
+        # overlapping it.
+        margin=dict(t=44, b=44, l=58, r=18),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, yref="paper",
+                    x=1.0, xanchor="right", font=dict(color=TEXT_MUTED, size=10)),
+    )
+    fig = apply_plotly_theme(fig, height=height)
+    fig.update_layout(
+        margin=dict(t=44, b=44, l=58, r=18),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, yref="paper",
+                    x=1.0, xanchor="right", font=dict(color=TEXT_MUTED, size=10)),
+    )
+    return fig
+
+
+def cockpit_gauge(value: float, label: str, height: int = 300) -> go.Figure:
+    """Radial gauge showing one headline percentage.
+
+    Reproduces the circular ring gauge from the reference mock, with the
+    metric rendered in the hole of the donut.
+
+    Args:
+        value: Percentage to display (0-100).
+        label: Caption rendered under the value inside the ring.
+        height: Figure height in pixels.
+
+    Returns:
+        A themed gauge figure.
+    """
+    pct = max(0.0, min(100.0, float(value)))
+    # Track / value / remainder of the ring.
+    fig = go.Figure(go.Pie(
+        values=[pct, 100 - pct],
+        hole=0.72,
+        sort=False,
+        direction="clockwise",
+        rotation=90,
+        textinfo="none",
+        marker=dict(
+            colors=[ACCENT if pct >= 70 else WARNING, "#182338"],
+            line=dict(color=CARD_BG, width=0),
+        ),
+        hoverinfo="skip",
+        showlegend=False,
+    ))
+    fig.add_annotation(
+        text=(
+            f"<span style='font-size:30px;font-weight:800;color:{TEXT_LIGHT}'>"
+            f"{pct:.1f}%</span><br>"
+            f"<span style='font-size:11px;color:{TEXT_MUTED}'>{label}</span>"
+        ),
+        showarrow=False, x=0.5, y=0.5,
+        font=dict(color=TEXT_LIGHT, size=12),
+        align="center",
+    )
+    fig.update_layout(
+        height=height,
+        margin=dict(t=6, b=6, l=6, r=6),
+        paper_bgcolor=CARD_BG,
+        plot_bgcolor=CARD_BG,
+        showlegend=False,
+    )
+    return fig
+
+
+def cockpit_mini_area(weekly: pd.DataFrame, height: int = 220) -> go.Figure:
+    """Compact area sparkline of net realized revenue (no axes chrome).
+
+    Args:
+        weekly: Weekly KPI frame.
+        height: Figure height in pixels.
+
+    Returns:
+        A themed mini area figure.
+    """
+    fig = go.Figure()
+    fig.add_scatter(
+        x=weekly["week_label"], y=weekly["net_realized"],
+        mode="lines", line=dict(color=ACCENT, width=2.2, shape="spline"),
+        fill="tozeroy", fillgradient=_gradient_fill(ACCENT, 0.45, 0.01),
+        hovertemplate="%{x}<br>₹%{y:,.0f}<extra>Net Realized</extra>",
+    )
+    fig.update_layout(
+        height=height,
+        margin=dict(t=8, b=8, l=8, r=8),
+        paper_bgcolor=CARD_BG,
+        plot_bgcolor=CARD_BG,
+        xaxis=dict(visible=False),
+        yaxis=dict(visible=False),
+        showlegend=False,
+        hovermode="x unified",
+    )
+    return fig
+
+
+def cockpit_volume_bars(weekly: pd.DataFrame, height: int = 300) -> go.Figure:
+    """Vertical bar chart of weekly transaction volume.
+
+    Args:
+        weekly: Weekly KPI frame.
+        height: Figure height in pixels.
+
+    Returns:
+        A themed bar figure.
+    """
+    colors = [ACCENT if not p else ACCENT_DEEP for p in
+              weekly["is_partial_week"].astype(bool)] if "is_partial_week" in weekly.columns \
+        else [ACCENT] * len(weekly)
+    fig = go.Figure(go.Bar(
+        x=weekly["week_label"], y=weekly["total_orders"],
+        marker=dict(color=colors, line=dict(color=ACCENT_SOFT, width=0.6)),
+        hovertemplate="%{x}<br>%{y:,} lines<extra></extra>",
+    ))
+    fig.update_layout(
+        height=height,
+        margin=dict(t=10, b=40, l=46, r=10),
+        paper_bgcolor=CARD_BG,
+        plot_bgcolor=CARD_BG,
+        xaxis=dict(showgrid=False, tickfont=dict(size=9)),
+        yaxis=dict(gridcolor=GRID, showgrid=True, zeroline=False,
+                   tickfont=dict(size=9)),
+        bargap=0.45,
+        showlegend=False,
+    )
+    return fig
+
+
+def cockpit_bucket_donut(df: pd.DataFrame, height: int = 300) -> go.Figure:
+    """Donut of revenue by financial bucket.
+
+    The colour key is rendered as HTML beside the chart (see
+    :func:`bucket_legend_rows`) rather than as a Plotly legend, because
+    Plotly positions legends in paper coordinates that drift outside the
+    plot whenever the container is resized.
+
+    Args:
+        df: Cleaned transaction frame.
+        height: Figure height in pixels.
+
+    Returns:
+        A themed donut figure.
+    """
+    agg = df.groupby("financial_bucket")["Amount"].sum().sort_values(ascending=False)
+    palette = BUCKET_PALETTE
+    labels = list(agg.index)
+    values = list(agg.values)
+    fig = go.Figure(go.Pie(
+        labels=labels, values=values, hole=0.62,
+        marker=dict(
+            colors=[palette.get(i, NEUTRAL) for i in labels],
+            line=dict(color=CARD_BG, width=2),
+        ),
+        textinfo="none",
+        showlegend=False,
+        hovertemplate="%{label}<br>₹%{value:,.0f}<extra></extra>",
+    ))
+    total = float(sum(values))
+    fig.add_annotation(
+        text=(f"<span style='font-size:15px;font-weight:800;color:{TEXT_LIGHT}'>"
+              f"₹{total/1e7:,.2f} Cr</span><br>"
+              f"<span style='font-size:10px;color:{TEXT_MUTED}'>invoiced</span>"),
+        showarrow=False, x=0.5, y=0.5, align="center",
+    )
+    fig.update_layout(
+        height=height,
+        margin=dict(t=6, b=6, l=6, r=6),
+        paper_bgcolor=CARD_BG,
+        plot_bgcolor=CARD_BG,
+        showlegend=False,
+    )
+    return fig
+
+
+def bucket_legend_rows(df: pd.DataFrame) -> list[tuple[str, str, float]]:
+    """Return the bucket mix as ``(label, colour, amount)`` rows.
+
+    Args:
+        df: Cleaned transaction frame.
+
+    Returns:
+        List of (bucket label, swatch colour, total amount), largest first.
+    """
+    agg = df.groupby("financial_bucket")["Amount"].sum().sort_values(ascending=False)
+    return [
+        (str(name), BUCKET_PALETTE.get(str(name), NEUTRAL), float(amount))
+        for name, amount in agg.items()
+    ]

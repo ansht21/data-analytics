@@ -11,6 +11,8 @@ htmlcov/
 
 # Generated artifacts
 reports/*.xlsx
+reports/*.png
+reports/*.html
 logs/
 data/processed/*.parquet
 data/archive/*

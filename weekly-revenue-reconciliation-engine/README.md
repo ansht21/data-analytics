@@ -60,14 +60,15 @@ ships **two reporting layers**:
   <img src="docs/images/01_dashboard_home.png" alt="Revenue Reconciliation Cockpit — live Streamlit dashboard" width="1000" />
 </a>
 
-*The cockpit home page: audit status banner, four KPI cards (Gross Invoiced ₹7.86 Cr · Net Realized ₹1.86 Cr · Leakage ₹83.07 L · Settled Clearance 69.2 %), weekly revenue vs clearance against target, revenue-by-bucket donut and the full weekly reconciliation matrix. The **Audit Controls** sidebar (fiscal week, category, fulfilment, ship state) drives every page.*
+*The cockpit home page: a bespoke grouped sidebar navigation, two large gradient KPI heroes (Total Revenue Invoiced ₹7.86 Cr · Net Realized Cash ₹1.86 Cr) with a column of stat pills (Leakage ₹83.07 L · Cancelled Orders 18,334 · Settled Clearance 69.2 %), an annotated revenue-trend area chart, a right-hand rail (net-realized velocity sparkline and weekly transaction volume), the revenue-by-financial-bucket donut with a colour key, the settlement-health radial gauge, and the full weekly reconciliation matrix. The **Channels** sidebar filters (fiscal week, category, fulfilment, ship state) drive every page.*
 
 | Executive Summary | Leakage Deep-Dive | Exception Audit |
 |:---|:---|:---|
 | <a href="docs/images/02_executive_summary.png"><img src="docs/images/02_executive_summary.png" alt="Executive Summary" width="100%"></a> | <a href="docs/images/04_leakage_analysis.png"><img src="docs/images/04_leakage_analysis.png" alt="Leakage Analysis" width="100%"></a> | <a href="docs/images/05_exception_audit.png"><img src="docs/images/05_exception_audit.png" alt="Exception Audit" width="100%"></a> |
 
 **Dashboard capabilities**
-- 🧭 **Global filters** — fiscal week, category, fulfilment channel and ship state; every chart, KPI and table on every page re-computes from the filtered set
+- 🧭 **Bespoke grouped navigation** — a custom dark sidebar (Profile / Workspace / Channels) replaces the default Streamlit nav; the active page is highlighted and every entry is a working, bookmarkable link
+- 🎛️ **Global filters** — fiscal week, category, fulfilment channel and ship state; every chart, KPI and table on every page re-computes from the filtered set
 - ⚡ **Session-cached** — the 11-step pipeline runs once per session, not once per widget interaction
 - 🎯 **Partial weeks marked** — W13/W26 render as hollow markers with the line broken, so a truncated window never reads as a collapse
 - 🧾 **Exception audit** — every cancelled / returned / lost line with one-click CSV export
@@ -85,9 +86,9 @@ ships **two reporting layers**:
 
 ## 📊 Automated Executive Excel Dashboard (`openpyxl`)
 
-> Generated with 1 command (`python run_pipeline.py`) — a production-ready multi-tab Excel workbook featuring 6 KPI cards, native Excel Bar/Line combo charts, dynamic `=SUM()` and `=IFERROR()` formulas, and conditional formatting data bars.
+> Generated with 1 command (`python run_pipeline.py`) — a production-ready multi-tab Excel workbook featuring a dark "Command Center" executive tab (gradient KPI hero cards, a native Excel area chart, a revenue-mix doughnut and a settlement-health gauge ring), dynamic `=SUM()` and `=IFERROR()` formulas, and conditional formatting data bars.
 
-### Tab 1 · Executive KPI Dashboard & Dynamic Combo Chart
+### Tab 1 · Command Center (dark executive dashboard)
 <a href="docs/images/06_excel_executive_dashboard.png">
   <img src="docs/images/06_excel_executive_dashboard.png" alt="Excel Executive Dashboard Tab" width="900" />
 </a>
@@ -273,18 +274,19 @@ weekly-revenue-reconciliation-engine/
 │   ├── data_loader.py       11-step ingestion & cleaning
 │   ├── reconciliation/      engine · metrics · fiscal_calendar ·
 │   │                        revenue_classifier · variance_analyzer
-│   ├── reporting/           excel_dashboard · kpi_cards · charts · formatters · tabs_*
+│   ├── reporting/           excel_dashboard · excel_cockpit · excel_cards ·
+│   │                        excel_charts · excel_theme · formatters · tabs_*
 │   └── utils/               date_utils · file_utils
 ├── streamlit_app/
 │   ├── Dashboard.py         entry point (cockpit home)
-│   ├── theme.py             shared dark palette + CSS + Plotly skin
-│   ├── common.py            cached loader, global filters, KPI card helpers
+│   ├── theme.py             shared "Midnight Deck" palette + CSS + Plotly skin
+│   ├── common.py            cached loader, global filters, sidebar shell
 │   ├── pages/               1_Executive · 2_Weekly_Trends · 3_Leakage · 4_Exception_Audit
-│   └── components/          kpi_cards · charts (Plotly figures)
+│   └── components/          cockpit (layout HTML) · charts (Plotly figures) · kpi_cards
 ├── tests/                   7 suites · 28 tests · full integration
 ├── docs/                    architecture · data_dictionary · deployment_guide · images/
-├── scripts/                 shoot.py (screenshots) · make_waterfall.py ·
-│                            render_executive_dashboard_cockpit.py
+├── scripts/                 check_pages · preview_cockpit_html · shoot_app ·
+│                            shoot_cockpit · shoot_excel · build_workbook_only
 ├── reports/                 generated workbooks (timestamped)
 ├── run_pipeline.py          CLI entry point
 ├── Makefile · Dockerfile · docker-compose.yml

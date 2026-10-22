@@ -1,37 +1,46 @@
-"""Dark "Metric Flow" theme: palette tokens, CSS injection, Plotly skin.
+"""Dark "Midnight Deck" theme: palette tokens, CSS injection, Plotly skin.
 
 Kept separate from :mod:`streamlit_app.common` so both the app pages and the
 PNG renderer can share the exact same colour tokens without importing
 Streamlit.
+
+The palette is a deep-navy / sky-cyan / emerald scheme. It is intentionally
+*not* the purple-magenta look of the reference CRM mock: same structural
+layout, a different dark identity.
 """
 
 from __future__ import annotations
 
 # Canvas / surface / border tokens.
-CANVAS_BG = "#131316"
-PANEL_BG = "#1B1B1F"
-CARD_BG = "#202024"
-CARD_HI = "#26262B"
-BORDER = "#31313A"
-CHIP_BG = "#2B2B31"
-CHIP_EDGE = "#3C3C45"
-GRID = "#34343C"
+CANVAS_BG = "#070B14"
+PANEL_BG = "#0B1220"
+CARD_BG = "#101A2C"
+CARD_HI = "#16223A"
+BORDER = "#1E2C45"
+CHIP_BG = "#16223A"
+CHIP_EDGE = "#26385A"
+GRID = "#1E2C45"
 
 # Text tokens.
-TEXT_LIGHT = "#F4F4F5"
-TEXT_MUTED = "#9CA0A8"
+TEXT_LIGHT = "#EAF0FA"
+TEXT_MUTED = "#8FA3BF"
 
-# Accent (single coral) + semantic tokens.
-ACCENT = "#F4573D"
-ACCENT_SOFT = "#F79C8D"
-ACCENT_DEEP = "#C23F2C"
-ACCENT_PALE = "#FBD5CE"
-NEUTRAL = "#7C8089"
+# Accent (sky cyan) + semantic tokens.
+ACCENT = "#22D3EE"
+ACCENT_SOFT = "#7DD3FC"
+ACCENT_DEEP = "#0E7490"
+ACCENT_PALE = "#CFFAFE"
+NEUTRAL = "#64748B"
 
 # Semantic series colours used in charts.
-POSITIVE = "#2FA37C"
-WARNING = "#D9A441"
-NEGATIVE = "#D1495B"
+POSITIVE = "#34D399"
+WARNING = "#F59E0B"
+NEGATIVE = "#FB7185"
+
+# Hero-card gradients (CSS ``background`` values).
+GRAD_HERO_A = "linear-gradient(135deg, #0E7490 0%, #0EA5E9 55%, #22D3EE 100%)"
+GRAD_HERO_B = "linear-gradient(135deg, #065F46 0%, #059669 55%, #34D399 100%)"
+GRAD_CTA = "linear-gradient(135deg, #0E7490 0%, #22D3EE 100%)"
 
 CSS = f"""
 <style>
@@ -60,14 +69,24 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
     border: 1px solid {CHIP_EDGE};
     border-radius: 8px;
     color: {TEXT_LIGHT};
+    font-size: 11px;
+    padding: 0 4px;
 }}
-[data-baseweb="tag"] svg {{ fill: {TEXT_MUTED}; }}
+/* Keep the filter chip lists compact so the sidebar stays scannable. */
+[data-testid="stMultiSelect"] [data-baseweb="tag"] {{
+    margin-bottom: 2px;
+}}
+[data-testid="stMultiSelect"] ul {{
+    max-height: 92px;
+    overflow-y: auto;
+}}
 [data-testid="stMultiSelect"] [data-baseweb="input"] > div {{
     background: {CARD_BG};
     border: 1px solid {BORDER};
     border-radius: 10px;
 }}
 [data-testid="stMultiSelect"] input {{ color: {TEXT_LIGHT}; }}
+[data-baseweb="tag"] svg {{ fill: {TEXT_MUTED}; }}
 [data-testid="stMultiSelect"] [data-baseweb="popover"] {{ background: {CARD_BG}; }}
 [data-testid="stMultiSelect"] li {{ background: {CARD_BG}; color: {TEXT_LIGHT}; }}
 [data-testid="stMultiSelect"] li:hover {{ background: {CARD_HI}; }}
@@ -100,7 +119,7 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
     color: #FFFFFF;
 }}
 
-/* KPI card: rounded dark tile with a coral top accent */
+/* ---------- KPI card: dark tile with a cyan top accent ---------- */
 .kpi-card {{
     background: {CARD_BG};
     border: 1px solid {BORDER};
@@ -142,8 +161,286 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
     font-weight: 700;
     border: 1px solid {BORDER};
 }}
-.kpi-delta.up {{ color: {ACCENT_SOFT}; background: #2E2320; border-color: {ACCENT}; }}
-.kpi-delta.down {{ color: {TEXT_MUTED}; background: {CHIP_BG}; }}
+.kpi-delta.up {{ color: {ACCENT_SOFT}; background: #0B2B33; border-color: {ACCENT}; }}
+.kpi-delta.down {{ color: {NEGATIVE}; background: #2A1420; border-color: {NEGATIVE}; }}
+
+/* ---------- Hero gradient card (the two large KPI blocks) ---------- */
+.hero-card {{
+    background: {GRAD_HERO_A};
+    border-radius: 16px;
+    padding: 20px 22px 18px 22px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    height: 100%;
+}}
+.hero-card.hero-alt {{ background: {GRAD_HERO_B}; }}
+.hero-card::after {{
+    content: "";
+    position: absolute;
+    right: -50px; top: -70px;
+    width: 190px; height: 190px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10);
+}}
+.hero-label {{
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    position: relative; z-index: 2;
+}}
+.hero-value {{
+    color: #FFFFFF;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 8px 0 4px 0;
+    position: relative; z-index: 2;
+}}
+.hero-value .unit {{ font-size: 15px; font-weight: 700; opacity: 0.85; margin-left: 4px; }}
+.hero-sub {{
+    color: rgba(255, 255, 255, 0.90);
+    font-size: 12px;
+    font-weight: 600;
+    position: relative; z-index: 2;
+}}
+.hero-foot {{
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 11px;
+    margin-top: 8px;
+    position: relative; z-index: 2;
+}}
+
+/* ---------- Compact stat pill (icon + label + value chip) ---------- */
+.pill {{
+    background: {CARD_BG};
+    border: 1px solid {BORDER};
+    border-radius: 12px;
+    padding: 9px 12px;
+    margin-bottom: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}}
+.pill-left {{ display: flex; align-items: center; gap: 8px; }}
+.pill-dot {{
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: #FFFFFF;
+    flex: 0 0 auto;
+}}
+.pill-label {{ color: {TEXT_MUTED}; font-size: 12px; font-weight: 600; }}
+.pill-value {{
+    color: {TEXT_LIGHT};
+    font-size: 13px;
+    font-weight: 800;
+    background: {CHIP_BG};
+    border: 1px solid {CHIP_EDGE};
+    border-radius: 999px;
+    padding: 2px 9px;
+}}
+.pill-value.pos {{ color: {POSITIVE}; }}
+.pill-value.warn {{ color: {WARNING}; }}
+.pill-value.neg {{ color: {NEGATIVE}; }}
+
+/* ---------- Panel wrapper (chart cards) ---------- */
+.panel {{
+    background: {CARD_BG};
+    border: 1px solid {BORDER};
+    border-radius: 16px;
+    padding: 14px 16px 12px 16px;
+    margin-bottom: 14px;
+}}
+.panel-title {{
+    color: {TEXT_LIGHT};
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}}
+.panel-sub {{ color: {TEXT_MUTED}; font-size: 11px; margin-bottom: 6px; }}
+
+/* Re-skin Streamlit's bordered container as a dark chart panel. */
+[data-testid="stVerticalBlockBorderWrapper"] {{
+    background: {CARD_BG};
+    border: 1px solid {BORDER} !important;
+    border-radius: 16px;
+    padding: 12px 14px 8px 14px;
+}}
+[data-testid="stVerticalBlockBorderWrapper"] > div {{
+    gap: 0.35rem;
+}}
+
+/* ---------- Colour-keyed legend (rendered as HTML) ---------- */
+.lg-row {{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid {GRID};
+}}
+.lg-row:last-child {{ border-bottom: none; }}
+.lg-swatch {{
+    width: 9px; height: 9px;
+    border-radius: 3px;
+    flex: 0 0 auto;
+}}
+.lg-label {{
+    color: {TEXT_MUTED};
+    font-size: 12px;
+    font-weight: 600;
+    flex: 1 1 auto;
+}}
+.lg-value {{
+    color: {TEXT_LIGHT};
+    font-size: 12px;
+    font-weight: 700;
+}}
+.lg-share {{
+    color: {ACCENT};
+    font-size: 11px;
+    font-weight: 700;
+    width: 46px;
+    text-align: right;
+}}
+
+/* ---------- Sidebar navigation ---------- */
+.nav-brand {{
+    color: {TEXT_LIGHT};
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    padding: 2px 0 4px 0;
+}}
+.nav-brand span {{ color: {ACCENT}; }}
+.nav-section {{
+    color: {ACCENT};
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 18px 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}}
+.nav-section::after {{
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: {BORDER};
+}}
+.nav-item {{
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: {TEXT_MUTED};
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 10px;
+    border-radius: 9px;
+    margin-bottom: 2px;
+    border-left: 2px solid transparent;
+}}
+.nav-item.active {{
+    color: {TEXT_LIGHT};
+    background: {CARD_BG};
+    border-left-color: {ACCENT};
+    box-shadow: inset 0 0 0 1px {BORDER};
+}}
+.nav-item .ni-icon {{
+    width: 20px; text-align: center;
+    color: {ACCENT}; font-size: 13px;
+}}
+/* Real <a> nav links rendered by the bespoke sidebar */
+.nav-link {{
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: {TEXT_MUTED};
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none !important;
+    padding: 7px 10px;
+    border-radius: 9px;
+    margin-bottom: 2px;
+    border-left: 2px solid transparent;
+    transition: background 120ms ease, color 120ms ease;
+}}
+.nav-link:hover {{
+    color: {TEXT_LIGHT};
+    background: {CARD_HI};
+    text-decoration: none !important;
+}}
+.nav-link .ni-icon {{
+    width: 20px; text-align: center;
+    color: {ACCENT}; font-size: 13px;
+    text-decoration: none;
+}}
+.nav-link.nav-active {{
+    color: {TEXT_LIGHT};
+    background: {CARD_BG};
+    border-left-color: {ACCENT};
+    box-shadow: inset 0 0 0 1px {BORDER};
+}}
+.nav-link.nav-active .ni-icon {{ color: {ACCENT}; }}
+.nav-sub {{
+    color: {TEXT_MUTED};
+    font-size: 12px;
+    padding: 4px 0 4px 31px;
+    font-weight: 500;
+}}
+.nav-sub.active {{ color: {ACCENT_SOFT}; font-weight: 700; }}
+
+/* Hide Streamlit's own multipage nav: we render a bespoke sidebar. */
+[data-testid="stSidebarNav"] {{ display: none; }}
+section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {{ padding-top: 0.4rem; }}
+
+/* ---------- Profile block + CTA at the bottom of the sidebar ---------- */
+.profile {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: {CARD_BG};
+    border: 1px solid {BORDER};
+    border-radius: 12px;
+    padding: 9px 11px;
+    margin-top: 14px;
+}}
+.avatar {{
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: {GRAD_HERO_A};
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex: 0 0 auto;
+}}
+.profile-name {{ color: {TEXT_LIGHT}; font-size: 12px; font-weight: 700; }}
+.profile-role {{ color: {TEXT_MUTED}; font-size: 10px; }}
+.cta {{
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: {GRAD_CTA};
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 9px 0;
+    border-radius: 10px;
+    margin-top: 10px;
+    border: none;
+}}
+
+/* ---------- Section title + status banner ---------- */
 .section-title {{
     color: {ACCENT};
     font-size: 12px;
@@ -153,7 +450,7 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
     margin: 6px 0 12px 0;
 }}
 .status-banner {{
-    background: #2A1D1A;
+    background: #0B1B24;
     border: 1px solid {ACCENT};
     border-radius: 12px;
     padding: 12px 16px;
@@ -185,21 +482,11 @@ def apply_plotly_theme(fig, height: int = 400, title: str = ""):
     Returns:
         The same figure, themed.
     """
-    fig.update_layout(
+    layout = dict(
         template="plotly_dark",
         paper_bgcolor=CANVAS_BG,
         plot_bgcolor=CARD_BG,
         font=dict(color=TEXT_MUTED, family="Segoe UI, Inter, sans-serif", size=12),
-        title=dict(
-            text=title,
-            font=dict(color=TEXT_LIGHT, size=14),
-            x=0.0,
-            xanchor="left",
-            xref="container",
-            y=0.99,
-            yanchor="top",
-            yref="container",
-        ) if title else None,
         height=height,
         margin=dict(t=64 if title else 30, b=78, l=62, r=26),
         xaxis=dict(gridcolor=GRID, zerolinecolor=GRID, linecolor=BORDER),
@@ -217,4 +504,19 @@ def apply_plotly_theme(fig, height: int = 400, title: str = ""):
         ),
         hoverlabel=dict(bgcolor=PANEL_BG, font_color=TEXT_LIGHT, bordercolor=BORDER),
     )
+    if title:
+        # Only set a title when there is one: passing ``title=None`` resets
+        # the title to the template default, which plotly.js then renders as
+        # the literal string "undefined".
+        layout["title"] = dict(
+            text=title,
+            font=dict(color=TEXT_LIGHT, size=14),
+            x=0.0,
+            xanchor="left",
+            xref="container",
+            y=0.99,
+            yanchor="top",
+            yref="container",
+        )
+    fig.update_layout(**layout)
     return fig
