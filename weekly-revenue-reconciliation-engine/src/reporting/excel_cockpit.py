@@ -11,6 +11,8 @@ used range; charts are real native Excel charts, not images.
 
 from __future__ import annotations
 
+from typing import TypedDict
+
 import pandas as pd
 from openpyxl.styles import Alignment
 from openpyxl.utils import get_column_letter
@@ -117,12 +119,32 @@ def _bucket_totals(weekly: pd.DataFrame, df: pd.DataFrame | None) -> dict[str, f
     return {str(k): float(v) for k, v in totals.sort_values(ascending=False).items()}
 
 
+class ChartRefs(TypedDict):
+    """Anchors of the hidden chart-source block on the Command Center sheet.
+
+    Every value is a cell anchor: the row/col pair the native Excel charts
+    reference, plus the ordered bucket labels for the donut.
+    """
+
+    weekly_row: int
+    week_col: int
+    gross_col: int
+    net_col: int
+    orders_col: int
+    bucket_row: int
+    bucket_label_col: int
+    bucket_value_col: int
+    gauge_row: int
+    gauge_value_col: int
+    bucket_labels: list[str]
+
+
 def _write_chart_data(
     ws: Worksheet,
     weekly: pd.DataFrame,
     df: pd.DataFrame,
     kpi,
-) -> dict[str, int]:
+) -> ChartRefs:
     """Write the hidden source block that the native charts reference.
 
     Args:

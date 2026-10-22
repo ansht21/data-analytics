@@ -21,7 +21,7 @@ cache:
 engine-lint:
   stage: lint
   before_script:
-    - pip install --quiet ruff mypy pandas openpyxl pyarrow pyyaml
+    - pip install --quiet ruff mypy pandas openpyxl pyarrow pyyaml types-PyYAML
   script:
     - cd weekly-revenue-reconciliation-engine
     - ruff check src tests scripts run_pipeline.py streamlit_app

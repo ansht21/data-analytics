@@ -16,7 +16,6 @@ from streamlit_app.common import (  # noqa: E402
     inject_theme,
     load_all,
     render_global_sidebar,
-    section_title,
 )
 from streamlit_app.components.charts import (  # noqa: E402
     leakage_stacked,

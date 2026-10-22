@@ -20,7 +20,6 @@ from streamlit_app.common import (  # noqa: E402
     kpi_row,
     load_all,
     render_global_sidebar,
-    section_title,
 )
 from streamlit_app.components.charts import (  # noqa: E402
     bucket_mix_donut,

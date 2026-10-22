@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pandas as pd
-import pytest
 from streamlit_app.components.charts import bucket_legend_rows
 from streamlit_app.components.cockpit import (
     hero_card,

@@ -17,6 +17,7 @@ from openpyxl.chart.legend import Legend
 from openpyxl.chart.marker import DataPoint
 from openpyxl.chart.shapes import GraphicalProperties
 from openpyxl.chart.text import RichText
+from openpyxl.chart.title import title_maker
 from openpyxl.drawing.line import LineProperties
 from openpyxl.drawing.text import (
     CharacterProperties,
@@ -87,10 +88,14 @@ def style_chart(chart, title: str = "") -> None:
     chart.graphical_properties = GraphicalProperties(solidFill=CANVAS_BG)
     chart.graphical_properties.line = LineProperties(noFill=True)
     if title:
-        chart.title = title
-        chart.title.tx.rich.p[0].pPr = ParagraphProperties(
+        # ``chart.title = <str>`` is converted to a Title by openpyxl's
+        # descriptor, but the static type stays ``str``. Build the Title
+        # explicitly so the rich-text formatting below is type-safe.
+        chart_title = title_maker(title)
+        chart_title.tx.rich.p[0].pPr = ParagraphProperties(
             defRPr=CharacterProperties(sz=1000, b=True, solidFill=TEXT_LIGHT)
         )
+        chart.title = chart_title
     chart.style = 2
     chart.roundedCorners = False
     # The chart source block lives in hidden columns; without this Excel
@@ -219,7 +224,7 @@ def build_bucket_donut(
     )
 
     series = chart.series[0]
-    points = []
+    points: list[DataPoint] = []
     for label in labels:
         point = DataPoint(idx=len(points))
         point.graphicalProperties = GraphicalProperties(
@@ -322,7 +327,7 @@ def build_settlement_gauge(
         titles_from_data=False, from_rows=True,
     )
     series = chart.series[0]
-    points = []
+    points: list[DataPoint] = []
     for idx, color in enumerate((ACCENT, "182338")):
         point = DataPoint(idx=idx)
         point.graphicalProperties = GraphicalProperties(solidFill=color)
