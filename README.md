@@ -5,8 +5,8 @@
 
 [![Tests](https://img.shields.io/badge/Tests-50_Passed-success?style=for-the-badge&logo=pytest&logoColor=white)](#featured-analytical-projects)
 [![Records](https://img.shields.io/badge/Records-179K%20verified-00C7B7?style=for-the-badge&logo=database&logoColor=white)](#portfolio-at-a-glance)
-[![Contract Agent CI](https://github.com/ansht21/data-analytics/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ansht21/data-analytics/actions/workflows/pipeline.yml)
-[![Revenue Engine CI](https://github.com/ansht21/data-analytics/actions/workflows/weekly-revenue-reconciliation-engine.yml/badge.svg)](https://github.com/ansht21/data-analytics/actions/workflows/weekly-revenue-reconciliation-engine.yml/badge.svg)
+[![Contract Agent CI](https://gitlab.com/ansht_121/data-analytics/badges/main/pipeline.svg?key=pipeline_contract_agent&style=for-the-badge)](https://gitlab.com/ansht_121/data-analytics/-/pipelines)
+[![Revenue Engine CI](https://gitlab.com/ansht_121/data-analytics/badges/main/pipeline.svg?key=weekly_revenue_reconciliation_engine&style=for-the-badge)](https://gitlab.com/ansht_121/data-analytics/-/pipelines)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
