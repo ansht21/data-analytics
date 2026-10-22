@@ -65,7 +65,7 @@ cols = ["Order ID", "parsed_date", "week_label", "Status", "financial_bucket",
         "Amount", "Category", "Fulfilment", "ship-state", "ship-city", "B2B"]
 cols = [c for c in cols if c in view.columns]
 if len(view):
-    st.dataframe(view[cols].head(5000), use_container_width=True, hide_index=True)
+    st.dataframe(view[cols].head(5000), width="stretch", hide_index=True)
     if len(view) > 5000:
         st.caption(f"Showing first 5,000 of {len(view):,} rows — narrow the filters to see more.")
 else:

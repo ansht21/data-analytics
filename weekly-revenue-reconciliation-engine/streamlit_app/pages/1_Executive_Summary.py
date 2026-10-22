@@ -79,12 +79,12 @@ kpi_row(
 )
 
 with panel("Gross → Net Waterfall", "Where the invoiced money went"):
-    st.plotly_chart(waterfall_gross_net(fweekly, fdf), use_container_width=True)
+    st.plotly_chart(waterfall_gross_net(fweekly, fdf), width="stretch")
 
 c1, c2 = st.columns(2, gap="medium")
 with c1:
     with panel("Weekly Trend", "Gross vs net realized cash"):
-        st.plotly_chart(weekly_combo(fweekly), use_container_width=True)
+        st.plotly_chart(weekly_combo(fweekly), width="stretch")
 with c2:
     with panel("Settled Clearance vs Target",
                f"Audit target {settings.thresholds.settled_clearance_critical_below:.0f}%"
@@ -93,15 +93,15 @@ with c2:
             settled_clearance_vs_target(
                 fweekly, settings.thresholds.settled_clearance_critical_below
             ),
-            use_container_width=True,
+            width="stretch",
         )
 
 with panel("Revenue by Financial Bucket", "Where every rupee landed"):
-    st.plotly_chart(bucket_mix_donut(fdf), use_container_width=True)
+    st.plotly_chart(bucket_mix_donut(fdf), width="stretch")
 
 with panel("🚨 Anomaly Log", "Weeks that breached an audit threshold"):
     if len(anomalies):
-        st.dataframe(anomalies, use_container_width=True, hide_index=True)
+        st.dataframe(anomalies, width="stretch", hide_index=True)
         st.caption(
             f"CRITICAL: settled clearance < {settings.thresholds.settled_clearance_critical_below:.0f}% · "
             f"WARNING: leakage share > {settings.thresholds.leakage_warning_above:.0f}% or "

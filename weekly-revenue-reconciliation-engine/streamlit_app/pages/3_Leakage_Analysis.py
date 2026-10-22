@@ -80,18 +80,18 @@ kpi_row(
 section_title("Where the Money Leaks")
 c1, c2 = st.columns(2)
 with c1:
-    st.plotly_chart(category_leakage_bar(leak), use_container_width=True)
+    st.plotly_chart(category_leakage_bar(leak), width="stretch")
 with c2:
-    st.plotly_chart(state_leakage_bar(leak), use_container_width=True)
+    st.plotly_chart(state_leakage_bar(leak), width="stretch")
 
 section_title("Fulfilment Channel Comparison")
 c3, c4 = st.columns(2)
 with c3:
     st.plotly_chart(
-        fulfilment_settlement_bar(fulfilment_settlement(fdf)), use_container_width=True
+        fulfilment_settlement_bar(fulfilment_settlement(fdf)), width="stretch"
     )
 with c4:
-    st.plotly_chart(bucket_mix_donut(fdf), use_container_width=True)
+    st.plotly_chart(bucket_mix_donut(fdf), width="stretch")
 
 section_title("Leakage ₹ by Fulfilment & Type")
 if len(leak):
@@ -100,7 +100,7 @@ if len(leak):
         .reset_index().pivot(index="Fulfilment", columns="financial_bucket",
                              values="Amount").fillna(0).round(2)
     )
-    st.dataframe(pivot, use_container_width=True)
+    st.dataframe(pivot, width="stretch")
 else:
     st.info("No leakage rows match the current filters.")
 
@@ -112,7 +112,7 @@ if len(cat):
             "Category": "Category", "revenue": "Gross Revenue ₹",
             "orders": "Orders", "qty": "Units",
         }),
-        use_container_width=True, hide_index=True,
+        width="stretch", hide_index=True,
     )
 else:
     st.info("No rows match the current filters.")

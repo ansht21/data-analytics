@@ -53,7 +53,7 @@ st.caption(
 c1, c2 = st.columns(2, gap="medium")
 with c1:
     with panel("Weekly Revenue", "Gross invoiced vs net realized cash"):
-        st.plotly_chart(weekly_combo(fweekly), use_container_width=True)
+        st.plotly_chart(weekly_combo(fweekly), width="stretch")
 with c2:
     with panel("Settled Clearance vs Target",
                f"Audit target {settings.thresholds.settled_clearance_critical_below:.0f}%"
@@ -62,11 +62,11 @@ with c2:
             settled_clearance_vs_target(
                 fweekly, settings.thresholds.settled_clearance_critical_below
             ),
-            use_container_width=True,
+            width="stretch",
         )
 
 with panel("Leakage by Week", "Cancellations, returns and losses per fiscal week"):
-    st.plotly_chart(leakage_stacked(fweekly), use_container_width=True)
+    st.plotly_chart(leakage_stacked(fweekly), width="stretch")
 
 with panel("Week-over-Week Metrics", "Every weekly KPI, filter-aware"):
     tbl = fweekly[[
@@ -80,7 +80,7 @@ with panel("Week-over-Week Metrics", "Every weekly KPI, filter-aware"):
         "Gross Coverage %", "Cancel %", "WoW Net %", "Lines", "AOV ₹",
         "Days", "Partial",
     ]
-    st.dataframe(tbl.round(2), use_container_width=True, hide_index=True)
+    st.dataframe(tbl.round(2), width="stretch", hide_index=True)
 
 neg = tbl[tbl["WoW Net %"] < 0]
 partial = tbl[tbl["Partial"]]

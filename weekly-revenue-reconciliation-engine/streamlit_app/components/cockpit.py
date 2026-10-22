@@ -443,7 +443,7 @@ def render_export_button(
         data=weekly_filtered.to_csv(index=False).encode("utf-8"),
         file_name=filename,
         mime="text/csv",
-        use_container_width=True,
+        width="stretch",
         key="sidebar_export_report",
     )
 

@@ -138,14 +138,14 @@ with main:
         "Revenue Trend — Gross Invoiced vs Net Realized",
         "Weekly fiscal calendar · W13–W26 FY22",
     ):
-        st.plotly_chart(cockpit_area_trend(fweekly), use_container_width=True)
+        st.plotly_chart(cockpit_area_trend(fweekly), width="stretch")
 
 with rail:
     with panel("Net Realized Velocity", "Rolling weekly shape"):
-        st.plotly_chart(cockpit_mini_area(fweekly), use_container_width=True)
+        st.plotly_chart(cockpit_mini_area(fweekly), width="stretch")
 
     with panel("Transaction Volume / Week", "Line count per fiscal week"):
-        st.plotly_chart(cockpit_volume_bars(fweekly), use_container_width=True)
+        st.plotly_chart(cockpit_volume_bars(fweekly), width="stretch")
 
 # ----------------------------------------------------- donut + gauge + table
 st.write("")
@@ -155,7 +155,7 @@ with d1:
     with panel("Revenue by Financial Bucket", "Where every rupee landed"):
         donut_col, legend_col = st.columns([1.15, 1], gap="medium")
         with donut_col:
-            st.plotly_chart(cockpit_bucket_donut(fdf), use_container_width=True)
+            st.plotly_chart(cockpit_bucket_donut(fdf), width="stretch")
         with legend_col:
             legend_rows = bucket_legend_rows(fdf)
             legend_total = sum(amount for _, _, amount in legend_rows) or 1.0
@@ -176,7 +176,7 @@ with d2:
     with panel("Settlement Health", f"Audit target {target:.0f}% of settled base"):
         st.plotly_chart(
             cockpit_gauge(kpi.settled_clearance_rate, "of settled base retained"),
-            use_container_width=True,
+            width="stretch",
         )
 
 st.write("")
@@ -196,7 +196,7 @@ with panel("Weekly Reconciliation Detail", "Every figure below is filter-aware")
             "total_orders": "Lines",
             "is_partial_week": "Partial",
         }),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
