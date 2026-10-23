@@ -86,9 +86,9 @@ ships **two reporting layers**:
 
 ## 📊 Automated Executive Excel Dashboard (`openpyxl`)
 
-> Generated with 1 command (`python run_pipeline.py`) — a production-ready multi-tab Excel workbook featuring a dark "Command Center" executive tab (gradient KPI hero cards, a native Excel area chart, a revenue-mix doughnut and a settlement-health gauge ring), dynamic `=SUM()` and `=IFERROR()` formulas, and conditional formatting data bars.
+> Generated with 1 command (`python run_pipeline.py`) — a production-ready multi-tab Excel workbook featuring a dark "Command Center" executive tab in the unified **Executive Slate / Metric-Flow** identity: slate-900 canvas, single sky-blue accent, gradient KPI hero cards with **week-over-week delta pills**, a native Excel area chart, a revenue-mix doughnut and a settlement-health gauge ring, dynamic `=SUM()` and `=IFERROR()` formulas, and conditional formatting data bars — every series drawn from one tonal-blue ladder.
 
-### Tab 1 · Command Center (dark executive dashboard)
+### Tab 1 · Command Center (dark executive dashboard — Metric-Flow slate/blue edition)
 <a href="docs/images/06_excel_executive_dashboard.png">
   <img src="docs/images/06_excel_executive_dashboard.png" alt="Excel Executive Dashboard Tab" width="900" />
 </a>
