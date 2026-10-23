@@ -57,7 +57,8 @@ def test_investigator_without_key_stays_offline(monkeypatch):
     assert "offline" in a["mode"]
 
 
-def test_react_agent_offline_safe():
+def test_react_agent_offline_safe(monkeypatch):
+    monkeypatch.delenv('GROQ_API_KEY', raising=False)
     from src import agent_investigate
     agent_investigate.set_context({"total_rows": 3, "violations": []}, None)
     out = agent_investigate.run_react_agent("test")
