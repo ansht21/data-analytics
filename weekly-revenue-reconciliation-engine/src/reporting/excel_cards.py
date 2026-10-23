@@ -17,6 +17,8 @@ from .excel_theme import (
     CENTER,
     GRAD_HERO_A,
     GRAD_HERO_B,
+    HERO_CHIP_FILL,
+    HERO_CHIP_FONT,
     HERO_FOOT_FONT,
     HERO_LABEL_FONT,
     HERO_SUB_FONT,
@@ -79,12 +81,15 @@ def render_hero_card(
     foot: str = "",
     alt: bool = False,
     number_format: str | None = None,
+    delta: str = "",
+    delta_up: bool = True,
 ) -> None:
     """Render a large gradient hero card.
 
     The card occupies ``height`` rows and ``span`` columns. Every cell in
     the block gets the gradient fill so the card reads as one surface, with
-    a bright accent bar on top.
+    a bright accent bar on top. Optionally a delta pill is pinned to the
+    label row's right edge (Metric-Flow style).
 
     Args:
         ws: Target worksheet.
@@ -96,8 +101,10 @@ def render_hero_card(
         value: Primary value (numeric cells get a number format applied).
         sub: Descriptor under the value.
         foot: Optional footnote line.
-        alt: Use the emerald gradient instead of the cyan one.
+        alt: Use the tonal-blue gradient instead of the sky one.
         number_format: Excel number format for a numeric value.
+        delta: Optional WoW delta text for the top-right pill.
+        delta_up: Arrow direction for the pill.
     """
     stops = GRAD_HERO_B if alt else GRAD_HERO_A
     fill = hero_gradient(stops)
@@ -115,10 +122,24 @@ def render_hero_card(
                 right=Side(style=None),
             )
 
-    safe_merge(ws, start_row, start_col, start_row, end_col)
-    lbl = ws.cell(row=start_row, column=start_col, value=label.upper())
-    lbl.font = HERO_LABEL_FONT
-    lbl.alignment = LEFT
+    if delta:
+        # Label keeps the left edge; the pill occupies the right 2 columns.
+        safe_merge(ws, start_row, start_col, start_row, end_col - 2)
+        lbl = ws.cell(row=start_row, column=start_col, value=label.upper())
+        lbl.font = HERO_LABEL_FONT
+        lbl.alignment = LEFT
+
+        safe_merge(ws, start_row, end_col - 1, start_row, end_col)
+        chip = ws.cell(row=start_row, column=end_col - 1,
+                       value=f'{"▲" if delta_up else "▼"} {delta} WoW')
+        chip.font = HERO_CHIP_FONT
+        chip.fill = HERO_CHIP_FILL
+        chip.alignment = CENTER
+    else:
+        safe_merge(ws, start_row, start_col, start_row, end_col)
+        lbl = ws.cell(row=start_row, column=start_col, value=label.upper())
+        lbl.font = HERO_LABEL_FONT
+        lbl.alignment = LEFT
 
     safe_merge(ws, start_row + 1, start_col, start_row + 2, end_col)
     val = ws.cell(row=start_row + 1, column=start_col, value=value)

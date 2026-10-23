@@ -120,13 +120,13 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
     color: #FFFFFF;
 }}
 
-/* ---------- KPI card: dark tile with a cyan top accent ---------- */
+/* ---------- KPI card: Metric-Flow tile, delta pill pinned top-right ---------- */
 .kpi-card {{
     background: {CARD_BG};
     border: 1px solid {BORDER};
-    border-radius: 14px;
-    padding: 16px 18px 14px 18px;
-    margin-bottom: 12px;
+    border-radius: 18px;
+    padding: 20px 20px 18px 20px;
+    margin-bottom: 14px;
     position: relative;
     overflow: hidden;
     height: 100%;
@@ -144,19 +144,20 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
     font-weight: 700;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }}
 .kpi-value {{
     color: {TEXT_LIGHT};
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 800;
     line-height: 1.15;
 }}
-.kpi-sub {{ color: {TEXT_MUTED}; font-size: 12px; margin-top: 6px; }}
+.kpi-sub {{ color: {TEXT_MUTED}; font-size: 12px; margin-top: 10px; }}
 .kpi-delta {{
-    display: inline-block;
-    margin-top: 10px;
-    padding: 3px 10px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 4px 12px;
     border-radius: 999px;
     font-size: 11px;
     font-weight: 700;
@@ -168,9 +169,9 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
 /* ---------- Hero gradient card (the two large KPI blocks) ---------- */
 .hero-card {{
     background: {GRAD_HERO_A};
-    border-radius: 16px;
-    padding: 20px 22px 18px 22px;
-    margin-bottom: 14px;
+    border-radius: 18px;
+    padding: 24px 24px 22px 24px;
+    margin-bottom: 16px;
     position: relative;
     overflow: hidden;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
@@ -256,27 +257,27 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
 .panel {{
     background: {CARD_BG};
     border: 1px solid {BORDER};
-    border-radius: 16px;
-    padding: 14px 16px 12px 16px;
-    margin-bottom: 14px;
+    border-radius: 18px;
+    padding: 18px 20px 16px 20px;
+    margin-bottom: 16px;
 }}
 .panel-title {{
     color: {TEXT_LIGHT};
     font-size: 13px;
     font-weight: 700;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
 }}
-.panel-sub {{ color: {TEXT_MUTED}; font-size: 11px; margin-bottom: 6px; }}
+.panel-sub {{ color: {TEXT_MUTED}; font-size: 11px; margin-bottom: 10px; }}
 
 /* Re-skin Streamlit's bordered container as a dark chart panel. */
 [data-testid="stVerticalBlockBorderWrapper"] {{
     background: {CARD_BG};
     border: 1px solid {BORDER} !important;
-    border-radius: 16px;
-    padding: 12px 14px 8px 14px;
+    border-radius: 18px;
+    padding: 16px 18px 10px 18px;
 }}
 [data-testid="stVerticalBlockBorderWrapper"] > div {{
-    gap: 0.35rem;
+    gap: 0.45rem;
 }}
 
 /* ---------- Colour-keyed legend (rendered as HTML) ---------- */

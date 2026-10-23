@@ -13,7 +13,7 @@ from openpyxl.formatting.rule import CellIsRule
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw" / "Amazon_Sale_Report.csv"
 OUT = ROOT / "reports" / "Amazon_All_Data_SINGLE_FILE.xlsx"
 

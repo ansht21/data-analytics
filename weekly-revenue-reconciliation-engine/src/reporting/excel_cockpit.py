@@ -257,6 +257,16 @@ def build_command_center(
     )
 
     # --- Hero cards + stat pills ----------------------------------------
+    # Week-over-week deltas on the last two FULL weeks (same rule as the
+    # static cockpit render and the Streamlit app: a partial week is never
+    # allowed to masquerade as a business collapse).
+    full_w = weekly[~weekly["is_partial_week"]]
+    if len(full_w) < 2:
+        full_w = weekly
+    _last, _prev = full_w.iloc[-1], full_w.iloc[-2]
+    d_gross = (_last["gross_revenue"] / _prev["gross_revenue"] - 1) * 100
+    d_net = (_last["net_realized"] / max(_prev["net_realized"], 1) - 1) * 100
+
     render_hero_card(
         ws, 6, HERO_COL, HERO_SPAN, 5,
         "Total Revenue Invoiced",
@@ -264,6 +274,8 @@ def build_command_center(
         f"{kpi.total_lines:,} transaction lines audited",
         foot=f"Exact: ₹{kpi.gross_revenue:,.2f}  |  {kpi.weeks_active} fiscal "
              f"weeks  |  AOV ₹{kpi.avg_order_value:,.0f}",
+        delta=f"{abs(d_gross):.1f}%",
+        delta_up=d_gross >= 0,
     )
     render_hero_card(
         ws, 6, HERO2_COL, HERO_SPAN, 5,
@@ -273,6 +285,8 @@ def build_command_center(
         foot=f"Exact: ₹{kpi.net_realized:,.2f}  |  Settlement lag "
              f"{kpi.settlement_lag_rate:.1f}%  |  ₹{in_flight/1e7:,.2f} Cr in flight",
         alt=True,
+        delta=f"{abs(d_net):.1f}%",
+        delta_up=d_net >= 0,
     )
     render_stat_pill(ws, 6, PILL_COL, PILL_SPAN, "Total Leakage",
                       f"₹{kpi.total_leakage/1e7:,.2f} Cr", "neg")
@@ -337,10 +351,10 @@ def build_command_center(
     # Size the rows so the hero cards and the banner have breathing room.
     ws.row_dimensions[1].height = 30
     ws.row_dimensions[2].height = 16
-    ws.row_dimensions[4].height = 22
+    ws.row_dimensions[4].height = 24
     for r in range(6, 12):
-        ws.row_dimensions[r].height = 20
-    ws.row_dimensions[7].height = 30
+        ws.row_dimensions[r].height = 21
+    ws.row_dimensions[7].height = 32
     ws.row_dimensions[8].height = 12
 
     # Hide the chart-source block so the dashboard reads cleanly.
