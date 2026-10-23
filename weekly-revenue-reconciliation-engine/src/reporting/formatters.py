@@ -15,11 +15,11 @@ THIN_BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 
 KPI_ACCENTS = {
     "blue": "0B2A4A",     # Executive Navy
-    "green": "0E9F8A",    # Emerald
-    "red": "DC2626",      # Crimson
-    "yellow": "D97706",   # Amber
+    "green": "0EA5E9",    # Sky (single-accent positive)
+    "red": "64748B",      # Muted slate (negative flag)
+    "yellow": "94A3B8",   # Muted slate (warning flag)
     "gray": "475569",     # Slate
-    "purple": "4F46E5",   # Indigo
+    "purple": "38BDF8",   # Sky (single-accent highlight)
 }
 
 CARD_BG_FILL = PatternFill("solid", fgColor="FFFFFF")

@@ -80,13 +80,13 @@ KPI_SLATE = ACCENT_SOFT     # gross invoiced - neutral context
 KPI_TEAL = POSITIVE         # net realized cash - positive
 KPI_CORAL = NEGATIVE        # total leakage - negative
 KPI_AMBER = WARNING         # clearance below target - warning
-KPI_INDIGO = "#A78BFA"      # avg order value - unit economics
+KPI_INDIGO = "#7DD3FC"      # avg order value - unit economics (tonal blue)
 
 # Gross -> Net composition stack colours.
 C_NET = POSITIVE
 C_CANCEL = NEGATIVE
 C_RETURN = WARNING
-C_LOSS = "#B91C1C"
+C_LOSS = "#64748B"
 C_TRANSIT = NEUTRAL
 
 FIG_W_IN, FIG_H_IN, DPI = 12.8, 7.2, 200   # -> exactly 2560 x 1440
@@ -124,7 +124,7 @@ def _kpi(ax, x, y, w, h, label, value, subtext, delta, delta_up, accent):
     bw = 0.060
     bcol = KPI_TEAL if delta_up else KPI_CORAL
     arrow = "\u25b2" if delta_up else "\u25bc"
-    _rect(ax, x + 0.012, y - 0.090, bw, 0.017, "#25252A", edge=bcol, lw=0.7, z=3)
+    _rect(ax, x + 0.012, y - 0.090, bw, 0.017, "#24344B", edge=bcol, lw=0.7, z=3)
     # "WoW" is spelled out: without it a -43% chip on Net Realized reads as
     # "the business collapsed" rather than "one flagged week vs the prior one".
     ax.text(x + 0.012 + bw / 2, y - 0.0815, f"{arrow} {delta} WoW", color=bcol, fontsize=6.4,
@@ -184,7 +184,7 @@ def _rank_card(ax, x, y_top, w, title, items, accent=ACCENT):
 
 
 def _status_footer(ax, x, y_bottom, w, title, sub):
-    _rect(ax, x, y_bottom, w, STATUS_H, "#2A1D1A", edge=ACCENT, lw=0.8)
+    _rect(ax, x, y_bottom, w, STATUS_H, "#1E293B", edge=ACCENT, lw=0.8)
     ax.text(x + w / 2, y_bottom + STATUS_H * 0.64, title, color=ACCENT, fontsize=7.2,
             weight="bold", transform=ax.transAxes, ha="center", va="center")
     ax.text(x + w / 2, y_bottom + STATUS_H * 0.26, sub, color=TEXT_MUTED, fontsize=6.4,

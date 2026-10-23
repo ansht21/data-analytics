@@ -55,7 +55,7 @@ def build_audit_tab(wb: Workbook, exceptions: pd.DataFrame, run_str: str) -> Non
     audit.conditional_formatting.add(
         f"D5:D{max(last_row, 5)}",
         CellIsRule(operator="equal", formula=['"Cancelled"'],
-                   fill=PatternFill("solid", fgColor="FFC7CE")))
+                   fill=PatternFill("solid", fgColor="E2E8F0")))
     style_range_border(audit, 4, max(last_row, 4), 1, len(cols))
     for c in range(1, len(cols) + 1):
         audit.column_dimensions[get_column_letter(c)].width = 22

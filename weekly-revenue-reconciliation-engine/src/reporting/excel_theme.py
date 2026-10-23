@@ -1,8 +1,8 @@
-"""Dark "Midnight Deck" theme tokens for the openpyxl dashboard.
+"""Dark "Executive Slate" theme tokens for the openpyxl dashboard.
 
 Mirrors :mod:`streamlit_app.theme` so the Excel workbook and the Streamlit
-cockpit read as the same product: deep-navy canvas, sky-cyan and emerald
-accents, muted slate labels.
+cockpit read as the same product: slate-900 canvas, elevated charcoal panels,
+a single sapphire/sky-blue accent, muted slate labels and status flags.
 
 Excel has no page background, so the canvas is painted by filling the used
 cell range with :data:`CANVAS_BG` and drawing "panels" as merged, filled
@@ -14,29 +14,29 @@ from __future__ import annotations
 from openpyxl.styles import Alignment, Border, Font, GradientFill, PatternFill, Side
 
 # --- Canvas / surface / border -------------------------------------------
-CANVAS_BG = "0B1220"
-PANEL_BG = "101A2C"
-PANEL_HI = "16223A"
-BORDER = "1E2C45"
-GRID = "26385A"
+CANVAS_BG = "0F172A"
+PANEL_BG = "1E293B"
+PANEL_HI = "27364A"
+BORDER = "334155"
+GRID = "24344B"
 
 # --- Text ----------------------------------------------------------------
-TEXT_LIGHT = "EAF0FA"
-TEXT_MUTED = "8FA3BF"
-TEXT_DIM = "5B6E8C"
+TEXT_LIGHT = "E2E8F0"
+TEXT_MUTED = "94A3B8"
+TEXT_DIM = "64748B"
 
 # --- Accents -------------------------------------------------------------
-ACCENT = "22D3EE"
+ACCENT = "38BDF8"
 ACCENT_SOFT = "7DD3FC"
-ACCENT_DEEP = "0E7490"
-POSITIVE = "34D399"
-POSITIVE_DEEP = "065F46"
-WARNING = "F59E0B"
-NEGATIVE = "FB7185"
+ACCENT_DEEP = "0284C7"
+POSITIVE = "0EA5E9"
+POSITIVE_DEEP = "075985"
+WARNING = "94A3B8"
+NEGATIVE = "64748B"
 
 # Hero gradient card fills (left -> right).
-GRAD_HERO_A = ("0E7490", "22D3EE")
-GRAD_HERO_B = ("065F46", "34D399")
+GRAD_HERO_A = ("0369A1", "38BDF8")
+GRAD_HERO_B = ("0C4A6E", "7DD3FC")
 
 # --- Fonts ---------------------------------------------------------------
 TITLE_FONT = Font(name="Segoe UI", size=20, bold=True, color=TEXT_LIGHT)
@@ -56,7 +56,7 @@ TABLE_FONT = Font(name="Segoe UI", size=9, color=TEXT_LIGHT)
 # --- Fills ---------------------------------------------------------------
 CANVAS_FILL = PatternFill("solid", fgColor=CANVAS_BG)
 PANEL_FILL = PatternFill("solid", fgColor=PANEL_BG)
-BANNER_FILL = PatternFill("solid", fgColor="0B1B24")
+BANNER_FILL = PatternFill("solid", fgColor="0F2743")
 PILL_FILL = PatternFill("solid", fgColor=PANEL_HI)
 
 THIN = Side(style="thin", color=BORDER)

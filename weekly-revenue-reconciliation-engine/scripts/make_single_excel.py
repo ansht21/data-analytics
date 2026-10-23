@@ -127,7 +127,7 @@ def main() -> None:
         ws2.conditional_formatting.add(
             f"H2:H{len(weekly) + 1}",
             CellIsRule(operator="lessThan", formula=["85"],
-                       fill=PatternFill("solid", fgColor="FFC7CE")))
+                       fill=PatternFill("solid", fgColor="E2E8F0")))
     print(f"DONE -> {OUT} ({OUT.stat().st_size // 1024} KB)", flush=True)
 
 

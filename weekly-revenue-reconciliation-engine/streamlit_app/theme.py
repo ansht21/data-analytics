@@ -1,46 +1,47 @@
-"""Dark "Midnight Deck" theme: palette tokens, CSS injection, Plotly skin.
+"""Dark "Executive Slate" theme: palette tokens, CSS injection, Plotly skin.
 
 Kept separate from :mod:`streamlit_app.common` so both the app pages and the
 PNG renderer can share the exact same colour tokens without importing
 Streamlit.
 
-The palette is a deep-navy / sky-cyan / emerald scheme. It is intentionally
-*not* the purple-magenta look of the reference CRM mock: same structural
-layout, a different dark identity.
+The palette is a unified monochromatic slate-navy identity: slate-900 canvas,
+charcoal cards, and a single sapphire/sky-blue accent. Chart series are tonal
+shades of the same blue; status flags are muted slate tones rather than bright
+red/green/amber.
 """
 
 from __future__ import annotations
 
 # Canvas / surface / border tokens.
-CANVAS_BG = "#070B14"
-PANEL_BG = "#0B1220"
-CARD_BG = "#101A2C"
-CARD_HI = "#16223A"
-BORDER = "#1E2C45"
-CHIP_BG = "#16223A"
-CHIP_EDGE = "#26385A"
-GRID = "#1E2C45"
+CANVAS_BG = "#0F172A"
+PANEL_BG = "#1E293B"
+CARD_BG = "#1E293B"
+CARD_HI = "#27364A"
+BORDER = "#334155"
+CHIP_BG = "#27364A"
+CHIP_EDGE = "#3D4F66"
+GRID = "#24344B"
 
 # Text tokens.
-TEXT_LIGHT = "#EAF0FA"
-TEXT_MUTED = "#8FA3BF"
+TEXT_LIGHT = "#E2E8F0"
+TEXT_MUTED = "#94A3B8"
 
-# Accent (sky cyan) + semantic tokens.
-ACCENT = "#22D3EE"
+# Accent (executive sky blue) + semantic tokens.
+ACCENT = "#38BDF8"
 ACCENT_SOFT = "#7DD3FC"
-ACCENT_DEEP = "#0E7490"
-ACCENT_PALE = "#CFFAFE"
-NEUTRAL = "#64748B"
+ACCENT_DEEP = "#0284C7"
+ACCENT_PALE = "#BAE6FD"
+NEUTRAL = "#475569"
 
-# Semantic series colours used in charts.
-POSITIVE = "#34D399"
-WARNING = "#F59E0B"
-NEGATIVE = "#FB7185"
+# Semantic series colours: tonal blues + muted slate flags (no circus colours).
+POSITIVE = "#0EA5E9"
+WARNING = "#94A3B8"
+NEGATIVE = "#64748B"
 
 # Hero-card gradients (CSS ``background`` values).
-GRAD_HERO_A = "linear-gradient(135deg, #0E7490 0%, #0EA5E9 55%, #22D3EE 100%)"
-GRAD_HERO_B = "linear-gradient(135deg, #065F46 0%, #059669 55%, #34D399 100%)"
-GRAD_CTA = "linear-gradient(135deg, #0E7490 0%, #22D3EE 100%)"
+GRAD_HERO_A = "linear-gradient(135deg, #0369A1 0%, #0284C7 55%, #38BDF8 100%)"
+GRAD_HERO_B = "linear-gradient(135deg, #0C4A6E 0%, #075985 55%, #7DD3FC 100%)"
+GRAD_CTA = "linear-gradient(135deg, #0284C7 0%, #38BDF8 100%)"
 
 CSS = f"""
 <style>
@@ -161,8 +162,8 @@ header[data-testid="stHeader"] {{ background: {CANVAS_BG}; }}
     font-weight: 700;
     border: 1px solid {BORDER};
 }}
-.kpi-delta.up {{ color: {ACCENT_SOFT}; background: #0B2B33; border-color: {ACCENT}; }}
-.kpi-delta.down {{ color: {NEGATIVE}; background: #2A1420; border-color: {NEGATIVE}; }}
+.kpi-delta.up {{ color: {ACCENT_SOFT}; background: #0B2E4A; border-color: {ACCENT}; }}
+.kpi-delta.down {{ color: {NEGATIVE}; background: #28303B; border-color: {NEGATIVE}; }}
 
 /* ---------- Hero gradient card (the two large KPI blocks) ---------- */
 .hero-card {{

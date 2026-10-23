@@ -160,9 +160,9 @@ def render_stat_pill(
         tone: ``pos``, ``warn``, ``neg`` or ``default`` for the value colour.
     """
     colors = {
-        "pos": "34D399",
-        "warn": "F59E0B",
-        "neg": "FB7185",
+        "pos": "0EA5E9",
+        "warn": "94A3B8",
+        "neg": "64748B",
         "default": TEXT_LIGHT,
     }
     end_col = start_col + span - 1

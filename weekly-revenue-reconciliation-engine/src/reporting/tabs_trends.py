@@ -104,11 +104,11 @@ def build_trends_tab(wb: Workbook, weekly: pd.DataFrame) -> tuple[Worksheet, int
     trends.conditional_formatting.add(
         f"P{first_row}:P{last_row}",
         CellIsRule(operator="lessThan", formula=["0.70"],
-                   fill=PatternFill("solid", fgColor="FFC7CE")))
+                   fill=PatternFill("solid", fgColor="E2E8F0")))
     trends.conditional_formatting.add(
         f"P{first_row}:P{last_row}",
         CellIsRule(operator="greaterThanOrEqual", formula=["0.85"],
-                   fill=PatternFill("solid", fgColor="C6EFCE")))
+                   fill=PatternFill("solid", fgColor="D5E5F5")))
     trends.conditional_formatting.add(
         f"B{first_row}:B{last_row}",
         DataBarRule(start_type="num", start_value=0, end_type="max", color="1F4E79"))

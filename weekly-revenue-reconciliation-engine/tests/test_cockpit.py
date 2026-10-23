@@ -43,9 +43,9 @@ def test_nav_item_marks_the_active_page() -> None:
 
 def test_legend_row_carries_colour_value_and_share() -> None:
     """Each legend row carries a swatch, label, value and share."""
-    html = legend_row("#22D3EE", "In-Transit", "₹5.10 Cr", "64.9%")
+    html = legend_row("#38BDF8", "In-Transit", "₹5.10 Cr", "64.9%")
     assert "lg-swatch" in html
-    assert "#22D3EE" in html
+    assert "#38BDF8" in html
     assert "In-Transit" in html
     assert "₹5.10 Cr" in html
     assert "64.9%" in html
@@ -59,7 +59,7 @@ def test_bucket_legend_rows_sorted_by_amount() -> None:
     })
     rows = bucket_legend_rows(df)
     assert [label for label, _, _ in rows] == ["In-Transit", "Net Realized", "Pending"]
-    assert rows[0][1] == "#22D3EE"       # In-Transit uses the accent colour
+    assert rows[0][1] == "#38BDF8"       # In-Transit uses the accent colour
 
 
 def test_export_button_payload_matches_filtered_view() -> None:
