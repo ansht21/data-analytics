@@ -4,6 +4,18 @@
 losing ~26% of customers. Which customers leave, why, and what does the revenue at risk
 look like?
 
+## How to Run
+
+```bash
+pip install -r requirements.txt
+
+# 1. Build the database  -> run sql_queries/01_data_cleaning.sql then 02_churn_analysis.sql in MySQL
+# 2. Statistical deep-dive -> jupyter notebook Churn_EDA_Analysis.ipynb
+# 3. Interactive dashboard -> streamlit run app.py
+# 4. Static executive view -> open excel_analysis/Churn_Dashboard.xlsx
+```
+
+
 > Data note: real-world dataset (IBM Telco customer-churn sample). Every figure below is
 > reproducible from the committed notebooks, SQL scripts, and dataset.
 

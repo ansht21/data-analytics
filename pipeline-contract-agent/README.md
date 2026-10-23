@@ -1,6 +1,7 @@
 # 🛡️ Pipeline Contract Agent
 
-Contract-first data pipeline guard for the supply-chain log.
+**Business problem:** one corrupt batch reaching the warehouse silently corrupts every
+report built on top of it — finance notices weeks later. This is a **contract-first data pipeline guard** for the supply-chain log.
 **The contract enforces. The agent investigates. The human approves.**
 
 > **✅ Live-verified 19-Oct-2026 (Windows, Python 3.14):** good batch
