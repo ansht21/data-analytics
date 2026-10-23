@@ -12,6 +12,10 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -100,6 +104,65 @@ def _bucket_legend(df) -> str:
                    f"{amount / total * 100:.1f}%")
         for label, color, amount in rows
     )
+
+
+def _weekly_table(weekly: pd.DataFrame) -> str:
+    """Render the Weekly Reconciliation Detail table as dark HTML.
+
+    Args:
+        weekly: Weekly KPI DataFrame.
+
+    Returns:
+        HTML string containing the complete table markup.
+    """
+    rows = []
+    for _, r in weekly.iterrows():
+        is_partial = "YES" if bool(r.get("is_partial_week", False)) else "NO"
+        partial_badge = (
+            '<span style="color:#F59E0B;background:#261E0A;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;">YES</span>'
+            if is_partial == "YES"
+            else '<span style="color:#64748B;font-size:11px;">NO</span>'
+        )
+        gross = f"₹{r['gross_revenue']:,.2f}"
+        net = f"₹{r['net_realized']:,.2f}"
+        leakage = f"₹{r['total_leakage']:,.2f}"
+        clearance = f"{r['settled_clearance_rate']:.2f}%"
+        wow = f"{r.get('wow_net_growth', 0.0):+.2f}%"
+        wow_color = "#34D399" if r.get('wow_net_growth', 0.0) >= 0 else "#FB7185"
+        lines = f"{int(r['total_orders']):,}"
+
+        rows.append(f"""
+        <tr style="border-bottom:1px solid #16223A;font-size:12px;">
+          <td style="padding:10px 14px;color:#22D3EE;font-weight:700;">{r['week_label']}</td>
+          <td style="padding:10px 14px;color:#EAF0FA;text-align:right;">{gross}</td>
+          <td style="padding:10px 14px;color:#34D399;font-weight:700;text-align:right;">{net}</td>
+          <td style="padding:10px 14px;color:#FB7185;text-align:right;">{leakage}</td>
+          <td style="padding:10px 14px;color:#7DD3FC;font-weight:700;text-align:right;">{clearance}</td>
+          <td style="padding:10px 14px;color:{wow_color};font-weight:700;text-align:right;">{wow}</td>
+          <td style="padding:10px 14px;color:#8FA3BF;text-align:right;">{lines}</td>
+          <td style="padding:10px 14px;text-align:center;">{partial_badge}</td>
+        </tr>
+        """)
+
+    return f"""
+    <table style="width:100%;border-collapse:collapse;margin-top:6px;font-family:'Segoe UI',sans-serif;">
+      <thead>
+        <tr style="background:#0E1726;border-bottom:2px solid #1E2C45;color:#8FA3BF;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;">
+          <th style="padding:10px 14px;text-align:left;">Week</th>
+          <th style="padding:10px 14px;text-align:right;">Gross ₹</th>
+          <th style="padding:10px 14px;text-align:right;">Net ₹</th>
+          <th style="padding:10px 14px;text-align:right;">Leakage ₹</th>
+          <th style="padding:10px 14px;text-align:right;">Settled Clearance %</th>
+          <th style="padding:10px 14px;text-align:right;">WoW Net %</th>
+          <th style="padding:10px 14px;text-align:right;">Lines</th>
+          <th style="padding:10px 14px;text-align:center;">Partial</th>
+        </tr>
+      </thead>
+      <tbody>
+        {''.join(rows)}
+      </tbody>
+    </table>
+    """
 
 
 def _build_parts(settings, df, weekly, kpi) -> tuple[str, str, str]:
@@ -244,6 +307,11 @@ def build_preview() -> str:
                                "of settled base retained"), 300)}
       {panel_close()}
     </div>
+  </div>
+  <div style="margin-top:16px">
+    {panel_open("Weekly Reconciliation Detail", "Every figure below is filter-aware")}
+    {_weekly_table(weekly)}
+    {panel_close()}
   </div>
   <div class="cap">Source: Amazon Sale Report (Kaggle CC0) · W13–W26 FY22</div>
 </div>
