@@ -56,8 +56,8 @@ ships **two reporting layers**:
   <b>Dark "Metric Flow" executive cockpit — 5 pages, global filters, Plotly drill-down</b>
 </p>
 
-<a href="docs/images/01_dashboard_home.png">
-  <img src="docs/images/01_dashboard_home.png" alt="Revenue Reconciliation Cockpit — live Streamlit dashboard" width="1000" />
+<a href="image/Revenue_Reconciliation_Dashboard_screenshot.png">
+  <img src="image/Revenue_Reconciliation_Dashboard_screenshot.png" alt="Revenue Reconciliation Cockpit — live Streamlit dashboard" width="1000" />
 </a>
 
 *The cockpit home page: a bespoke grouped sidebar navigation, two large gradient KPI heroes (Total Revenue Invoiced ₹7.86 Cr · Net Realized Cash ₹1.86 Cr) with a column of stat pills (Leakage ₹83.07 L · Cancelled Orders 18,334 · Settled Clearance 69.2 %), an annotated revenue-trend area chart, a right-hand rail (net-realized velocity sparkline and weekly transaction volume), the revenue-by-financial-bucket donut with a colour key, the settlement-health radial gauge, and the full weekly reconciliation matrix. The **Channels** sidebar filters (fiscal week, category, fulfilment, ship state) drive every page.*
